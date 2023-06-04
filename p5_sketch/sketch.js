@@ -55,7 +55,7 @@ function setup() {
   rotDiv.position(width - 200, 0);
   
   mvt = new Movement(0, width/2);
-  //code = new GCodeGen("test1", grid1.path);
+  code = new GCodeGen("test1");
   
 }
 
@@ -114,9 +114,14 @@ function draw() {
   //mvt.display();
   pop();
   
-  if (grid1.changedGrid){
-    //code.updatePath(grid1.path);
-  }
+  //print(grid1.changedGrid);
+   if (grid1.changedGrid){
+  //   console.log("yoooo");
+  //   console.log(grid1.path.length);
+     //console.log(grid1.path);
+     code.updatePath(grid1.path);
+     grid1.changedGrid = false;
+   }
 }
 
 function mouseDragged() {

@@ -1,7 +1,7 @@
 class GCodeGen {
-  constructor(fileName, path) {
+  constructor(fileName) {
     let self = this;
-    this.path = path;
+    this.path = [];
     this.path[0] = new createVector(20, 20, 0);
     this.writer = createWriter(fileName + ".sbp");
 
@@ -39,14 +39,14 @@ class GCodeGen {
           "\n"
       );
       // feed move through the path
-      for (let i = 0; i < path.length; i++) {
+      for (let i = 0; i < self.path.length; i++) {
         self.writer.write(
           "M3, " +
-            self.path[0].x +
+            self.path[i].x +
             ", " +
-            self.path[0].y +
+            self.path[i].y +
             ", " +
-            self.path[0].z +
+            self.path[i].z +
             "\n"
         );
       }
@@ -61,6 +61,14 @@ class GCodeGen {
   }
   
   updatePath(path){
-    this.path = path;
+    this.path = [];
+    for (let i = 0; i < path.length; i++) {
+      this.path.push(path[i]);
+    }
+    //console.log
+    /*this.path = path;
+    print(this.path[10]);
+    print(path[10]);*/
+    console.log(path);
   }
 }

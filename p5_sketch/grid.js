@@ -45,9 +45,11 @@ class Grid {
     
     //console.log("at creation: " + this.gridMatrix[0][0]);
     this.sinGrid(this.sinAmp, this.sinFreq);
+    //print(this.path);s
   }
 
   display() {
+    //print(this.path);
     //console.log(this.x);
     for (let i = 0; i < this.row; i++) {
       for (let j = 0; j < this.column; j++) {
@@ -84,7 +86,8 @@ class Grid {
     fill(255, 0);
     strokeWeight(2);
     stroke(255, 0, 0);
-    this.path = [];
+  
+
     let previousPoint = new createVector();
     //beginShape();
     for (let i = 0; i < this.row; i++) {
@@ -119,11 +122,20 @@ class Grid {
             this.gridMatrix[i][j2].y * this.spacingY + this.y,
             100 - this.maxDepth * this.depthMatrix[i][j2]
           );*/
-          //this.path.push(previousPoint);
+          if (this.changedGrid){
+            //print(previousPoint);
+            print(this.path.length);
+            print(previousPoint);
+            //this.path[this.path.length] = previousPoint;
+            //sprint(this.path);
+          }
         }
       }
+      //console.log(this.path);
     }
-    this.firstPoint = true;
+    
+      this.firstPoint = true;
+    
     //endShape();
     noStroke();
   }
@@ -140,19 +152,20 @@ class Grid {
           j * this.spacingY + this.y
         );
         this.depthMatrix[i][j] = this.depth(c) / 255.0;
-        print("i:"+ i+" j:"+j);
-        print(this.gridMatrix[i][j]);
+        //print("i:"+ i+" j:"+j);
+        //print(this.gridMatrix[i][j]);
         this.gridMatrix[i][j].z = this.depth(c) / 255.0;
       }
     }
   }
 
   updateGrid(textu, row, column) {
-    console.log("yoo");
+    //console.log("yoo");
     let c;
     let tempDepthMatrix = [];
     let tempGridMatrix = [];
     this.firstPoint = true;
+    this.path = [];
     for (let i = 0; i < int(row); i++) {
       tempDepthMatrix[i] = [];
       tempGridMatrix[i] = [];
@@ -167,8 +180,12 @@ class Grid {
           j * this.spacingY + this.y,
           this.depth(c) / 255.0
         );
+        if ( tempGridMatrix[i][j].z > 0.01){
+          this.path.push(tempGridMatrix[i][j]);
+        }
       }
     }
+    console.log(this.path);
     //console.log("row:"+row);
     //console.log("temp:"+tempDepthMatrix.length);
     //console.log("self:"+ this.depthMatrix.length);
@@ -178,6 +195,7 @@ class Grid {
     this.row = row;
     this.column = column;
     this.sinGrid(this.sinAmp, this.sinFreq);
+    this.changedGrid = true;
   }
 
   //1D pattern
@@ -194,25 +212,25 @@ class Grid {
 
   bindUI(self) {
     this.updateX = function () {
-      self.changedGrid = true;
-      //console.log(this.value());
+      //console.log(self.changedGrid);
       self.x = Number((-this.value() / 1000) * width);
       document.querySelector("#div0").innerHTML = "x: " + int(-self.x);
       self.updateGrid(self.textu, self.row, self.column);
+      //self.changedGrid = true;
     };
     this.ui.sliders[0].changed(this.updateX);
 
     this.updateY = function () {
-      self.changedGrid = true;
       //console.log(this.value());
       self.y = Number((this.value() / 1000) * width);
       self.updateGrid(self.textu, self.row, self.column);
       document.querySelector("#div1").innerHTML = "y: " + int(self.y);
+      //self.changedGrid = true;
     };
     this.ui.sliders[1].changed(this.updateY);
 
     this.updateSizeX = function () {
-      self.changedGrid = true;
+      //self.changedGrid = true;
       //console.log(self);
       self.sizeX = Number((this.value() / 1000) * width);
       //self.row = int(self.sizeX);//int(self.sizeX / self.spacingX);
@@ -223,7 +241,7 @@ class Grid {
     this.ui.sliders[2].changed(this.updateSizeX);
 
     this.updateSizeY = function () {
-      self.changedGrid = true;
+      //self.changedGrid = true;
       //console.log(this.value());
       self.sizeY = Number((this.value() / 1000) * width);
       //self.column = int(self.sizeY); //int(self.sizeY / self.spacingY);
@@ -233,7 +251,7 @@ class Grid {
     this.ui.sliders[3].changed(this.updateSizeY);
 
     this.updateDensX = function () {
-      self.changedGrid = true;
+      //self.changedGrid = true;
       //console.log(this.value());
       self.spacingX = Number((this.value() / 1000) * 50);
       //self.row = int(self.sizeX / self.spacingX);
@@ -244,7 +262,7 @@ class Grid {
     this.ui.sliders[4].changed(this.updateDensX);
 
     this.updateDensY = function () {
-      self.changedGrid = true;
+      //self.changedGrid = true;
       //console.log(this.value());
       self.spacingY = Number((this.value() / 1000) * 50);
       //self.column = int(self.sizeY / self.spacingY);
@@ -255,14 +273,14 @@ class Grid {
     this.ui.sliders[5].changed(this.updateDensY);
 
     this.updateSinAmp = function () {
-      self.changedGrid = true;
+      //self.changedGrid = true;
       self.sinAmp = Number((this.value() / 1000) * 2);
       self.sinGrid(self.sinAmp, self.sinFreq);
     };
     this.ui.sliders[6].changed(this.updateSinAmp);
 
     this.updateSinFreq = function () {
-      self.changedGrid = true;
+      //self.changedGrid = true;
       self.sinFreq = Number((this.value() / 1000) * 2);
       self.sinGrid(self.sinAmp, self.sinFreq);
     };
