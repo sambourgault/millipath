@@ -56,6 +56,10 @@ class Grid {
         push();
         fill(200);
         //console.log(this.x);
+        /*translate(this.x-this.sizeX/2,-this.y+this.sizeY/2,0);
+        rotateZ(0.1*millis()/1000);
+        translate(-this.x+this.sizeX/2,this.y-this.sizeY/2,0);*/
+
         translate(
           this.gridMatrix[i][j].x,
           this.gridMatrix[i][j].y,
@@ -117,18 +121,6 @@ class Grid {
             previousPoint.y = this.gridMatrix[i][j2].y;
             previousPoint.z = 100 - this.maxDepth * this.gridMatrix[i][j2].z;
           }
-          /*vertex(
-            this.gridMatrix[i][j2].x * this.spacingX + this.x,
-            this.gridMatrix[i][j2].y * this.spacingY + this.y,
-            100 - this.maxDepth * this.depthMatrix[i][j2]
-          );*/
-          if (this.changedGrid){
-            //print(previousPoint);
-            print(this.path.length);
-            print(previousPoint);
-            //this.path[this.path.length] = previousPoint;
-            //sprint(this.path);
-          }
         }
       }
       //console.log(this.path);
@@ -170,22 +162,28 @@ class Grid {
       tempDepthMatrix[i] = [];
       tempGridMatrix[i] = [];
       for (let j = 0; j < int(column); j++) {
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = int(column) - 1 - j;
+        }
+        //console.log(j2);
+
         c = textu.get(
           textu.width - i * this.spacingX + this.x,
-          j * this.spacingY + this.y
+          j2 * this.spacingY + this.y
         );
-        tempDepthMatrix[i][j] = this.depth(c) / 255.0;
-        tempGridMatrix[i][j] = createVector(
+        tempDepthMatrix[i][j2] = this.depth(c) / 255.0;
+        tempGridMatrix[i][j2] = createVector(
           -i * this.spacingX + this.x,
-          j * this.spacingY + this.y,
+          j2 * this.spacingY + this.y,
           this.depth(c) / 255.0
         );
-        if ( tempGridMatrix[i][j].z > 0.01){
-          this.path.push(tempGridMatrix[i][j]);
+        if ( tempGridMatrix[i][j2].z > 0.01){
+          this.path.push(tempGridMatrix[i][j2]);
         }
       }
     }
-    console.log(this.path);
+    //console.log(this.path);
     //console.log("row:"+row);
     //console.log("temp:"+tempDepthMatrix.length);
     //console.log("self:"+ this.depthMatrix.length);
@@ -223,8 +221,8 @@ class Grid {
     this.updateY = function () {
       //console.log(this.value());
       self.y = Number((this.value() / 1000) * width);
-      self.updateGrid(self.textu, self.row, self.column);
       document.querySelector("#div1").innerHTML = "y: " + int(self.y);
+      self.updateGrid(self.textu, self.row, self.column);
       //self.changedGrid = true;
     };
     this.ui.sliders[1].changed(this.updateY);

@@ -69,6 +69,6 @@ class GCodeGen {
     /*this.path = path;
     print(this.path[10]);
     print(path[10]);*/
-    console.log(path);
+    //console.log(path);
   }
 }
