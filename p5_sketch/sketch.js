@@ -9,6 +9,8 @@ let x;
 let y;
 let outsideRadius = 200;
 let insideRadius = 100;
+let sizeX = 500;
+let sizeY = sizeX;
 
 let graph;
 let directions;
@@ -31,17 +33,25 @@ function setup() {
   // shaders require WEBGL mode to work
   createCanvas(windowWidth, windowHeight, WEBGL);
   noStroke();
+  console.log(windowWidth);
+  console.log(width);
 
   directions = new Directions();
-  camera(-width / 2, -600, 800, -width / 2, 0, 300, 0, 0, -1);
-  //ortho(-width / 2, width / 2, height / 2, -height / 2, 0, 500);
+  //camera(-width / 2, -600, 800, -width / 2, 0, 300, 0, 0, -1);
+  //ortho(0, width / 2, height / 2, -height / 2, 0, 500);
+  
+  //translate(-width/2,0,0);
+  // ortho([left], [right], [bottom], [top], [near], [far])
+  ortho(-width, 0, -height, 0, -width, width);
+  
 
   // initialize the createGraphics layers
-  shaderTexture = createGraphics(width, height, WEBGL);
+  shaderTexture = createGraphics(width, width, WEBGL);
 
   // turn off the createGraphics layers stroke
   shaderTexture.noStroke();
-  grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
+  //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
+  grid1 = new Grid(0, 0, shaderTexture);
 
   rotationSlider = createSlider(0, 1000, 500);
   rotationSlider.position(width - 200, 30);
@@ -60,6 +70,17 @@ function setup() {
 }
 
 function draw() {
+  //rotateZ(PI);
+  //push();
+  //translate(width/2, height/2,0);
+  //rotateX(PI);
+  rotateZ(PI);
+  //print(mouseX/200)
+  translate(width/2+sizeX/2,-height/2-sizeY/2,0);
+  //console.log()
+  //translate(-width/2, height/2,0);
+  //pop();
+  //translate(0,0,1000);
   //orbitControl();
   // instead of just setting the active shader we are passing it to the createGraphics layer
   shaderTexture.shader(theShader);
@@ -86,15 +107,15 @@ function draw() {
 
   push();
   //rotateZ(theta * mouseX * 0.0001);
-  
-  translate(0,width/2,0);
-  rotateX(theta);
-  translate(0,-width/2,0);
+  //rotateZ()
+  translate(0,sizeY/2,0);
+  rotateX(-theta);
+  translate(0,-sizeY/2,0);
   //rotateY(theta * mouseX * 0.0001);
   //theta += 0.5;
   //rectMode(CENTER);
-  translate(-width, 0, 0);
-  rect(0, 0, width, height);
+  translate(-sizeX, 0, 0);
+  rect(0, 0, sizeX, sizeY);
   pop();
 
   if (!readOnce) {
@@ -102,9 +123,15 @@ function draw() {
     grid1.addTexture(shaderTexture);
   }
   push();
-  translate(0,width/2,0);
-  rotateX(theta);
-  translate(0,-width/2,0);
+  /*translate(-width/2, -height/2, 0);
+  rotateZ(PI);
+  translate(width/2, height/2, 0);*/
+  //rotateZ(PI);
+
+  translate(0,sizeY/2,0);
+  rotateX(-theta);
+  translate(0,-sizeY/2,0);
+
   grid1.display(shaderTexture);
   directions.display();
   pop();
@@ -132,7 +159,7 @@ function rotateWorld(){
       //document.querySelector("#div4").innerHTML ="spacing X: " + int(self.spacingX);
   push();
   translate(0,width/2,0);
-  theta = map((this.value() / 1000), 0, 1, -1, 1);
+  theta = map((this.value() / 1000), 0, 1, 0, PI/2);
   pop();
 }
 

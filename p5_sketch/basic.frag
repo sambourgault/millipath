@@ -44,12 +44,13 @@ vec3 sdgCircle( in vec2 p, in float r )
 void main() {
   //vec2 size = vec2(0.5,0.5) ;
   // position of the pixel divided by resolution, to get normalized positions on the canvas
-  vec2 st = gl_FragCoord.xy/u_resolution.xy; 
+  // make it square
+  vec2 st = gl_FragCoord.xy/u_resolution.xx; 
   st  -= 0.5;
-  st.x = st.x * u_resolution.x / u_resolution.y;
+  //st.x = st.x * u_resolution.x / u_resolution.y;
   //st.x *= 10.; 
   //vec2 m = u_mouse/u_resolution.xy;
-  float f1 = circle(st, vec2(0.15, 0.), 0.1);
+  float f1 = circle(st, vec2(0., 0.), 0.1);
   float f2 = smoothCircle(st, vec2(-0.05, 0.), 0.2);
   vec3 color = 1.-vec3(f2);
   //color = vec3(max(f1, f2));
@@ -58,8 +59,8 @@ void main() {
   //color += vec3(1., 0., 0.)*line(st, y);
   
   
-  vec3 dg1 = sdgCircle(st + vec2(0.1,0.0),0.2);
-  vec3 dg2 = sdgCircle( st - vec2(0.2,0.0), 0.04) ;
+  vec3 dg1 = sdgCircle(st + vec2(0.,0.0),0.2);
+  vec3 dg2 = sdgCircle( st - vec2(0.,0.0), 0.04) ;
 
   //return sdgMin(dg1,dg2);
   //vec3 s = sdgSMin(dg1,dg2,0.6*u_mouse.x/u_resolution.x);

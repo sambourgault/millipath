@@ -74,6 +74,10 @@ class Grid {
           );
         }
 
+        if (i == 0 && j == 0){
+          sphere(10);
+        }
+
         sphere(2);
         pop();
       }
@@ -139,9 +143,13 @@ class Grid {
       this.depthMatrix[i] = [];
 
       for (let j = 0; j < int(this.column); j++) {
-        c = textu.get(
+        /*c = textu.get(
           textu.width - i * this.spacingX + this.x,
           j * this.spacingY + this.y
+        );*/
+        c = textu.get(
+          textu.width - (i * this.spacingX - this.x)*textu.width/sizeX,
+          (j * this.spacingY + this.y)*textu.height/sizeY
         );
         this.depthMatrix[i][j] = this.depth(c) / 255.0;
         //print("i:"+ i+" j:"+j);
@@ -158,6 +166,7 @@ class Grid {
     let tempGridMatrix = [];
     this.firstPoint = true;
     this.path = [];
+    console.log(textu.width);
     for (let i = 0; i < int(row); i++) {
       tempDepthMatrix[i] = [];
       tempGridMatrix[i] = [];
@@ -167,11 +176,17 @@ class Grid {
           j2 = int(column) - 1 - j;
         }
         //console.log(j2);
-
+        
         c = textu.get(
-          textu.width - i * this.spacingX + this.x,
-          j2 * this.spacingY + this.y
+          textu.width - (i * this.spacingX - this.x)*textu.width/sizeX,
+          (j2 * this.spacingY + this.y)*textu.height/sizeY
         );
+
+        /*c = textu.get(
+          sizeX - i * this.spacingX + this.x,
+          j2 * this.spacingY + this.y
+        );*/
+
         tempDepthMatrix[i][j2] = this.depth(c) / 255.0;
         tempGridMatrix[i][j2] = createVector(
           -i * this.spacingX + this.x,
