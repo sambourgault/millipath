@@ -22,6 +22,24 @@ class GCodeGen {
     this.button.position(0, height - 50);
     this.button.style("font-family", "Poppins");
 
+    this.simSlider =  createSlider(0.,1000.,0);
+    this.simSlider.addClass("sliders");
+    this.simSlider.position(width/2 - 75, height - 100);
+    this.simSlider.style('width', '150px');
+    this.simSlider.style('background-color', '#7C7C7C');
+
+    this.playButton = createButton("play");
+    this.playButton.position(width/2-85, height - 50);
+    this.playButton.style("font-family", "Poppins");
+    this.playButton.style("width", "75px");
+
+    this.simButton = createButton("pause");
+    this.simButton.position(width/2+10, height - 50);
+    this.simButton.style("font-family", "Poppins");
+    this.simButton.style("width", "75px");
+
+    this.tool = new Tool();
+
     this.generateGCode = function () {
       
       // link move in Z to go up
@@ -70,5 +88,9 @@ class GCodeGen {
     print(this.path[10]);
     print(path[10]);*/
     //console.log(path);
+  }
+
+  display(){
+    this.tool.display();
   }
 }

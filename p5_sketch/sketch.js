@@ -23,6 +23,8 @@ let mvt;
 let code;
 let codeGenButton;
 
+
+
 function preload() {
   // load the shader
   theShader = loadShader("basic.vert", "basic.frag");
@@ -53,7 +55,7 @@ function setup() {
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   grid1 = new Grid(0, 0, shaderTexture);
 
-  rotationSlider = createSlider(0, 1000, 500);
+  /*rotationSlider = createSlider(0, 1000, 0);
   rotationSlider.position(width - 200, 30);
   rotationSlider.addClass("sliders");
   rotationSlider.style("width", "150px");
@@ -62,9 +64,10 @@ function setup() {
   rotDiv = createDiv('rotation X');
   rotDiv.style('font-size', '16px');
   rotDiv.style('font-family', 'Poppins');
-  rotDiv.position(width - 200, 0);
+  rotDiv.position(width - 200, 0);*/
   
-  mvt = new Movement(0, width/2);
+  mvt = new Movement(0, 0);
+  mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
   code = new GCodeGen("test1");
   
 }
@@ -77,6 +80,7 @@ function draw() {
   rotateZ(PI);
   //print(mouseX/200)
   translate(width/2+sizeX/2,-height/2-sizeY/2,0);
+  
   //console.log()
   //translate(-width/2, height/2,0);
   //pop();
@@ -134,11 +138,12 @@ function draw() {
 
   grid1.display(shaderTexture);
   directions.display();
+  code.display();
   pop();
   
   push();
-  rotateX(PI/2);
-  //mvt.display();
+  //rotateX(PI/2);
+  mvt.display();
   pop();
   
   //print(grid1.changedGrid);
@@ -149,10 +154,13 @@ function draw() {
      code.updatePath(grid1.path);
      grid1.changedGrid = false;
    }
+
+   
 }
 
 function mouseDragged() {
   //theta = map(mouseX / width, 0, 1, -1, 1);
+  theta = map((mouseX / width), 0, 1, 0, PI/2);
 }
 
 function rotateWorld(){
