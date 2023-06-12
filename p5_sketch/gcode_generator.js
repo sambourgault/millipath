@@ -2,7 +2,7 @@ class GCodeGen {
   constructor(fileName) {
     let self = this;
     this.path = [];
-    this.path[0] = new createVector(20, 20, 0);
+    this.path[0] = new createVector(0, 0, 0);
     this.writer = createWriter(fileName + ".sbp");
 
     this.writer.write("SA \n");
@@ -33,12 +33,15 @@ class GCodeGen {
     this.playButton.style("font-family", "Poppins");
     this.playButton.style("width", "75px");
 
-    this.simButton = createButton("pause");
-    this.simButton.position(width/2+10, height - 50);
-    this.simButton.style("font-family", "Poppins");
-    this.simButton.style("width", "75px");
+    this.pauseButton = createButton("pause");
+    this.pauseButton.position(width/2+10, height - 50);
+    this.pauseButton.style("font-family", "Poppins");
+    this.pauseButton.style("width", "75px");
 
     this.tool = new Tool();
+    this.play = false;
+    this.playTime = 0;
+    this.indexPlay = 0;
 
     this.generateGCode = function () {
       
@@ -76,6 +79,17 @@ class GCodeGen {
       self.writer.close();
     };
     this.button.mousePressed(this.generateGCode);
+
+    this.beginSimulation = function(){
+      self.play = true;
+      self.playTime = millis();
+    }
+    this.playButton.mousePressed(this.beginSimulation);
+
+    this.pauseSimulation = function(){
+      self.play = false;
+    }
+    this.pauseButton.mousePressed(this.pauseSimulation);
   }
   
   updatePath(path){
@@ -91,6 +105,22 @@ class GCodeGen {
   }
 
   display(){
-    this.tool.display();
+    if (this.play){
+      //console.log("yoo");
+      if (millis() - this.playTime > 100){
+        this.indexPlay+=1;
+        this.playTime = millis();
+      }
+      if (this.indexPlay > this.path.length-1) {
+        this.indexPlay = 0;
+      }
+    } else {
+      //console.log("hello?")
+      this.indexPlay = int(this.simSlider.value()/1000*(this.path.length-1));
+    }
+    //console.log(this.indexPlay);
+    this.tool.display(this.path[this.indexPlay]);
+
+
   }
 }

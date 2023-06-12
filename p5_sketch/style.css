@@ -9,7 +9,7 @@ canvas {
 .sliders {
   -webkit-appearance: none;
   height: 2.5px;
-  background: #BEED008;
+  background: #BED008;
   opacity: 0.7;
   -webkit-transition: .2s;
   transition: opacity .2s;

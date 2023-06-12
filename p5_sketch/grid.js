@@ -74,9 +74,9 @@ class Grid {
           );
         }
 
-        if (i == 0 && j == 0){
+        /*if (i == 0 && j == 0){
           sphere(10);
-        }
+        }*/
 
         sphere(2);
         pop();
@@ -166,7 +166,7 @@ class Grid {
     let tempGridMatrix = [];
     this.firstPoint = true;
     this.path = [];
-    console.log(textu.width);
+    //console.log(textu.width);
     for (let i = 0; i < int(row); i++) {
       tempDepthMatrix[i] = [];
       tempGridMatrix[i] = [];
