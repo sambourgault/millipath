@@ -22,7 +22,14 @@ let rotDiv;
 let mvt;
 let code;
 let codeGenButton;
-
+let safeHeight = 50 //mm
+let materialThickness = 50.8; //mm = 2 inches
+let spindleSpeed = 18000; // rpm
+let moveSpeed = 16; // mm/s
+let plungeRate = 5; //mm/s
+let matDepthCut = 0.1; // mm
+let infoBox;
+let sZIn, mtIn, sSIn, mSIn, pRIn, mdcIn;
 
 
 function preload() {
@@ -65,6 +72,8 @@ function setup() {
   rotDiv.style('font-size', '16px');
   rotDiv.style('font-family', 'Poppins');
   rotDiv.position(width - 200, 0);*/
+  infoBox = new CollapsibleBox(10,400, '300px', "machine specs");
+  setupInputs();
   
   mvt = new Movement(0, 0);
   mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
@@ -173,4 +182,48 @@ function rotateWorld(){
 
 function windowResized() {
   //resizeCanvas(windowWidth, windowHeight);
+}
+
+function setupInputs(){
+  let offY = 40;
+  let offX = 10;
+  pRIn, mdcIn
+  labelSZ= createDiv("safe Z height (mm)").parent(infoBox.box);
+  labelSZ.position(offX,1*offY);
+  labelSZ.style('width', '170px');
+  sZIn = createInput(str(safeHeight)).parent(infoBox.box);
+  sZIn.position(offX, 1.5*offY);
+ 
+
+  labelMT= createDiv("material thickness (mm)").parent(infoBox.box);
+  labelMT.position(offX,2*offY);
+  labelMT.style('width', '170px');
+  mtIn = createInput(str(materialThickness)).parent(infoBox.box);
+  mtIn.position(offX, 2.5*offY);
+
+  labelSS= createDiv("spindle speed (rpm)").parent(infoBox.box);
+  labelSS.position(offX,3*offY);
+  labelSS.style('width', '170px');
+  sSIn = createInput(str(spindleSpeed)).parent(infoBox.box);
+  sSIn.position(offX, 3.5*offY);
+
+  labelMS= createDiv("move speed (mm/s)").parent(infoBox.box);
+  labelMS.position(offX,4*offY);
+  labelMS.style('width', '170px');
+  mSIn = createInput(str(moveSpeed)).parent(infoBox.box);
+  mSIn.position(offX, 4.5*offY);
+
+  labelPR= createDiv("plunge rate (mm/s)").parent(infoBox.box);
+  labelPR.position(offX,5*offY);
+  labelPR.style('width', '170px');
+  pRIn = createInput(str(plungeRate)).parent(infoBox.box);
+  pRIn.position(offX, 5.5*offY);
+
+  labelMDC= createDiv("max depth cut (mm)").parent(infoBox.box);
+  labelMDC.position(10,6*offY);
+  labelMDC.style('width', '170px');
+  mdcIn = createInput(str(matDepthCut)).parent(infoBox.box);
+  mdcIn.position(offX, 6.5*offY);
+
+
 }

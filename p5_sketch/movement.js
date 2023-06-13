@@ -103,7 +103,7 @@ class Movement{
       x = this.translateX(x);
       y = this.translateY(y);
       //console.log(sqrt(x^2+y^2));
-  
+      sphere(2);
       if (i != 0) {
         line(previous.x, previous.y,previous.z,x,y,z);
       }
@@ -114,6 +114,6 @@ class Movement{
     }
   }
 
-  
+
   
 }

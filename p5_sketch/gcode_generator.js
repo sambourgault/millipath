@@ -1,19 +1,23 @@
 class GCodeGen {
   constructor(fileName) {
     let self = this;
+    this.paths = [];
     this.path = [];
-    this.path[0] = new createVector(0, 0, 0);
+    this.path[0] = new createVector(0, 0, safeHeight);
+    this.paths.push(this.path);
+    this.typePaths = [];
+    this.typePaths.push("J");
     this.writer = createWriter(fileName + ".sbp");
 
     this.writer.write("SA \n");
     this.writer.write("CN, 90 \n");
     this.writer.write("IF %(25)=0 THEN GOTO UNIT_ERROR\n");
-    this.writer.write("&PWSafeZ = 10\n"); //mm
-    this.writer.write("&PWMaterial = 20\n"); //mm
+    this.writer.write("&PWSafeZ = " + sZIn.value() + "\n"); //mm
+    this.writer.write("&PWMaterial = " + mtIn.value() + "\n"); //mm
     this.writer.write("C9\n");
-    this.writer.write("TR, 18000\n");
+    this.writer.write("TR," + sSIn.value() +"\n");
     this.writer.write("C6\nPAUSE 2\n");
-    this.writer.write("MS, 16, 5\n");
+    this.writer.write("MS," + mSIn.value() +"," + pRIn.value() + "\n");
 
     /*this.safeZ = createInput();
     this.safeZ.position(0,height - 80);*/
@@ -46,7 +50,7 @@ class GCodeGen {
     this.generateGCode = function () {
       
       // link move in Z to go up
-      self.writer.write("JZ, 20\n");
+      self.writer.write("JZ, 100\n");
       // link move to 0,0 in XY
       self.writer.write("J2, 0, 0\n");
       // link move above first point of path
@@ -93,7 +97,12 @@ class GCodeGen {
   }
   
   updatePath(path){
-    this.path = [];
+    //add first path point to jog path
+    this.paths[0].push(new createVector(path[0].x, path[0].y, safeHeight));
+    
+    // reset second move path
+    this.paths[1] = [];
+    this.typePaths[1] = "M";
     for (let i = 0; i < path.length; i++) {
       this.path.push(path[i]);
     }
