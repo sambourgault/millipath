@@ -45,12 +45,10 @@ class Grid {
     
     //console.log("at creation: " + this.gridMatrix[0][0]);
     this.sinGrid(this.sinAmp, this.sinFreq);
-    //print(this.path);s
+
   }
 
   display() {
-    //print(this.path);
-    //console.log(this.x);
     for (let i = 0; i < this.row; i++) {
       for (let j = 0; j < this.column; j++) {
         push();
@@ -83,14 +81,14 @@ class Grid {
       }
     }
     //console.log("at display: " + this.gridMatrix[0][0]);
-    this.displayPath();
+    //this.displayPath();
   }
 
   depth(col) {
     return (red(col) + green(col) + blue(col)) / 3;
   }
 
-  displayPath() {
+  /*displayPath() {
     fill(255, 0);
     strokeWeight(2);
     stroke(255, 0, 0);
@@ -127,14 +125,13 @@ class Grid {
           }
         }
       }
-      //console.log(this.path);
     }
     
       this.firstPoint = true;
     
     //endShape();
     noStroke();
-  }
+  }*/
 
 
   addTexture(textu) {
@@ -198,10 +195,7 @@ class Grid {
         }
       }
     }
-    //console.log(this.path);
-    //console.log("row:"+row);
-    //console.log("temp:"+tempDepthMatrix.length);
-    //console.log("self:"+ this.depthMatrix.length);
+
     this.depthMatrix = tempDepthMatrix;
     this.gridMatrix = tempGridMatrix;
     //console.log("self after:"+this.depthMatrix.length);

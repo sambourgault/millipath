@@ -98,24 +98,22 @@ class GCodeGen {
   
   updatePath(path){
     //add first path point to jog path
-    this.paths[0].push(new createVector(path[0].x, path[0].y, safeHeight));
+    this.paths[0][1] = new createVector(path[0].x, path[0].y, safeHeight);
     
     // reset second move path
     this.paths[1] = [];
     this.typePaths[1] = "M";
+    //add first plunge to second move path
+    this.paths[1].push(this.paths[0][1]);
     for (let i = 0; i < path.length; i++) {
-      this.path.push(path[i]);
+      this.paths[1].push(path[i]);
     }
-    //console.log
-    /*this.path = path;
-    print(this.path[10]);
-    print(path[10]);*/
-    //console.log(path);
+    let last =  path[path.length - 1];
+    this.paths[1].push(new createVector(last.x, last.y, safeHeight));
   }
 
   display(){
     if (this.play){
-      //console.log("yoo");
       if (millis() - this.playTime > 100){
         this.indexPlay+=1;
         this.playTime = millis();
@@ -124,12 +122,79 @@ class GCodeGen {
         this.indexPlay = 0;
       }
     } else {
-      //console.log("hello?")
       this.indexPlay = int(this.simSlider.value()/1000*(this.path.length-1));
     }
-    //console.log(this.indexPlay);
     this.tool.display(this.path[this.indexPlay]);
 
+    this.displayPath();
 
+  }
+
+  displayPath() {
+    
+    fill(255, 0);
+    strokeWeight(2);
+
+    // draw each path
+    //console.log(this.paths.length);
+    for (let j = 0; j < this.paths.length; j++){
+      //console.log(this.typePaths[j]);
+      if (this.typePaths[j] == "J"){
+        stroke(0, 255, 0);
+      } else if (this.typePaths[j] == "M"){
+        //console.log(j+"MM");
+        stroke(255, 0, 0);
+      }
+
+      //console.log(j +":" +this.paths[j].length);
+      for (let i = 1; i < this.paths[j].length; i++){
+
+        //stroke(255, 0, 0);
+        let previous = this.paths[j][i-1];
+        let current = this.paths[j][i];
+        line(previous.x, previous.y, previous.z, current.x, current.y, current.z);
+      }
+    }
+    //console.log("yoo")
+  
+
+    /*let previousPoint = new createVector();
+    //beginShape();
+    for (let i = 0; i < this.row; i++) {
+      //console.log("i:" + i);
+      for (let j = 0; j < this.column; j++) {
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+
+        if (this.depthMatrix[i][j2] > 0.01) {
+          if (this.firstPoint) {
+            previousPoint.x = this.gridMatrix[i][j2].x;
+            previousPoint.y = this.gridMatrix[i][j2].y;
+            previousPoint.z = 100 - this.maxDepth * this.gridMatrix[i][j2].z;
+            this.firstPoint = false;
+          } else {
+            line(
+              previousPoint.x,
+              previousPoint.y,
+              previousPoint.z,
+              this.gridMatrix[i][j2].x,
+              this.gridMatrix[i][j2].y,
+              100 - this.maxDepth * this.gridMatrix[i][j2].z
+            );
+            previousPoint.x = this.gridMatrix[i][j2].x;
+            previousPoint.y = this.gridMatrix[i][j2].y;
+            previousPoint.z = 100 - this.maxDepth * this.gridMatrix[i][j2].z;
+          }
+        }
+      }
+      //console.log(this.path);
+    }*/
+    
+      //this.firstPoint = true;
+    
+    //endShape();
+    noStroke();
   }
 }
