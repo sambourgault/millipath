@@ -45,16 +45,35 @@ class GCodeGen {
     this.tool = new Tool();
     this.play = false;
     this.playTime = 0;
+    this.indexJPlay = 0;
     this.indexPlay = 0;
 
     this.generateGCode = function () {
       
       // link move in Z to go up
-      self.writer.write("JZ, 100\n");
+      self.writer.write("JZ," + self.paths[0][0].z + "\n");
       // link move to 0,0 in XY
-      self.writer.write("J2, 0, 0\n");
-      // link move above first point of path
-      self.writer.write(
+      self.writer.write("J2,"+ self.paths[0][0].x +","+ self.paths[0][0].y +"\n");
+      // add all next link and feed move based on typePaths[j]
+      for (let j = 0; j < self.paths.length; j++){
+        for (let i = 0; i < self.paths[j].length; i++) {
+          if (j == 0 && i ==0){
+            // skip first point of paths[0];
+          }
+          else{
+            self.writer.write(self.typePaths[j]+"3,"+
+            self.paths[j][i].x +
+            ", " +
+            self.paths[j][i].y +
+            ", " +
+            self.paths[j][i].z +
+            "\n"
+            );
+
+        }
+      }
+      }
+      /*self.writer.write(
         "J3," +
           self.path[0].x +
           ", " +
@@ -74,9 +93,11 @@ class GCodeGen {
             self.path[i].z +
             "\n"
         );
-      }
+      }*/
+
+      // REHOME
       // link move in Z to go up
-      self.writer.write("JZ, 20\n");
+      self.writer.write("JZ," + safeHeight + "\n");
       // link move to 0,0 in XY
       self.writer.write("J2, 0, 0\n");
 
@@ -110,6 +131,7 @@ class GCodeGen {
     }
     let last =  path[path.length - 1];
     this.paths[1].push(new createVector(last.x, last.y, safeHeight));
+
   }
 
   display(){
@@ -118,13 +140,18 @@ class GCodeGen {
         this.indexPlay+=1;
         this.playTime = millis();
       }
-      if (this.indexPlay > this.path.length-1) {
+      if (this.indexPlay > this.paths[this.indexJPlay].length-1) {
         this.indexPlay = 0;
+        this.indexJPlay += 1;
+        if (this.indexJPlay > this.paths.length-1){
+          this.indexJPlay = 0;
+        }
       }
     } else {
-      this.indexPlay = int(this.simSlider.value()/1000*(this.path.length-1));
+      this.indexPlay = int(this.simSlider.value()/1000*(this.paths[this.indexJPlay].length-1));
     }
-    this.tool.display(this.path[this.indexPlay]);
+
+    this.tool.display(this.paths[this.indexJPlay][this.indexPlay]);
 
     this.displayPath();
 
@@ -152,7 +179,10 @@ class GCodeGen {
         //stroke(255, 0, 0);
         let previous = this.paths[j][i-1];
         let current = this.paths[j][i];
+        push();
+        translate(0,0,70);
         line(previous.x, previous.y, previous.z, current.x, current.y, current.z);
+        pop();
       }
     }
     //console.log("yoo")

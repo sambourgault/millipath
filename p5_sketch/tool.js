@@ -13,7 +13,7 @@ class Tool{
         translate(0,100+this.height/2,0);
         //console.log(point)
         if (point){
-            translate(point.x, -30,-point.y);
+            translate(point.x, -30+point.z,-point.y);
         }
         cylinder(this.diameter, this.height);
         pop();

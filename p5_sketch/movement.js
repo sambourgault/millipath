@@ -46,7 +46,8 @@ class Movement{
     push();
     translate(this.sizeX/2, -this.sizeY/2, 20);
     //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
-    this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,100, 360/20);
+    //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,100, 360/20);
+    this.polygon(100*this.scale, 3);
     pop();
     //circle(this.translateX(0+this.sizeX/2), this.translateY(0+this.sizeY/2), 100);
     //line(this.translateX(0), this.translateY(0), this.translateX(200), this.translateY(200));
@@ -57,7 +58,7 @@ class Movement{
     translate(this.sizeX/2+20,-this.sizeY/2-20,0);
     rotateX(PI/2);
     //circle(0,0,200);
-    translate(-this.sizeX/2-20,0,-4*this.sizeY/2-60);
+    translate(-this.sizeX/2-20,0,-4*this.sizeY/2-80);
     this.xyMovement();
     pop();
   }
@@ -103,7 +104,7 @@ class Movement{
       x = this.translateX(x);
       y = this.translateY(y);
       //console.log(sqrt(x^2+y^2));
-      sphere(2);
+      //sphere(2);
       if (i != 0) {
         line(previous.x, previous.y,previous.z,x,y,z);
       }
@@ -112,6 +113,34 @@ class Movement{
       previous.y = y;
       previous.z = z;
     }
+  }
+
+  polygon(r, nbSides){
+    let previous = new createVector(0,0); 
+    let t,x,y,z;
+    let first = new createVector(0,0);
+    for (let i = 0; i < nbSides; i++){
+      t = 360/nbSides*i*PI/180;
+      x = r*cos(t);
+      y = r*sin(t);
+      z = 0;
+      x = this.translateX(x);
+      y = this.translateY(y);
+      if (i == 0){
+        first.x = x;
+        first.y = y;
+        first.z = z;
+      }
+
+      if (i != 0) {
+        line(previous.x, previous.y,previous.z,x,y,z);
+      }
+
+      previous.x = x;
+      previous.y = y;
+      previous.z = z;
+    }
+    line(previous.x, previous.y,previous.z,first.x,first.y,first.z);
   }
 
 
