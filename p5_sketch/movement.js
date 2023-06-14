@@ -24,7 +24,7 @@ class Movement{
   makePath(){
     this.polygon(100*this.scale, 3);
     //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
-    //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,100, 360/20);
+    //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
   }
   
   display(){

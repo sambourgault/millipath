@@ -2,7 +2,7 @@ class Tool{
     constructor(){
         this.x = 0;
         this.y = 0;
-        this.diameter = 5;
+        this.diameter = 0.25 * 25.4; //in * mm/in
         this.height = 75;
     }
 
@@ -15,7 +15,7 @@ class Tool{
         if (point){
             translate(point.x, -30+point.z,-point.y);
         }
-        cylinder(this.diameter, this.height);
+        cylinder(tsIn.value()*25.4, this.height);
         pop();
     }
 

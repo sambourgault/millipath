@@ -27,9 +27,9 @@ let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 16; // mm/s
 let plungeRate = 5; //mm/s
-let matDepthCut = 0.1; // mm
+let maxDepthCut = 0.1; // mm
 let infoBox;
-let sZIn, mtIn, sSIn, mSIn, pRIn, mdcIn;
+let sZIn, mtIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
 
 
 function preload() {
@@ -72,7 +72,7 @@ function setup() {
   rotDiv.style('font-size', '16px');
   rotDiv.style('font-family', 'Poppins');
   rotDiv.position(width - 200, 0);*/
-  infoBox = new CollapsibleBox(10,450, '300px', "machine specs");
+  infoBox = new CollapsibleBox(10,450, '340px', "machine specs");
   setupInputs();
   
   mvt = new Movement(0, 0);
@@ -187,7 +187,7 @@ function windowResized() {
 function setupInputs(){
   let offY = 40;
   let offX = 10;
-  pRIn, mdcIn
+
   labelSZ= createDiv("safe Z height (mm)").parent(infoBox.box);
   labelSZ.position(offX,1*offY);
   labelSZ.style('width', '170px');
@@ -222,8 +222,13 @@ function setupInputs(){
   labelMDC= createDiv("max depth cut (mm)").parent(infoBox.box);
   labelMDC.position(10,6*offY);
   labelMDC.style('width', '170px');
-  mdcIn = createInput(str(matDepthCut)).parent(infoBox.box);
+  mdcIn = createInput(str(maxDepthCut)).parent(infoBox.box);
   mdcIn.position(offX, 6.5*offY);
 
+  labelTS = createDiv("tool size (in)").parent(infoBox.box);
+  labelTS.position(10,7*offY);
+  labelTS.style('width', '170px');
+  tsIn = createInput("0.25").parent(infoBox.box);
+  tsIn.position(offX, 7.5*offY);
 
 }

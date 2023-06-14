@@ -49,7 +49,7 @@ class GCodeGen {
     this.indexPlay = 0;
     this.linkState = false;
     this.movement;
-    this.mvtScale = 0.2;
+    this.mvtScale = 0.4;
 
     this.generateGCode = function () {
       
