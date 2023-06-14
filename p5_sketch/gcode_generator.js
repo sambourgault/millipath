@@ -23,7 +23,7 @@ class GCodeGen {
     this.safeZ.position(0,height - 80);*/
 
     this.button = createButton("save file");
-    this.button.position(0, height - 50);
+    this.button.position(20, height - 50);
     this.button.style("font-family", "Poppins");
 
     this.simSlider =  createSlider(0.,1000.,0);
@@ -47,14 +47,19 @@ class GCodeGen {
     this.playTime = 0;
     this.indexJPlay = 0;
     this.indexPlay = 0;
+    this.linkState = false;
+    this.movement;
+    this.mvtScale = 0.2;
 
     this.generateGCode = function () {
       
+      // HOME
       // link move in Z to go up
       self.writer.write("JZ," + self.paths[0][0].z + "\n");
       // link move to 0,0 in XY
       self.writer.write("J2,"+ self.paths[0][0].x +","+ self.paths[0][0].y +"\n");
       // add all next link and feed move based on typePaths[j]
+
       for (let j = 0; j < self.paths.length; j++){
         for (let i = 0; i < self.paths[j].length; i++) {
           if (j == 0 && i ==0){
@@ -69,37 +74,15 @@ class GCodeGen {
             self.paths[j][i].z +
             "\n"
             );
-
+          }
         }
       }
-      }
-      /*self.writer.write(
-        "J3," +
-          self.path[0].x +
-          ", " +
-          self.path[0].y +
-          ", " +
-          self.path[0].z +
-          "\n"
-      );
-      // feed move through the path
-      for (let i = 0; i < self.path.length; i++) {
-        self.writer.write(
-          "M3, " +
-            self.path[i].x +
-            ", " +
-            self.path[i].y +
-            ", " +
-            self.path[i].z +
-            "\n"
-        );
-      }*/
 
       // REHOME
       // link move in Z to go up
-      self.writer.write("JZ," + safeHeight + "\n");
+      //self.writer.write("JZ," + safeHeight + "\n");
       // link move to 0,0 in XY
-      self.writer.write("J2, 0, 0\n");
+      //self.writer.write("J2, 0, 0\n");
 
       self.writer.close();
     };
@@ -117,20 +100,59 @@ class GCodeGen {
     this.pauseButton.mousePressed(this.pauseSimulation);
   }
   
-  updatePath(path){
+  updatePath(grid, mvt, linkState){
+    this.movement = mvt;
+    this.linkState = linkState;
     //add first path point to jog path
-    this.paths[0][1] = new createVector(path[0].x, path[0].y, safeHeight);
+    this.paths = [];
+    this.typePaths = [];
+    this.typePaths.push("J");
+    this.paths[0] = [];
+    this.paths[0][0] = new createVector(0,0,safeHeight);
+    //this.paths[0][1] = new createVector(grid[0].x+this.mvtScale*mvt.path[0].x, grid[0].y+this.mvtScale*mvt.path[0].y, safeHeight);
+    //this.paths[0][1] = new createVector(grid[0].x, grid[0].y, safeHeight);
+    //console.log(this.paths[0][1]);
     
-    // reset second move path
-    this.paths[1] = [];
-    this.typePaths[1] = "M";
-    //add first plunge to second move path
-    this.paths[1].push(this.paths[0][1]);
-    for (let i = 0; i < path.length; i++) {
-      this.paths[1].push(path[i]);
+    if (this.linkState == true){
+      // reset second move path
+      this.paths[1] = [];
+      this.typePaths[1] = "M";
+      //add first plunge to second move path
+      this.paths[1].push(this.paths[0][1]);
+      // add grid points
+      for (let i = 0; i < grid.length; i++) {
+        this.paths[1].push(grid[i]);
+      }
+      // add retract at the end
+      let last =  grid[grid.length - 1];
+      this.paths[1].push(new createVector(last.x, last.y, safeHeight));
+    } else {
+      for (let i = 1; i < grid.length+1 ; i++){
+        // add jog move from previous position to over current point
+        this.paths[2*i - 1] = [];
+        this.typePaths[2*i - 1] = "J";
+        //let previousPathPoint = this.paths[2*i-2][this.paths[2*i-2].length-1];
+        //this.paths[2*i-1].push(previousPathPoint);
+        this.paths[2*i-1].push(new createVector(grid[i-1].x+this.mvtScale*mvt.path[0].x, grid[i-1].y+this.mvtScale*mvt.path[0].y, safeHeight));
+        
+        //add feed move
+        this.paths[2*i] = [];
+        this.typePaths[2*i] = "M";
+        for (let k = 0; k < mvt.path.length; k++){
+          this.paths[2*i].push(new createVector(grid[i-1].x+this.mvtScale*mvt.path[k].x, grid[i-1].y+this.mvtScale*mvt.path[k].y, grid[i-1].z+this.mvtScale*mvt.path[k].z));
+        }
+        // add retract to safe Z height
+        let lastPoint = this.paths[2*i][this.paths[2*i].length-1];
+        this.paths[2*i].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+      }
+      // REHOME
+      this.typePaths.push("J");
+      let lastJog = [];
+      //let temp = this.paths[2*grid.length][this.paths[2*grid.length].length-1];
+      //lastJog.push(temp);
+      lastJog.push(this.paths[0][0]);
+      this.paths.push(lastJog);
     }
-    let last =  path[path.length - 1];
-    this.paths[1].push(new createVector(last.x, last.y, safeHeight));
 
   }
 
@@ -163,21 +185,33 @@ class GCodeGen {
     strokeWeight(2);
 
     // draw each path
-    //console.log(this.paths.length);
     for (let j = 0; j < this.paths.length; j++){
-      //console.log(this.typePaths[j]);
       if (this.typePaths[j] == "J"){
         stroke(0, 255, 0);
       } else if (this.typePaths[j] == "M"){
-        //console.log(j+"MM");
         stroke(255, 0, 0);
       }
 
-      //console.log(j +":" +this.paths[j].length);
-      for (let i = 1; i < this.paths[j].length; i++){
-
+      //console.log(j +":" +this.paths[j]);
+      for (let i = 0; i < this.paths[j].length; i++){
+        // if (i == 1){
+        //   push();
+        //   translate(this.paths[j][i-1]);
+        //   sphere(5);
+        //   pop();
+        // }
         //stroke(255, 0, 0);
-        let previous = this.paths[j][i-1];
+        let previous;
+        if (i == 0 && j != 0){
+          previous = this.paths[j-1][this.paths[j-1].length - 1];
+          //console.log(previous);
+        } else if (i == 0 && j == 0){
+          previous = new createVector(0,0,safeHeight);
+         // console.log(previous);
+        } else {
+          previous = this.paths[j][i-1];
+          //console.log(previous);
+        }
         let current = this.paths[j][i];
         push();
         translate(0,0,70);

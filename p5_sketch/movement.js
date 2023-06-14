@@ -7,6 +7,7 @@ class Movement{
     this.offsetX = 0;
     this.offsetY = 0;
     this.scale = 0.5;
+    this.path = [];
     this.label= createDiv("movement xy plane");
     this.label.style('font-size', '14px');
     this.label.style('font-family', 'Poppins');
@@ -16,18 +17,23 @@ class Movement{
     this.label2.style('font-size', '14px');
     this.label2.style('font-family', 'Poppins');
     this.label2.position(width - this.sizeX-20, 20+this.sizeY);
+    this.makePath();
     
+  }
+
+  makePath(){
+    this.polygon(100*this.scale, 3);
+    //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
+    //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,100, 360/20);
   }
   
   display(){
     push();
     fill(255, 100);
-    //stroke(100);
     translate(this.offsetX, this.offsetY);
     rotateZ(-PI);
     rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
     rect(this.x-this.sizeX-20,this.y+40+this.sizeY,this.sizeX,this.sizeY);
-    //ellipse(this.x-this.sizeX,this.y,10,10);
     this.xyMovement();
     this.xzMovement();
     pop();
@@ -38,26 +44,19 @@ class Movement{
     this.offsetY -= y;
   }
 
-  xyMovement(){
-    
+  xyMovement(){ 
     stroke(255,0,0);
     strokeWeight(2);
-    //noFill();
     push();
     translate(this.sizeX/2, -this.sizeY/2, 20);
-    //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
-    //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,100, 360/20);
-    this.polygon(100*this.scale, 3);
+    this.displayPath();
     pop();
-    //circle(this.translateX(0+this.sizeX/2), this.translateY(0+this.sizeY/2), 100);
-    //line(this.translateX(0), this.translateY(0), this.translateX(200), this.translateY(200));
   }
 
   xzMovement(){
     push();
     translate(this.sizeX/2+20,-this.sizeY/2-20,0);
     rotateX(PI/2);
-    //circle(0,0,200);
     translate(-this.sizeX/2-20,0,-4*this.sizeY/2-80);
     this.xyMovement();
     pop();
@@ -72,75 +71,59 @@ class Movement{
   }
 
   hypertrochoid(R, r, d, limit, res){
-    let previous = new createVector(0,0); 
-    let t, x,y,z;
+    let t,x,y,z;
     fill(255, 0);
     for (let i = 0; i < limit; i++){
        t = res*i*PI/180;
        x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
        y = ((R-r)*sin(t) + d*sin((R-r)/r * t));
        z = map(sqrt(pow(x,2)+pow(y,2)), R-d, R+d, 0.,20.);
-       x = this.translateX(x);
-       y = this.translateY(y);
-      
-       if (i != 0) {
-        line(previous.x, previous.y,previous.z,x,y,z);
-      }
-
-      previous.x = x;
-      previous.y = y;
-      previous.z = z;
+       this.path[i] = new createVector(x,y,z);
     }
   }
 
   hypotrochoid(R, r, d, limit, res){
-    let previous = new createVector(0,0); 
     let t,x,y,z;
     for (let i = 0; i < limit; i++){
       t = res*i*PI/180;
       x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
       y = ((R-r)*sin(t) - d*sin((R-r)/r * t));
       z = map(sqrt(pow(x,2)+pow(y,2)), R-d, R+d, 0.,20.);
-      x = this.translateX(x);
-      y = this.translateY(y);
-      //console.log(sqrt(x^2+y^2));
-      //sphere(2);
-      if (i != 0) {
-        line(previous.x, previous.y,previous.z,x,y,z);
-      }
-
-      previous.x = x;
-      previous.y = y;
-      previous.z = z;
+      this.path[i] = new createVector(x,y,z);
     }
   }
 
   polygon(r, nbSides){
-    let previous = new createVector(0,0); 
     let t,x,y,z;
-    let first = new createVector(0,0);
     for (let i = 0; i < nbSides; i++){
       t = 360/nbSides*i*PI/180;
       x = r*cos(t);
       y = r*sin(t);
       z = 0;
-      x = this.translateX(x);
-      y = this.translateY(y);
-      if (i == 0){
-        first.x = x;
-        first.y = y;
-        first.z = z;
-      }
+      this.path[i] = new createVector(x,y,z);
+    }
+    // to close the polygon
+    this.path[nbSides] = this.path[0];
+  }
 
-      if (i != 0) {
-        line(previous.x, previous.y,previous.z,x,y,z);
-      }
+  displayPath(){
+    let previous = new createVector(0,0);
+    let x,y,z;
+    for (let i = 0; i < this.path.length; i++){
+
+      x = this.translateX(this.path[i].x);
+      y = this.translateY(this.path[i].y);
+      z = this.path[i].z;
+
+     if (i != 0){
+      line(previous.x, previous.y,previous.z,x,y,z);
+     }
+      
 
       previous.x = x;
       previous.y = y;
       previous.z = z;
     }
-    line(previous.x, previous.y,previous.z,first.x,first.y,first.z);
   }
 
 

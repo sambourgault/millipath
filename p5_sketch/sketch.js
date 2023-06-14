@@ -72,7 +72,7 @@ function setup() {
   rotDiv.style('font-size', '16px');
   rotDiv.style('font-family', 'Poppins');
   rotDiv.position(width - 200, 0);*/
-  infoBox = new CollapsibleBox(10,400, '300px', "machine specs");
+  infoBox = new CollapsibleBox(10,450, '300px', "machine specs");
   setupInputs();
   
   mvt = new Movement(0, 0);
@@ -135,23 +135,23 @@ function draw() {
     readOnce = true;
     grid1.addTexture(shaderTexture);
   }
+
+  // display grid 1
   push();
   /*translate(-width/2, -height/2, 0);
   rotateZ(PI);
   translate(width/2, height/2, 0);*/
   //rotateZ(PI);
-
   translate(0,sizeY/2,0);
   rotateX(-theta);
   translate(0,-sizeY/2,0);
-
   grid1.display(shaderTexture);
   directions.display();
   code.display();
   pop();
   
+  // display movement
   push();
-  //rotateX(PI/2);
   mvt.display();
   pop();
   
@@ -160,7 +160,7 @@ function draw() {
   //   console.log("yoooo");
   //   console.log(grid1.path.length);
      //console.log(grid1.path);
-     code.updatePath(grid1.path);
+     code.updatePath(grid1.path, mvt, grid1.linkState);
      grid1.changedGrid = false;
    }
 
