@@ -1,6 +1,6 @@
 // a shader variable
-let theShader;
-let shaderTexture;
+//--let theShader;
+//--let shaderTexture;
 let grid1;
 
 let theta = 0;
@@ -34,7 +34,7 @@ let sZIn, mtIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
 
 function preload() {
   // load the shader
-  theShader = loadShader("basic.vert", "basic.frag");
+  //--theShader = loadShader("basic.vert", "basic.frag");
 }
 
 function setup() {
@@ -55,13 +55,16 @@ function setup() {
   
 
   // initialize the createGraphics layers
-  shaderTexture = createGraphics(width, width, WEBGL);
+  //--shaderTexture = createGraphics(width, width, WEBGL);
 
   // turn off the createGraphics layers stroke
-  shaderTexture.noStroke();
+  //--shaderTexture.noStroke();
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
-  grid1 = new Grid(0, 0, shaderTexture);
-
+  //--grid1 = new Grid(0, 0, shaderTexture);
+  grid1 = new Grid(0, 0);
+  //console.log(grid1);
+  //grid1.updateGrid();
+  //console.log(grid1);
   /*rotationSlider = createSlider(0, 1000, 0);
   rotationSlider.position(width - 200, 30);
   rotationSlider.addClass("sliders");
@@ -96,12 +99,13 @@ function draw() {
   //translate(0,0,1000);
   //orbitControl();
   // instead of just setting the active shader we are passing it to the createGraphics layer
-  shaderTexture.shader(theShader);
+ 
+ //---- shaderTexture.shader(theShader);
 
   // send resolution of sketch into shader
-  theShader.setUniform("u_resolution", [width, windowHeight]);
-  theShader.setUniform("u_mouse", [mouseX, map(mouseY, 0, height, height, 0)]); // we flip Y so it's oriented properly in our shader
-  theShader.setUniform("u_time", millis() / 1000.0); // we divide millis by 1000 to convert it to seconds
+ // ---- theShader.setUniform("u_resolution", [width, windowHeight]);
+ // ---- theShader.setUniform("u_mouse", [mouseX, map(mouseY, 0, height, height, 0)]); // we flip Y so it's oriented properly in our shader
+ // ---- theShader.setUniform("u_time", millis() / 1000.0); // we divide millis by 1000 to convert it to seconds
 
   // shader() sets the active shader with our shader
   //shader(theShader);
@@ -110,15 +114,15 @@ function draw() {
   //rect(0,0,width,height);
 
   // passing the shaderTexture layer geometry to render on
-  shaderTexture.rect(0, 0, 1, 1);
+  //---- shaderTexture.rect(0, 0, 1, 1);
 
   background(240);
 
   // pass the shader as a texture
   // anything drawn after this will have this texture.
-  texture(shaderTexture);
+  // ---- texture(shaderTexture);
 
-  push();
+  /*push();
   //rotateZ(theta * mouseX * 0.0001);
   //rotateZ()
   translate(0,sizeY/2,0);
@@ -129,11 +133,13 @@ function draw() {
   //rectMode(CENTER);
   translate(-sizeX, 0, 0);
   rect(0, 0, sizeX, sizeY);
-  pop();
+  pop();*/
 
-  if (!readOnce) {
+ if (!readOnce) {
     readOnce = true;
-    grid1.addTexture(shaderTexture);
+    console.log(grid1);
+    //grid1.addTexture(shaderTexture);
+    grid1.updateGrid(grid1.row,grid1.column);
   }
 
   // display grid 1
@@ -145,7 +151,7 @@ function draw() {
   translate(0,sizeY/2,0);
   rotateX(-theta);
   translate(0,-sizeY/2,0);
-  grid1.display(shaderTexture);
+  grid1.display();
   directions.display();
   code.display();
   pop();
