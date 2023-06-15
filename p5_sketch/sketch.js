@@ -20,6 +20,7 @@ let rotationSlider;
 let rotDiv;
 
 let mvt;
+let boundary;
 let code;
 let codeGenButton;
 let safeHeight = 20 //mm
@@ -29,7 +30,9 @@ let moveSpeed = 16; // mm/s
 let plungeRate = 5; //mm/s
 let maxDepthCut = 1; // mm
 let infoBox;
-let sZIn, mtIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
+let matBox;
+let sZIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
+let stockSizeXIn, stockSizeYIn, mtIn;
 let title = "milli---path";
 
 
@@ -63,11 +66,14 @@ function setup() {
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   //--grid1 = new Grid(0, 0, shaderTexture);
   grid1 = new Grid(0, 0);
-  infoBox = new CollapsibleBox(10,470, '340px', "machine specs");
+  infoBox = new CollapsibleBox(10,470, '300px', "machine specs");
+  matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
   setupInputs();
   
   mvt = new Movement(0, 0);
   mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
+  boundary = new Boundary(0,0);
+  boundary.setOffset(width/2+sizeX/2,height/2 - boundary.sizeY - 270);
   code = new GCodeGen("test1");
   
 }
@@ -139,6 +145,14 @@ function draw() {
   translate(0,sizeY/2,0);
   rotateX(-theta);
   translate(0,-sizeY/2,0);
+  noFill();
+  stroke(0);
+  push();
+  translate(-stockSizeXIn.value()/2, stockSizeYIn.value()/2, -materialThickness/2);
+  box(stockSizeXIn.value(), stockSizeYIn.value(), materialThickness);
+  pop();
+  noStroke();
+  
   grid1.display();
   directions.display();
   code.display();
@@ -147,6 +161,10 @@ function draw() {
   // display movement
   push();
   mvt.display();
+  pop();
+
+  push();
+  boundary.display();
   pop();
   
   //print(grid1.changedGrid);
@@ -183,47 +201,60 @@ function setupInputs(){
   let offY = 40;
   let offX = 10;
 
+  // machine
   labelSZ= createDiv("safe Z height (mm)").parent(infoBox.box);
   labelSZ.position(offX,1*offY);
   labelSZ.style('width', '170px');
   sZIn = createInput(str(safeHeight)).parent(infoBox.box);
   sZIn.position(offX, 1.5*offY);
- 
-
-  labelMT= createDiv("material thickness (mm)").parent(infoBox.box);
-  labelMT.position(offX,2*offY);
-  labelMT.style('width', '170px');
-  mtIn = createInput(str(materialThickness)).parent(infoBox.box);
-  mtIn.position(offX, 2.5*offY);
 
   labelSS= createDiv("spindle speed (rpm)").parent(infoBox.box);
-  labelSS.position(offX,3*offY);
+  labelSS.position(offX,2*offY);
   labelSS.style('width', '170px');
   sSIn = createInput(str(spindleSpeed)).parent(infoBox.box);
-  sSIn.position(offX, 3.5*offY);
+  sSIn.position(offX, 2.5*offY);
 
   labelMS= createDiv("move speed (mm/s)").parent(infoBox.box);
-  labelMS.position(offX,4*offY);
+  labelMS.position(offX,3*offY);
   labelMS.style('width', '170px');
   mSIn = createInput(str(moveSpeed)).parent(infoBox.box);
-  mSIn.position(offX, 4.5*offY);
+  mSIn.position(offX, 3.5*offY);
 
   labelPR= createDiv("plunge rate (mm/s)").parent(infoBox.box);
-  labelPR.position(offX,5*offY);
+  labelPR.position(offX,4*offY);
   labelPR.style('width', '170px');
   pRIn = createInput(str(plungeRate)).parent(infoBox.box);
-  pRIn.position(offX, 5.5*offY);
+  pRIn.position(offX, 4.5*offY);
 
   labelMDC= createDiv("max depth cut (mm)").parent(infoBox.box);
-  labelMDC.position(10,6*offY);
+  labelMDC.position(10,5*offY);
   labelMDC.style('width', '170px');
   mdcIn = createInput(str(maxDepthCut)).parent(infoBox.box);
-  mdcIn.position(offX, 6.5*offY);
+  mdcIn.position(offX, 5.5*offY);
 
   labelTS = createDiv("tool size (in)").parent(infoBox.box);
-  labelTS.position(10,7*offY);
+  labelTS.position(10,6*offY);
   labelTS.style('width', '170px');
   tsIn = createInput("0.25").parent(infoBox.box);
-  tsIn.position(offX, 7.5*offY);
+  tsIn.position(offX, 6.5*offY);
+
+  // material
+  labelMT= createDiv("thickness (mm)").parent(matBox.box);
+  labelMT.position(offX,1*offY);
+  labelMT.style('width', '170px');
+  mtIn = createInput(str(materialThickness)).parent(matBox.box);
+  mtIn.position(offX, 1.5*offY);
+
+  labelSX= createDiv("stock size X (mm)").parent(matBox.box);
+  labelSX.position(offX,2*offY);
+  labelSX.style('width', '170px');
+  stockSizeXIn = createInput("500").parent(matBox.box);
+  stockSizeXIn.position(offX, 2.5*offY);
+
+  labelSY= createDiv("stock size Y (mm)").parent(matBox.box);
+  labelSY.position(offX,3*offY);
+  labelSY.style('width', '170px');
+  stockSizeYIn = createInput("500").parent(matBox.box);
+  stockSizeYIn.position(offX, 3.5*offY);
 
 }

@@ -8,8 +8,10 @@ class Grid {
     this.x = (-this.ui.sliders[0].value() / 1000) * width;
     this.y = (this.ui.sliders[1].value() / 1000) * width;
     this.sizeX = int((this.ui.sliders[2].value() / 1000) * width);
+    this.realSizeX = this.sizeX;
     this.UGX = false;
     this.sizeY = int((this.ui.sliders[3].value() / 1000) * width);
+    this.realSizeY = this.sizeY;
     this.spacingX = (this.ui.sliders[4].value() / 1000) * 50;
     this.spacingY = (this.ui.sliders[5].value() / 1000) * 50;
     this.boundaryDist = (this.ui.sliders[8].value() / 1000) * 200;
@@ -53,6 +55,7 @@ class Grid {
   }
 
   display() {
+
     for (let i = 0; i < this.row; i++) {
       for (let j = 0; j < this.column; j++) {
         push();
@@ -155,6 +158,8 @@ class Grid {
     this.column = column;
     this.sinGrid(this.sinAmp, this.sinFreq);
     this.changedGrid = true;
+    this.realSizeX = (this.row-1)*this.spacingX;
+    this.realSizeY = (this.column-1)*this.spacingY;
   }
 
   /*updateGrid(textu, row, column) {
