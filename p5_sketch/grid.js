@@ -4,7 +4,7 @@ class Grid {
     //constructor(x, y, textu) {
     const self = this;
     //this.textu = textu;
-    this.ui = new UI();
+    this.ui = new UI(this);
     this.x = (-this.ui.sliders[0].value() / 1000) * width;
     this.y = (this.ui.sliders[1].value() / 1000) * width;
     this.sizeX = int((this.ui.sliders[2].value() / 1000) * width);
@@ -12,6 +12,7 @@ class Grid {
     this.sizeY = int((this.ui.sliders[3].value() / 1000) * width);
     this.spacingX = (this.ui.sliders[4].value() / 1000) * 50;
     this.spacingY = (this.ui.sliders[5].value() / 1000) * 50;
+    this.boundaryDist = (this.ui.sliders[8].value() / 1000) * 200;
     console.log(this.sizeX);
     this.row = int(this.sizeX / this.spacingX);
     console.log(this.row);
@@ -101,11 +102,6 @@ class Grid {
         this.gridMatrix[i][j].z = this.depth(c) / 255.0;
       }
     }
-  }*/
-  /*updateGrid() {
-    console.log("yooooo");
-    console.log(this.row);
-    this.updateGrid(this.row, this.column)
   }*/
 
   updateGrid(row, column) {
@@ -210,7 +206,7 @@ class Grid {
   }*/
 
   boundaryFunction(x, y){
-    let d = this.circle(x, y, 50);
+    let d = this.circle(x, y, this.boundaryDist);
     return d;
   }
 
@@ -296,6 +292,14 @@ class Grid {
     };
     this.ui.sliders[5].changed(this.updateDensY);
 
+    this.updateBoundaryDist = function(){
+      self.boundaryDist = Number(this.value()/1000 * 200);
+      self.updateGrid( self.row, self.column);
+      document.querySelector("#div8").innerHTML =
+        "dist: " + int(self.boundaryDist);
+    }
+    this.ui.sliders[8].changed(this.updateBoundaryDist);
+
     this.updateSinAmp = function () {
       //self.changedGrid = true;
       self.sinAmp = Number((this.value() / 1000) * 2);
@@ -309,5 +313,7 @@ class Grid {
       self.sinGrid(self.sinAmp, self.sinFreq);
     };
     this.ui.sliders[7].changed(this.updateSinFreq);
+
+
   }
 }

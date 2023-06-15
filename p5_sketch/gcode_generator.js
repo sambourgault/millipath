@@ -47,7 +47,7 @@ class GCodeGen {
     this.playTime = 0;
     this.indexJPlay = 0;
     this.indexPlay = 0;
-    this.linkState = false;
+    this.linkState = true;
     this.movement;
     this.mvtScale = 0.4;
     
@@ -112,22 +112,38 @@ class GCodeGen {
     this.paths[0][0] = new createVector(0,0,safeHeight);
     //this.paths[0][1] = new createVector(grid[0].x+this.mvtScale*mvt.path[0].x, grid[0].y+this.mvtScale*mvt.path[0].y, safeHeight);
     //this.paths[0][1] = new createVector(grid[0].x, grid[0].y, safeHeight);
-    //console.log(this.paths[0][1]);
+
     
+    // if linked state on 
     if (this.linkState == true){
-      // reset second move path
+  
+      // add the first jog move from previous position to over current point
       this.paths[1] = [];
-      this.typePaths[1] = "M";
-      //add first plunge to second move path
-      this.paths[1].push(this.paths[0][1]);
-      // add grid points
-      for (let i = 0; i < grid.length; i++) {
-        this.paths[1].push(grid[i]);
+      this.typePaths[1] = "J";
+      this.paths[1].push(new createVector(grid[0].x+this.mvtScale*mvt.path[0].x, grid[0].y+this.mvtScale*mvt.path[0].y, safeHeight));
+      
+      for (let i = 2; i < grid.length+2 ; i++){
+        //add feed move
+        this.paths[i] = [];
+        this.typePaths[i] = "M";
+        for (let k = 0; k < mvt.path.length; k++){
+          this.paths[i].push(new createVector(grid[i-2].x+this.mvtScale*mvt.path[k].x, grid[i-2].y+this.mvtScale*mvt.path[k].y, -maxDepthCut*grid[i-2].z+this.mvtScale*mvt.path[k].z));
+        }
       }
-      // add retract at the end
-      let last =  grid[grid.length - 1];
-      this.paths[1].push(new createVector(last.x, last.y, safeHeight));
+      // add retract to safe Z height to the last point
+      let nbPaths = this.paths.length;
+      let nbPointsInLast = this.paths[nbPaths-1].length;
+      let lastPoint = this.paths[nbPaths-1][nbPointsInLast-1];
+      this.paths[grid.length+1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+
+      // REHOME at the end
+      this.typePaths.push("J");
+      let lastJog = [];
+      lastJog.push(this.paths[0][0]);
+      this.paths.push(lastJog);
+
     } else {
+      // if unlinked state on
       for (let i = 1; i < grid.length+1 ; i++){
         // add jog move from previous position to over current point
         this.paths[2*i - 1] = [];

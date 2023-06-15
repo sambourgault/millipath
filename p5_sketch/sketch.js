@@ -22,7 +22,7 @@ let rotDiv;
 let mvt;
 let code;
 let codeGenButton;
-let safeHeight = 50 //mm
+let safeHeight = 20 //mm
 let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 16; // mm/s
@@ -30,6 +30,7 @@ let plungeRate = 5; //mm/s
 let maxDepthCut = 1; // mm
 let infoBox;
 let sZIn, mtIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
+let title = "milli---path";
 
 
 function preload() {
@@ -62,20 +63,7 @@ function setup() {
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   //--grid1 = new Grid(0, 0, shaderTexture);
   grid1 = new Grid(0, 0);
-  //console.log(grid1);
-  //grid1.updateGrid();
-  //console.log(grid1);
-  /*rotationSlider = createSlider(0, 1000, 0);
-  rotationSlider.position(width - 200, 30);
-  rotationSlider.addClass("sliders");
-  rotationSlider.style("width", "150px");
-  rotationSlider.style("background-color", "#7C7C7C");
-  rotationSlider.input(rotateWorld);
-  rotDiv = createDiv('rotation X');
-  rotDiv.style('font-size', '16px');
-  rotDiv.style('font-family', 'Poppins');
-  rotDiv.position(width - 200, 0);*/
-  infoBox = new CollapsibleBox(10,450, '340px', "machine specs");
+  infoBox = new CollapsibleBox(10,470, '340px', "machine specs");
   setupInputs();
   
   mvt = new Movement(0, 0);
@@ -166,7 +154,8 @@ function draw() {
   //   console.log("yoooo");
   //   console.log(grid1.path.length);
      //console.log(grid1.path);
-     code.updatePath(grid1.path, mvt, grid1.linkState);
+     console.log(grid1.ui.linkState)
+     code.updatePath(grid1.path, mvt, grid1.ui.linkState);
      grid1.changedGrid = false;
    }
 
