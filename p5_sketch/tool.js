@@ -10,11 +10,12 @@ class Tool{
         push();
         fill(100);
         rotateX(PI/2);
-        translate(0,100+this.height/2,0);
-        //console.log(point)
-        if (point){
-            translate(point.x, -30+point.z,-point.y);
-        }
+        translate(0,this.height/2,0);
+
+        let scaleZ = 1.;
+        if (point.z < 0.) scaleZ = 30;
+        translate(point.x, scaleZ*point.z, -point.y);
+       
         cylinder(tsIn.value()*25.4, this.height);
         pop();
     }

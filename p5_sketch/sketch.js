@@ -27,7 +27,7 @@ let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 16; // mm/s
 let plungeRate = 5; //mm/s
-let maxDepthCut = 0.1; // mm
+let maxDepthCut = 1; // mm
 let infoBox;
 let sZIn, mtIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
 

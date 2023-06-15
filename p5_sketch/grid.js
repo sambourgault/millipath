@@ -52,10 +52,7 @@ class Grid {
   }
 
   display() {
-
-    //console.log(this.row);
     for (let i = 0; i < this.row; i++) {
-      //console.log("hello");
       for (let j = 0; j < this.column; j++) {
         push();
         fill(200);
@@ -67,7 +64,7 @@ class Grid {
         translate(
           this.gridMatrix[i][j].x,
           this.gridMatrix[i][j].y,
-          100 - this.maxDepth * this.gridMatrix[i][j].z
+          - this.maxDepth * this.gridMatrix[i][j].z
         );
         
         if (this.depthMatrix[i][j] > 0.01) {
@@ -79,16 +76,10 @@ class Grid {
           );
         }
 
-        /*if (i == 0 && j == 0){
-          sphere(10);
-        }*/
-
         sphere(2);
         pop();
       }
     }
-    //console.log("at display: " + this.gridMatrix[0][0]);
-    //this.displayPath();
   }
 
   depth(col) {

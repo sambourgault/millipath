@@ -50,6 +50,7 @@ class GCodeGen {
     this.linkState = false;
     this.movement;
     this.mvtScale = 0.4;
+    
 
     this.generateGCode = function () {
       
@@ -139,17 +140,15 @@ class GCodeGen {
         this.paths[2*i] = [];
         this.typePaths[2*i] = "M";
         for (let k = 0; k < mvt.path.length; k++){
-          this.paths[2*i].push(new createVector(grid[i-1].x+this.mvtScale*mvt.path[k].x, grid[i-1].y+this.mvtScale*mvt.path[k].y, grid[i-1].z+this.mvtScale*mvt.path[k].z));
+          this.paths[2*i].push(new createVector(grid[i-1].x+this.mvtScale*mvt.path[k].x, grid[i-1].y+this.mvtScale*mvt.path[k].y, -maxDepthCut*grid[i-1].z+this.mvtScale*mvt.path[k].z));
         }
         // add retract to safe Z height
         let lastPoint = this.paths[2*i][this.paths[2*i].length-1];
         this.paths[2*i].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
       }
-      // REHOME
+      // REHOME at the end
       this.typePaths.push("J");
       let lastJog = [];
-      //let temp = this.paths[2*grid.length][this.paths[2*grid.length].length-1];
-      //lastJog.push(temp);
       lastJog.push(this.paths[0][0]);
       this.paths.push(lastJog);
     }
@@ -176,7 +175,6 @@ class GCodeGen {
     this.tool.display(this.paths[this.indexJPlay][this.indexPlay]);
 
     this.displayPath();
-
   }
 
   displayPath() {
@@ -192,34 +190,28 @@ class GCodeGen {
         stroke(255, 0, 0);
       }
 
-      //console.log(j +":" +this.paths[j]);
       for (let i = 0; i < this.paths[j].length; i++){
-        // if (i == 1){
-        //   push();
-        //   translate(this.paths[j][i-1]);
-        //   sphere(5);
-        //   pop();
-        // }
-        //stroke(255, 0, 0);
         let previous;
         if (i == 0 && j != 0){
           previous = this.paths[j-1][this.paths[j-1].length - 1];
-          //console.log(previous);
         } else if (i == 0 && j == 0){
           previous = new createVector(0,0,safeHeight);
-         // console.log(previous);
         } else {
           previous = this.paths[j][i-1];
-          //console.log(previous);
         }
         let current = this.paths[j][i];
         push();
-        translate(0,0,70);
-        line(previous.x, previous.y, previous.z, current.x, current.y, current.z);
+        //translate(0,0,70);
+        let scalePZ = 1.;
+        let scaleCZ = 1.;
+        if (previous.z < 0.) scalePZ = 30;
+        if (current.z < 0.) scaleCZ = 30;
+        
+        
+        line(previous.x, previous.y, scalePZ*previous.z, current.x, current.y, scaleCZ*current.z);
         pop();
       }
     }
-    //console.log("yoo")
   
 
     /*let previousPoint = new createVector();
