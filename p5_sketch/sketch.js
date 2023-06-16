@@ -72,7 +72,7 @@ function setup() {
   
   mvt = new Movement(0, 0);
   mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
-  boundary = new Boundary(0,0);
+  boundary = new Boundary(-stockSizeXIn.value()/2,stockSizeYIn.value()/2);
   boundary.setOffset(width/2+sizeX/2,height/2 - boundary.sizeY - 270);
   code = new GCodeGen("test1");
   
@@ -155,17 +155,21 @@ function draw() {
   
   grid1.display();
   directions.display();
+  boundary.display();
   code.display();
   pop();
   
+  // display boundary
+  push();
+  boundary.displayStatic();
+  pop();
+
+
   // display movement
   push();
   mvt.display();
   pop();
 
-  push();
-  boundary.display();
-  pop();
   
   //print(grid1.changedGrid);
    if (grid1.changedGrid){

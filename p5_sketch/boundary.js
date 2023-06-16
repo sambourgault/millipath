@@ -6,7 +6,7 @@ class Boundary{
         this.y = y ;
         this.offsetX = 0;
         this.offsetY = 0;
-        this.scale = 0.5;
+        this.scale = 1;
         this.path = [];
         this.label= createDiv("boundaries");
         this.label.style('font-size', '14px');
@@ -29,31 +29,60 @@ class Boundary{
         this.offsetY = -y;
     }
 
-    display(grid){
+    displayStatic(){
         //frame
+        //console.log("yooo")
         push();
         fill(255, 100);
         //fill(255,0,0);
         translate(this.offsetX, this.offsetY);
         rotateZ(-PI);
-        rect(this.x-this.sizeX-20,this.y,this.sizeX,this.sizeY);
+        rect(-this.sizeX-20,0,this.sizeX,this.sizeY);
         //trasnlate(this.)
-        push();
-        rotateZ(PI);
-        translate(this.sizeX/2+grid1.realSizeX/2+20-grid1.x, this.y-this.sizeY/2-grid1.realSizeY/2-grid1.y, 50);//this.sizeY);
-        grid1.display();
-        pop();
+        //push();
+        //rotateZ(PI);
+        //translate(this.sizeX/2+grid1.realSizeX/2+20-grid1.x, this.y-this.sizeY/2-grid1.realSizeY/2-grid1.y, 50);//this.sizeY);
+        //grid1.display();
+        //pop();
         // display boundary
+        
         stroke(255,0,0);
         strokeWeight(2);
         push();
-        translate(this.sizeX/2-20, -this.sizeY/2, 20);
+        translate(-this.sizeX/2-20, this.sizeY/2, 20);
+        //translate(-20,0, 20);
         this.displayPath();
         pop();
+
         pop();
         noFill();
         noStroke();
       }
+
+      display(){
+        let previous = new createVector(0,0);
+        let x,y,z;
+        stroke(0,0,255);
+        strokeWeight(2);
+        
+        for (let i = 0; i < this.path.length; i++){
+    
+            x = this.path[i].x;
+            y = this.path[i].y;
+            z = this.path[i].z;
+      
+           if (i != 0){
+            push();
+            translate(this.x, this.y, 0);
+            line(previous.x, previous.y,previous.z,x,y,z);
+            pop();
+           }
+
+            previous.x = x;
+            previous.y = y;
+            previous.z = z;
+      }
+    }
 
       displayPath(){
         let previous = new createVector(0,0);
@@ -61,8 +90,10 @@ class Boundary{
         stroke(0,0,255);
         for (let i = 0; i < this.path.length; i++){
     
-          x = this.translateX(this.path[i].x);
-          y = this.translateY(this.path[i].y);
+          //x = this.translateX(this.path[i].x);
+          //y = this.translateY(this.path[i].y);
+          x = this.path[i].x;
+          y = this.path[i].y;
           z = this.path[i].z;
     
          if (i != 0){
@@ -85,7 +116,7 @@ class Boundary{
       polygon(r, nbSides){
         let t,x,y,z;
         for (let i = 0; i < nbSides; i++){
-          t = 360/nbSides*i*PI/180;
+          t = 360/nbSides*i*PI/180+PI/4;
           x = r*cos(t);
           y = r*sin(t);
           z = 0;
