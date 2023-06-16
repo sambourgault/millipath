@@ -9,6 +9,7 @@ class Tool{
     display(point){
         push();
         fill(100);
+        noStroke();
         rotateX(PI/2);
         translate(0,this.height/2,0);
 

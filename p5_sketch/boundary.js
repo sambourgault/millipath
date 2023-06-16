@@ -84,6 +84,8 @@ class Boundary{
       }
     }
 
+
+
       displayPath(){
         let previous = new createVector(0,0);
         let x,y,z;
@@ -124,6 +126,10 @@ class Boundary{
         }
         // to close the polygon
         this.path[nbSides] = this.path[0];
+      }
+
+      inBound(x, y){
+
       }
 
       translateX(x){

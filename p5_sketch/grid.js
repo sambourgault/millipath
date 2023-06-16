@@ -130,8 +130,10 @@ class Grid {
           (j2 * this.spacingY + this.y)*textu.height/sizeY
         );*/
         
-        c = this.boundaryFunction(-i * this.spacingX + this.x, j2 * this.spacingY + this.y);
-
+        //c = this.boundaryFunction(-i * this.spacingX + this.x, j2 * this.spacingY + this.y);
+        let x = -i * this.spacingX + this.x;
+        let y = j2 * this.spacingY + this.y;
+        c = this.boundaryFunction2(-x,y,50,50,200);
         /*c = textu.get(
           sizeX - i * this.spacingX + this.x,
           j2 * this.spacingY + this.y
@@ -212,6 +214,12 @@ class Grid {
 
   boundaryFunction(x, y){
     let d = this.circle(x, y, this.boundaryDist);
+    return d;
+  }
+
+  boundaryFunction2(x, y, bx, by, size){
+    let d = 0;
+    if (x > bx && x < bx+size && y > by && y < by +size) d = 1.;
     return d;
   }
 
