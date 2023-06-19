@@ -5,8 +5,8 @@ class UI{
     console.log(this.grid);
     this.box =  new CollapsibleBox(10,10, '450px', "grid specs");
     this.sliders = [];
-    this.labels = ["x: " + 0, "y: "+ 0,"size X: " + width/2, "size Y: "+width/2, "spacing X: 25", "spacing Y: 25", "amp: 0", "period: 2", "dist: 50"];
-    this.defaultValues = [0, 0, 400, 400, 500, 500, 0, 0, 250];
+    this.labels = ["x: " + 0, "y: "+ 0,"size X: " + 200, "size Y: "+200, "spacing X: 25", "spacing Y: 25", "amp: 0", "period: 2", "dist: 50"];
+    this.defaultValues = [0, 0, 500, 500, 800, 800, 0, 0, 250];
     this.divs = [];
      this.x = 0;
      this.y = 0;

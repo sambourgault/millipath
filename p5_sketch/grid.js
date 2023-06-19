@@ -7,15 +7,15 @@ class Grid {
     this.ui = new UI(this);
     this.x = (-this.ui.sliders[0].value() / 1000) * width;
     this.y = (this.ui.sliders[1].value() / 1000) * width;
-    this.sizeX = int((this.ui.sliders[2].value() / 1000) * width);
+    this.sizeX = int((this.ui.sliders[2].value() / 1000) * 400);
     this.realSizeX = this.sizeX;
     this.UGX = false;
-    this.sizeY = int((this.ui.sliders[3].value() / 1000) * width);
+    this.sizeY = int((this.ui.sliders[3].value() / 1000) * 400);
     this.realSizeY = this.sizeY;
     this.spacingX = (this.ui.sliders[4].value() / 1000) * 50;
     this.spacingY = (this.ui.sliders[5].value() / 1000) * 50;
     this.boundaryDist = (this.ui.sliders[8].value() / 1000) * 200;
-    console.log(this.sizeX);
+    console.log("sizex: "+this.sizeX);
     this.row = int(this.sizeX / this.spacingX);
     console.log(this.row);
     this.column = int(this.sizeY / this.spacingY);
@@ -133,7 +133,8 @@ class Grid {
         //c = this.boundaryFunction(-i * this.spacingX + this.x, j2 * this.spacingY + this.y);
         let x = -i * this.spacingX + this.x;
         let y = j2 * this.spacingY + this.y;
-        c = this.boundaryFunction2(-x,y,50,50,200);
+        c = 1;
+        //c = this.boundaryFunction2(-x,y,50,50,200);
         /*c = textu.get(
           sizeX - i * this.spacingX + this.x,
           j2 * this.spacingY + this.y
@@ -267,7 +268,7 @@ class Grid {
     this.updateSizeX = function () {
       //self.changedGrid = true;
       //console.log(self);
-      self.sizeX = Number((this.value() / 1000) * width);
+      self.sizeX = Number((this.value() / 1000) * 400);
       //self.row = int(self.sizeX);//int(self.sizeX / self.spacingX);
       self.updateGrid(int(self.sizeX / self.spacingX), self.column);
       document.querySelector("#div2").innerHTML = "size X: " + int(self.sizeX);
@@ -278,7 +279,7 @@ class Grid {
     this.updateSizeY = function () {
       //self.changedGrid = true;
       //console.log(this.value());
-      self.sizeY = Number((this.value() / 1000) * width);
+      self.sizeY = Number((this.value() / 1000) * 400);
       //self.column = int(self.sizeY); //int(self.sizeY / self.spacingY);
       self.updateGrid(self.row, int(self.sizeY / self.spacingY));
       document.querySelector("#div3").innerHTML = "size Y: " + int(self.sizeY);

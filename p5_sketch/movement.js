@@ -6,6 +6,7 @@ class Movement{
     this.y = y ;
     this.offsetX = 0;
     this.offsetY = 0;
+    this.rotOffset = 0;
     this.scale = 0.5;
     this.path = [];
     this.label= createDiv("movement xy plane");
@@ -22,8 +23,8 @@ class Movement{
   }
 
   makePath(){
-    this.point(0,0);
-    //this.polygon(100*this.scale, 3);
+    //this.point(0,0);
+    this.polygon(100*this.scale, 3);
     //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
     //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
   }
@@ -102,7 +103,7 @@ class Movement{
   polygon(r, nbSides){
     let t,x,y,z;
     for (let i = 0; i < nbSides; i++){
-      t = 360/nbSides*i*PI/180;
+      t = 360/nbSides*i*PI/180 + this.rotOffset;
       x = r*cos(t);
       y = r*sin(t);
       z = 0;
