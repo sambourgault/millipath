@@ -155,7 +155,7 @@ function draw() {
   
   grid1.display();
   directions.display();
-  boundary.display();
+  //boundary.display();
   code.display();
   pop();
   

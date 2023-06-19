@@ -5,7 +5,7 @@ class UI{
     console.log(this.grid);
     this.box =  new CollapsibleBox(10,10, '450px', "grid specs");
     this.sliders = [];
-    this.labels = ["x: " + 0, "y: "+ 0,"size X: " + width/2, "size Y: "+width/2, "spacing X: 25", "spacing Y: 25", "amp: 0", "freq: 0", "dist: 50"];
+    this.labels = ["x: " + 0, "y: "+ 0,"size X: " + width/2, "size Y: "+width/2, "spacing X: 25", "spacing Y: 25", "amp: 0", "period: 2", "dist: 50"];
     this.defaultValues = [0, 0, 400, 400, 500, 500, 0, 0, 250];
     this.divs = [];
      this.x = 0;
@@ -39,7 +39,6 @@ class UI{
         self.linkButton.html("linked");
         self.linkButton.style("background", "red");
       }
-      console.log(grid1);
       self.grid.updateGrid(grid.row,grid.column);
     }
     this.linkButton.mousePressed(this.changeLinkState);

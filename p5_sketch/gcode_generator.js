@@ -9,15 +9,24 @@ class GCodeGen {
     this.typePaths.push("J");
     this.writer = createWriter(fileName + ".sbp");
 
-    this.writer.write("SA \n");
-    this.writer.write("CN, 90 \n");
+    this.writer.write("' "+fileName+"\n");
+
+    // 0 for inch, 1 for metric
     this.writer.write("IF %(25)=0 THEN GOTO UNIT_ERROR\n");
+    // set to absolute distance
+    this.writer.write("SA \n");
+    // CN, 90 calls up the My_Variables file to set user variables from a predefined list.
+    // this.writer.write("CN, 90 \n");
     this.writer.write("&PWSafeZ = " + sZIn.value() + "\n"); //mm
+    this.writer.write("&PWZorigin = Material Surface\n");
     this.writer.write("&PWMaterial = " + mtIn.value() + "\n"); //mm
     this.writer.write("C9\n");
+    // set spindle speed
     this.writer.write("TR," + sSIn.value() +"\n");
+    // spindle on
     this.writer.write("C6\nPAUSE 2\n");
-    this.writer.write("MS," + mSIn.value() +"," + pRIn.value() + "\n");
+    // set move speed
+    this.writer.write("MS," + mSIn.value() +"," + pRIn.value() + "\n'\n");
 
     /*this.safeZ = createInput();
     this.safeZ.position(0,height - 80);*/
@@ -84,7 +93,14 @@ class GCodeGen {
       //self.writer.write("JZ," + safeHeight + "\n");
       // link move to 0,0 in XY
       //self.writer.write("J2, 0, 0\n");
-
+      self.writer.write("'\n'Turning router OFF\n");
+      // spindle off
+      self.writer.write("C7\n");
+      self.writer.write("END\n'\n'\n");
+      self.writer.write("UNIT_ERROR:\n");
+      //CN, 91 is a check for possibly running a metric file when the software/controller is in inch mode.
+      self.writer.write("CN, 91\n");
+      self.writer.write("END");
       self.writer.close();
     };
     this.button.mousePressed(this.generateGCode);

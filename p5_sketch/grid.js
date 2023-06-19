@@ -23,8 +23,8 @@ class Grid {
     this.initialGridMatrix = [];
     this.gridMatrix = [];
     this.maxDepth = 30;
-    this.sinAmp = 0;
-    this.sinFreq = 0;
+    this.sinAmp = (this.ui.sliders[6].value() / 1000) * 2;
+    this.sinPeriod = (this.ui.sliders[7].value() / 1000) * 30 + 2;
     this.bindUI(self);
     this.firstPoint = true;
     this.changedGrid = false;
@@ -50,7 +50,7 @@ class Grid {
     }
     
     //console.log("at creation: " + this.gridMatrix[0][0]);
-    //this.sinGrid(this.sinAmp, this.sinFreq);
+    this.sinGrid(this.sinAmp, this.sinPeriod);
 
   }
 
@@ -158,7 +158,7 @@ class Grid {
     //console.log("self after:"+this.depthMatrix.length);
     this.row = row;
     this.column = column;
-    this.sinGrid(this.sinAmp, this.sinFreq);
+    this.sinGrid(this.sinAmp, this.sinPeriod);
     this.changedGrid = true;
     this.realSizeX = (this.row-1)*this.spacingX;
     this.realSizeY = (this.column-1)*this.spacingY;
@@ -236,7 +236,9 @@ class Grid {
     for (let i = 0; i < this.row; i++) {
       for (let j = 0; j < this.column; j++) {
         this.gridMatrix[i][j].x =
-          (a * sin(b * this.gridMatrix[i][j].y) - i) * this.spacingX + this.x;
+          (a * cos(2*PI/b * j) - i) * this.spacingX + this.x;
+          //console.log(this.gridMatrix[i][j].y);
+          //console.log(sin(2*PI/b * j));
       }
     }
   }
@@ -315,17 +317,25 @@ class Grid {
 
     this.updateSinAmp = function () {
       //self.changedGrid = true;
-      self.sinAmp = Number((this.value() / 1000) * 2);
-      self.sinGrid(self.sinAmp, self.sinFreq);
+      self.sinAmp = Number((this.value() / 1000) * 2.);
+      //self.sinGrid(self.sinAmp, self.sinPeriod);
+      console.log(self.sinAmp);
+      console.log(self.sinPeriod);
+      self.updateGrid( self.row, self.column);
+      document.querySelector("#div6").innerHTML =
+        "amp: " + float(self.sinAmp);
     };
     this.ui.sliders[6].changed(this.updateSinAmp);
 
-    this.updateSinFreq = function () {
+    this.updateSinPeriod = function () {
       //self.changedGrid = true;
-      self.sinFreq = Number((this.value() / 1000) * 2);
-      self.sinGrid(self.sinAmp, self.sinFreq);
+      self.sinPeriod = int(Number((this.value() / 1000) * 50))+2;
+      //self.sinGrid(self.sinAmp, self.sinPeriod);
+      self.updateGrid( self.row, self.column);
+      document.querySelector("#div7").innerHTML =
+        "period: " + int(self.sinPeriod);
     };
-    this.ui.sliders[7].changed(this.updateSinFreq);
+    this.ui.sliders[7].changed(this.updateSinPeriod);
 
 
   }
