@@ -137,12 +137,14 @@ class GCodeGen {
       // add the first jog move from previous position to over current point
       this.paths[1] = [];
       this.typePaths[1] = "J";
+      this.rotateMvt(mvt,grid[0]);
       this.paths[1].push(new createVector(grid[0].x+this.scaleMvt(grid[0])*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0])*mvt.path[0].y, safeHeight));
       
       for (let i = 2; i < grid.length+2 ; i++){
         //add feed move
         this.paths[i] = [];
         this.typePaths[i] = "M";
+        this.rotateMvt(mvt,grid[i-2]);
         for (let k = 0; k < mvt.path.length; k++){
           this.paths[i].push(new createVector(grid[i-2].x+this.scaleMvt(grid[i-2])*mvt.path[k].x, grid[i-2].y+this.scaleMvt(grid[i-2])*mvt.path[k].y, -maxDepthCut*grid[i-2].z+mvt.path[k].z));
         }
@@ -167,6 +169,7 @@ class GCodeGen {
         this.typePaths[2*i - 1] = "J";
         //let previousPathPoint = this.paths[2*i-2][this.paths[2*i-2].length-1];
         //this.paths[2*i-1].push(previousPathPoint);
+        this.rotateMvt(mvt,grid[i-1]);
         this.paths[2*i-1].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1])*mvt.path[0].x, grid[i-1].y+this.scaleMvt(grid[i-1])*mvt.path[0].y, safeHeight));
         
         //add feed move
@@ -189,11 +192,29 @@ class GCodeGen {
   }
 
   scaleMvt(point){
+    let scale = 1.;
     // linear scale X
-    console.log("p: "+-point.x);
-    console.log("p0: "+ this.gridP0.x);
-    let scale = map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.);
+    scale = map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.);
+    // linear scale Y
+    scale = map((point.y-this.gridP0.y), 0, 1000, 0.2, 2.);
+    //linear scale XY
+    scale =  2*map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.)*map((point.y-this.gridP0.y), 0, 1000, 0.2, 2.);
+
     return scale;
+  }
+
+  rotateMvt(mvt, point){
+    let rotateOffset = 0;
+    // constant
+    rotateOffset = -PI/4;
+
+    // linear in X
+    //rotateOffset = map((-point.x+this.gridP0.x), 0, 1000, 0., 2*PI);
+    
+    mvt.rotateOffset = rotateOffset;
+    let rotatedPath = mvt.makePath(rotateOffset);
+    //console.log(rotatedPath);
+    return rotatedPath;
   }
 
   display(){

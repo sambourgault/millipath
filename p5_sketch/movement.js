@@ -22,11 +22,13 @@ class Movement{
     
   }
 
-  makePath(){
+  makePath(rotationOffset = 0){
     //this.point(0,0);
-    this.polygon(100*this.scale, 3);
+    this.path = [];
+    this.polygon(100*this.scale, 3, rotationOffset);
     //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
     //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
+    return this.path;
   }
   
   display(){
@@ -100,10 +102,10 @@ class Movement{
     }
   }
 
-  polygon(r, nbSides){
+  polygon(r, nbSides, rotationOffset){
     let t,x,y,z;
     for (let i = 0; i < nbSides; i++){
-      t = 360/nbSides*i*PI/180 + this.rotOffset;
+      t = 360/nbSides*i*PI/180 + rotationOffset + this.rotOffset;
       x = r*cos(t);
       y = r*sin(t);
       z = 0;
@@ -112,6 +114,7 @@ class Movement{
     // to close the polygon
     this.path[nbSides] = this.path[0];
   }
+
 
   displayPath(){
     let previous = new createVector(0,0);
