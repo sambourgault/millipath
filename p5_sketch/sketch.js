@@ -1,8 +1,8 @@
 // a shader variable
 //--let theShader;
 //--let shaderTexture;
-let grid1;
-let grid2;
+//let grid1;
+//let grid2;
 let grids = [];
 
 let theta = 0;
@@ -67,18 +67,22 @@ function setup() {
   //--shaderTexture.noStroke();
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   //--grid1 = new Grid(0, 0, shaderTexture);
-  grids[0] = new Grid(25, 50, 10, 10);
-  grids[1] = new Grid(200, 50, 10, 470);
+  grids[0] = new Grid(25, 25, 10, 10, 50, 50);
+  grids[1] = new Grid(175, 25, 10, 470, 25, 25, 140, 140);
+  grids[2] = new Grid(325, 25, 10, 930, 25, 25, 140, 140);
+  grids[3] = new Grid(475, 25, 10, 1390, 25, 25, 140, 140);
+  grids[4] = new Grid(25 + 70,25 + 70,210, 930, 140,140,141,141);
   infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
   matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
   setupInputs();
   
-  mvt = new Movement(0, 0);
-  mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
+  mvt = new Movement(1, 0, 0);
+  mvt2 = new Movement(5, 0,0);
+  mvt3 = new Movement(6,0,0);
+  //mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
   boundary = new Boundary(-stockSizeXIn.value()/2,stockSizeYIn.value()/2);
   boundary.setOffset(width/2+sizeX/2,height/2 - boundary.sizeY - 270);
   code = new GCodeGen("test1");
-  
 }
 
 function draw() {
@@ -178,14 +182,20 @@ function draw() {
 
   // display movement
   push();
-  mvt.displayStatic();
+  mvt3.displayStatic();
   pop();
 
   
   for (let i = 0; i < grids.length; i++){
    if (grids[i].changedGrid){
     //console.log("helloo")
+    if (i == 3){
+      code.updatePath(i, grids[i].path, mvt2, grids[i].ui.linkState);
+    } else if (i == 4){
+      code.updatePath(i, grids[i].path, mvt3, grids[i].ui.linkState);
+    } else {
      code.updatePath(i, grids[i].path, mvt, grids[i].ui.linkState);
+    } 
      grids[i].changedGrid = false;
    }
   }
@@ -261,13 +271,13 @@ function setupInputs(){
   labelSX= createDiv("stock size X (mm)").parent(matBox.box);
   labelSX.position(offX,2*offY);
   labelSX.style('width', '170px');
-  stockSizeXIn = createInput("500").parent(matBox.box);
+  stockSizeXIn = createInput("610").parent(matBox.box);
   stockSizeXIn.position(offX, 2.5*offY);
 
   labelSY= createDiv("stock size Y (mm)").parent(matBox.box);
   labelSY.position(offX,3*offY);
   labelSY.style('width', '170px');
-  stockSizeYIn = createInput("500").parent(matBox.box);
+  stockSizeYIn = createInput("610").parent(matBox.box);
   stockSizeYIn.position(offX, 3.5*offY);
 
 }

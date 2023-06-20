@@ -1,5 +1,6 @@
 class Movement{
-  constructor(x, y){
+  constructor(mode,x, y){
+    this.mode = mode;
     this.sizeX = 300;
     this.sizeY = 200;
     this.x = x ;
@@ -22,11 +23,11 @@ class Movement{
     
   }
 
-  makePath(mode = 0, rotationOffset = 0){
+  makePath(rotationOffset = 0){
     // maybe clear path
     // this.path = [];
 
-    switch(mode) {
+    switch(this.mode) {
       case 0:
         // one point 
         this.point(0,0);
@@ -44,6 +45,12 @@ class Movement{
         break;
       case 4:
         this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
+        break;
+      case 5:
+        this.chevron(0,0,50*this.scale, rotationOffset, 5);
+        break;
+      case 6:
+        this.polygon(70/cos(PI/4), 4, rotationOffset);
         break;
       default:
         this.point(0,0);
@@ -128,6 +135,36 @@ class Movement{
     }
   }
 
+  chevron(x,y,l,rotateOffset, nbPoint){
+    let z = 0;
+    let maxX = l*cos(rotateOffset+this.rotOffset);
+    let maxY = l*sin(rotateOffset+this.rotOffset);
+    let deltaX = l*cos(rotateOffset+this.rotOffset)/nbPoint;
+    let deltaY = l*sin(rotateOffset+this.rotOffset)/nbPoint;
+    for (let i = 0; i < nbPoint+1; i++){
+      // linear descending in X
+      //z = -i*deltaX/maxX;
+      // positive parabola with min in the middle of the line
+      z = this.parabola(i*deltaX,0,maxX);
+      //console.log(z);
+      this.path[i] = new createVector(x-i*deltaX+maxX,y+i*deltaY, z);
+    }
+    //console.log(this.path.length);
+    //console.log(nbPoint+1);
+
+    deltaY = -deltaY;
+    for (let i = 1; i < nbPoint+1; i++){
+      // linear descending in X
+      //z = -i*deltaX/maxX;
+      // positive parabola with min in the middle of the line
+      z = this.parabola(i*deltaX,0,maxX);
+      //console.log(z);
+      this.path[nbPoint+i] = new createVector(x-i*deltaX,y+i*deltaY+maxY, z);
+    }
+
+
+  }
+
   paarabola(a,x,h,k){
     let y = a*pow((x-h),2) + k;
     return y;
@@ -167,7 +204,7 @@ class Movement{
   polygon(r, nbSides, rotationOffset){
     let t,x,y,z;
     for (let i = 0; i < nbSides; i++){
-      t = 360/nbSides*i*PI/180 + rotationOffset + this.rotOffset;
+      t = 360/nbSides*i*PI/180 + PI/nbSides + rotationOffset + this.rotOffset;
       x = r*cos(t);
       y = r*sin(t);
       z = 0;
@@ -181,13 +218,16 @@ class Movement{
   displayPath(){
     let previous = new createVector(0,0);
     let x,y,z;
+    //let scale = 10.;
+    let scale = 1./this.scale;
     for (let i = 0; i < this.path.length; i++){
 
-      x = this.translateX(this.path[i].x);
-      y = this.translateY(this.path[i].y);
+
+      x = this.translateX(scale*this.path[i].x);
+      y = this.translateY(scale*this.path[i].y);
       //x = this.path[i].x;
       //y = this.path[i].y;
-      z = this.path[i].z;
+      z = scale*this.path[i].z;
 
      if (i != 0){
       line(previous.x, previous.y,previous.z,x,y,z);

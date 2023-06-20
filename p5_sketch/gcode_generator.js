@@ -36,22 +36,22 @@ class GCodeGen {
     this.safeZ.position(0,height - 80);*/
 
     this.button = createButton("save file");
-    this.button.position(20, height - 50);
+    this.button.position(width/2-35, height - 80);
     this.button.style("font-family", "Poppins");
 
     this.simSlider =  createSlider(0.,1000.,0);
     this.simSlider.addClass("sliders");
-    this.simSlider.position(width/2 - 75, height - 100);
+    this.simSlider.position(width/2 - 75, height - 150);
     this.simSlider.style('width', '150px');
     this.simSlider.style('background-color', '#7C7C7C');
 
     this.playButton = createButton("play");
-    this.playButton.position(width/2-85, height - 50);
+    this.playButton.position(width/2-85, height - 120);
     this.playButton.style("font-family", "Poppins");
     this.playButton.style("width", "75px");
 
     this.pauseButton = createButton("pause");
-    this.pauseButton.position(width/2+10, height - 50);
+    this.pauseButton.position(width/2+10, height - 120);
     this.pauseButton.style("font-family", "Poppins");
     this.pauseButton.style("width", "75px");
 
@@ -67,8 +67,7 @@ class GCodeGen {
     this.gridP0;
     
 
-    this.generateGCode = function () {
-      
+    this.generateGCode = function () {  
       // HOME
       // link move in Z to go up
       self.writer.write("JZ," + self.allPaths[0][0][0].z + "\n");
@@ -151,16 +150,17 @@ class GCodeGen {
       // add the first jog move from previous position to over current point
       tempPaths[1] = [];
       tempTypePaths[1] = "J";
-      this.rotateMvt(mvt,grid[0]);
-      tempPaths[1].push(new createVector(grid[0].x+this.scaleMvt(grid[0])*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0])*mvt.path[0].y, safeHeight));
+
+      this.rotateMvt(mvt,index,grid[0], 0);
+      tempPaths[1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.path[0].y, safeHeight));
       
       for (let i = 2; i < grid.length+2 ; i++){
         //add feed move
         tempPaths[i] = [];
         tempTypePaths[i] = "M";
-        this.rotateMvt(mvt,grid[i-2]);
+        this.rotateMvt(mvt,index,grid[i-2], i-2);
         for (let k = 0; k < mvt.path.length; k++){
-          tempPaths[i].push(new createVector(grid[i-2].x+this.scaleMvt(grid[i-2])*mvt.path[k].x, grid[i-2].y+this.scaleMvt(grid[i-2])*mvt.path[k].y, -maxDepthCut*grid[i-2].z+mvt.path[k].z));
+          tempPaths[i].push(new createVector(grid[i-2].x+this.scaleMvt(grid[i-2], index)*mvt.path[k].x, grid[i-2].y+this.scaleMvt(grid[i-2], index)*mvt.path[k].y, -maxDepthCut*grid[i-2].z+mvt.path[k].z));
         }
       }
       // add retract to safe Z height to the last point
@@ -188,14 +188,14 @@ class GCodeGen {
         tempTypePaths[2*i - 1] = "J";
         //let previousPathPoint = this.paths[2*i-2][this.paths[2*i-2].length-1];
         //this.paths[2*i-1].push(previousPathPoint);
-        this.rotateMvt(mvt,grid[i-1]);
-        tempPaths[2*i-1].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1])*mvt.path[0].x, grid[i-1].y+this.scaleMvt(grid[i-1])*mvt.path[0].y, safeHeight));
+        this.rotateMvt(mvt,index,grid[i-1], i-1);
+        tempPaths[2*i-1].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1], index)*mvt.path[0].x, grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.path[0].y, safeHeight));
         
         //add feed move
         tempPaths[2*i] = [];
         tempTypePaths[2*i] = "M";
         for (let k = 0; k < mvt.path.length; k++){
-          tempPaths[2*i].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1])*mvt.path[k].x, grid[i-1].y+this.scaleMvt(grid[i-1])*mvt.path[k].y, maxDepthCut*grid[i-1].z+mvt.path[k].z));
+          tempPaths[2*i].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1],index)*mvt.path[k].x, grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.path[k].y, maxDepthCut*grid[i-1].z+mvt.path[k].z));
         }
         // add retract to safe Z height
         let lastPoint = tempPaths[2*i][tempPaths[2*i].length-1];
@@ -213,8 +213,12 @@ class GCodeGen {
     }
   }
 
-  scaleMvt(point){
+  scaleMvt(point, gridIndex){
+
     let scale = 1.;
+    if (gridIndex == 2){
+      scale = 0.5;
+    }
     // linear scale X
     //scale = map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.);
     // linear scale Y
@@ -225,10 +229,19 @@ class GCodeGen {
     return scale;
   }
 
-  rotateMvt(mvt, point){
+  rotateMvt(mvt, gridIndex, point, pointIndex){
     let rotateOffset = 0;
-    // constant
-    rotateOffset = PI/4;
+
+    if (gridIndex == 0 || gridIndex == 1){
+      // constant
+      rotateOffset = PI/4;
+    } else if (gridIndex == 2) {
+      rotateOffset = PI/2*int(random(4)) + PI/4;
+    } else if (gridIndex == 3){
+      rotateOffset = PI/4 + (pointIndex % 2) * PI;
+      //rotateOffset = 0;
+      //console.log(rotateOffset);
+    } 
 
     // linear in X
     //rotateOffset = map((-point.x+this.gridP0.x), 0, 1000, 0., 2*PI);
@@ -237,7 +250,7 @@ class GCodeGen {
     //rotateOffset = PI/2*int(random(4)) + PI/4;
 
     mvt.rotateOffset = rotateOffset;
-    let rotatedPath = mvt.makePath(1,rotateOffset);
+    let rotatedPath = mvt.makePath(rotateOffset);
     //console.log(rotatedPath);
     return rotatedPath;
   }
@@ -275,33 +288,36 @@ class GCodeGen {
 
     // draw each path
     for (let k = 0; k < this.allPaths.length; k++){
-      for (let j = 0; j < this.allPaths[k].length; j++){
-        if (this.allTypePaths[k][j] == "J"){
-          stroke(0, 255, 0);
-        } else if (this.allTypePaths[k][j] == "M"){
-          stroke(255, 0, 0);
-        }
-
-        for (let i = 0; i < this.allPaths[k][j].length; i++){
-          let previous;
-          if (i == 0 && j != 0){
-            previous = this.allPaths[k][j-1][this.allPaths[k][j-1].length - 1];
-          } else if (i == 0 && j == 0){
-            previous = new createVector(0,0,safeHeight);
-          } else {
-            previous = this.allPaths[k][j][i-1];
+      if (grids[k].visible){
+        //console.log(grids[k].visible);
+        for (let j = 0; j < this.allPaths[k].length; j++){
+          if (this.allTypePaths[k][j] == "J"){
+            stroke(0, 255, 0);
+          } else if (this.allTypePaths[k][j] == "M"){
+            stroke(255, 0, 0);
           }
-          let current = this.allPaths[k][j][i];
-          push();
-          //translate(0,0,70);
-          let scalePZ = 1.;
-          let scaleCZ = 1.;
-          //if (previous.z < 0.) scalePZ = 30;
-          //if (current.z < 0.) scaleCZ = 30;
-          
-          
-          line(previous.x, previous.y, scalePZ*previous.z, current.x, current.y, scaleCZ*current.z);
-          pop();
+
+          for (let i = 0; i < this.allPaths[k][j].length; i++){
+            let previous;
+            if (i == 0 && j != 0){
+              previous = this.allPaths[k][j-1][this.allPaths[k][j-1].length - 1];
+            } else if (i == 0 && j == 0){
+              previous = new createVector(0,0,safeHeight);
+            } else {
+              previous = this.allPaths[k][j][i-1];
+            }
+            let current = this.allPaths[k][j][i];
+            push();
+            //translate(0,0,70);
+            let scalePZ = 1.;
+            let scaleCZ = 1.;
+            //if (previous.z < 0.) scalePZ = 30;
+            //if (current.z < 0.) scaleCZ = 30;
+            
+            
+            line(previous.x, previous.y, scalePZ*previous.z, current.x, current.y, scaleCZ*current.z);
+            pop();
+          }
         }
       }
     }
