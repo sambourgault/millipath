@@ -3,6 +3,7 @@
 //--let shaderTexture;
 let grid1;
 let grid2;
+let grids = [];
 
 let theta = 0;
 
@@ -66,8 +67,8 @@ function setup() {
   //--shaderTexture.noStroke();
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   //--grid1 = new Grid(0, 0, shaderTexture);
-  grid1 = new Grid(20, 20, 10, 10);
-  grid2 = new Grid(200, 0, 10, 470);
+  grids[0] = new Grid(25, 50, 10, 10);
+  grids[1] = new Grid(200, 50, 10, 470);
   infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
   matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
   setupInputs();
@@ -133,10 +134,10 @@ function draw() {
 
  if (!readOnce) {
     readOnce = true;
-    console.log(grid1);
     //grid1.addTexture(shaderTexture);
-    grid1.updateGrid(grid1.row,grid1.column);
-    grid2.updateGrid(grid2.row,grid2.column);
+    for (let i = 0; i < grids.length; i++){
+      grids[i].updateGrid(grids[i].row,grids[i].column);
+    }
   }
 
   // display grid 1
@@ -160,8 +161,11 @@ function draw() {
   pop();
   noStroke();
   
-  grid1.display();
-  grid2.display();
+  //grid1.display();
+  //grid2.display();
+  for (let i = 0; i < grids.length; i++){
+    grids[i].display();
+  }
   directions.display();
   //boundary.display();
   code.display();
@@ -172,22 +176,19 @@ function draw() {
   boundary.displayStatic();
   pop();
 
-
   // display movement
   push();
   mvt.displayStatic();
   pop();
 
   
-  //print(grid1.changedGrid);
-   if (grid1.changedGrid){
-  //   console.log("yoooo");
-  //   console.log(grid1.path.length);
-     //console.log(grid1.path);
-     //console.log(grid1.ui.linkState)
-     code.updatePath(grid1.path, mvt, grid1.ui.linkState);
-     grid1.changedGrid = false;
+  for (let i = 0; i < grids.length; i++){
+   if (grids[i].changedGrid){
+    //console.log("helloo")
+     code.updatePath(i, grids[i].path, mvt, grids[i].ui.linkState);
+     grids[i].changedGrid = false;
    }
+  }
 
    
 }

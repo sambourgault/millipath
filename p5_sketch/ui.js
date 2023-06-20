@@ -7,9 +7,10 @@ class UI{
     //console.log(this.grid);
     this.box =  new CollapsibleBox(this.x, this.y, '450px', "grid specs");
     this.sliders = [];
-    this.labels = ["x: " + 0, "y: "+ 0,"size X: " + 200, "size Y: "+200, "spacing X: 25", "spacing Y: 25", "amp: 0", "period: 2", "dist: 50"];
+    //this.labels = ["x: " + 0, "y: "+ 0,"size X: " + 200, "size Y: "+200, "spacing X: 25", "spacing Y: 25", "amp: 0", "period: 2", "dist: 50"];
+    this.labels = ["x" , "y","size X" , "size Y", "spacing X", "spacing Y", "amp", "period", "dist"];    
     //this.defaultValues = [0, 0, 500, 500, 800, 800, 0, 0, 250];
-    this.defaultValues = [gridX,gridY,200,200,50,50,0,2,50];
+    this.defaultValues = [gridX,gridY,150,150,50,50,0,2,50];
     this.divs = [];
    
      this.offY = 40;

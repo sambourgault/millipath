@@ -143,7 +143,7 @@ class Grid {
         //c = this.boundaryFunction(-i * this.spacingX + this.x, j2 * this.spacingY + this.y);
         let x = -i * this.spacingX + this.x;
         let y = j2 * this.spacingY + this.y;
-        c = 1;
+        c = 0.;
         //c = this.boundaryFunction2(-x,y,50,50,200);
         /*c = textu.get(
           sizeX - i * this.spacingX + this.x,
@@ -157,10 +157,10 @@ class Grid {
           c //this.depth(c) / 255.0
         );
 
-
-        if ( tempGridMatrix[i][j2].z > 0.01){
+        // now all points are in. movement defines Z.  
+        //if ( tempGridMatrix[i][j2].z > 0.01){
           this.path.push(tempGridMatrix[i][j2]);
-        }
+       // }
       }
     }
 
@@ -213,7 +213,7 @@ class Grid {
       //console.log(self.changedGrid);
       //self.x = Number((-this.value() / 1000) * width);
       self.x = Number(-this.value());
-      document.querySelector("#div0").innerHTML = "x: " + int(-self.x);
+      //document.querySelector("#div0").innerHTML = "x: " + int(-self.x);
       self.updateGrid(self.row, self.column);
       //self.changedGrid = true;
     };
@@ -223,7 +223,7 @@ class Grid {
       //console.log(this.value());
       //self.y = Number((this.value() / 1000) * width);
       self.y = Number(this.value());
-      document.querySelector("#div1").innerHTML = "y: " + int(self.y);
+      //document.querySelector("#div1").innerHTML = "y: " + int(self.y);
       self.updateGrid(self.row, self.column);
       //self.changedGrid = true;
     };
@@ -236,7 +236,7 @@ class Grid {
       self.sizeX = Number(this.value());
       //self.row = int(self.sizeX);//int(self.sizeX / self.spacingX);
       self.updateGrid(int(self.sizeX / self.spacingX), self.column);
-      document.querySelector("#div2").innerHTML = "size X: " + int(self.sizeX);
+      //document.querySelector("#div2").innerHTML = "size X: " + int(self.sizeX);
       //self.UGX = true;
     };
     this.ui.sliders[2].changed(this.updateSizeX);
@@ -248,7 +248,7 @@ class Grid {
       self.sizeY = Number(this.value());
       //self.column = int(self.sizeY); //int(self.sizeY / self.spacingY);
       self.updateGrid(self.row, int(self.sizeY / self.spacingY));
-      document.querySelector("#div3").innerHTML = "size Y: " + int(self.sizeY);
+      //document.querySelector("#div3").innerHTML = "size Y: " + int(self.sizeY);
     };
     this.ui.sliders[3].changed(this.updateSizeY);
 
@@ -259,8 +259,7 @@ class Grid {
       self.spacingX = Number(this.value());
       //self.row = int(self.sizeX / self.spacingX);
       self.updateGrid(int(self.sizeX / self.spacingX), self.column);
-      document.querySelector("#div4").innerHTML =
-        "spacing X: " + int(self.spacingX);
+      //document.querySelector("#div4").innerHTML = "spacing X: " + int(self.spacingX);
     };
     this.ui.sliders[4].changed(this.updateDensX);
 
@@ -271,8 +270,7 @@ class Grid {
       self.spacingY = Number(this.value());
       //self.column = int(self.sizeY / self.spacingY);
       self.updateGrid( self.row, int(self.sizeY / self.spacingY));
-      document.querySelector("#div5").innerHTML =
-        "spacing Y: " + int(self.spacingY);
+      //document.querySelector("#div5").innerHTML ="spacing Y: " + int(self.spacingY);
     };
     this.ui.sliders[5].changed(this.updateDensY);
 
@@ -280,8 +278,7 @@ class Grid {
       //self.boundaryDist = Number(this.value()/1000 * 200);
       self.boundaryDist = Number(this.value());
       self.updateGrid( self.row, self.column);
-      document.querySelector("#div8").innerHTML =
-        "dist: " + int(self.boundaryDist);
+      //document.querySelector("#div8").innerHTML = "dist: " + int(self.boundaryDist);
     }
     this.ui.sliders[8].changed(this.updateBoundaryDist);
 
@@ -291,8 +288,7 @@ class Grid {
       self.sinAmp = Number(this.value());
       //self.sinGrid(self.sinAmp, self.sinPeriod);
       self.updateGrid( self.row, self.column);
-      document.querySelector("#div6").innerHTML =
-        "amp: " + float(self.sinAmp);
+      //document.querySelector("#div6").innerHTML ="amp: " + float(self.sinAmp);
     };
     this.ui.sliders[6].changed(this.updateSinAmp);
 
@@ -302,8 +298,7 @@ class Grid {
       self.sinPeriod = Number(this.value());
       //self.sinGrid(self.sinAmp, self.sinPeriod);
       self.updateGrid( self.row, self.column);
-      document.querySelector("#div7").innerHTML =
-        "period: " + int(self.sinPeriod);
+      //document.querySelector("#div7").innerHTML = "period: " + int(self.sinPeriod);
     };
     this.ui.sliders[7].changed(this.updateSinPeriod);
 
