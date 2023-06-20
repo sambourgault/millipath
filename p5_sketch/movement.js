@@ -24,8 +24,9 @@ class Movement{
 
   makePath(rotationOffset = 0){
     //this.point(0,0);
-    this.path = [];
-    this.polygon(100*this.scale, 3, rotationOffset);
+    //this.path = [];
+    this.line(0,0,50*this.scale, rotationOffset);
+    //this.polygon(100*this.scale, 3, rotationOffset);
     //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
     //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
     return this.path;
@@ -41,6 +42,20 @@ class Movement{
     this.xyMovement();
     this.xzMovement();
     pop();
+  }
+
+  displayStatic(){
+    push();
+    fill(255, 100);
+    //translate(this.offsetX, this.offsetY);
+    //rotateZ(-PI);
+    rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
+    rect(this.x-this.sizeX-20,this.y+40+this.sizeY,this.sizeX,this.sizeY);
+    pop();
+
+    this.xyMovement();
+    this.xzMovement();
+    //pop();
   }
 
   setOffset(x, y){
@@ -67,7 +82,7 @@ class Movement{
   }
 
   translateX(x){
-    return x - this.x - this.sizeX - 20;
+    return -x - this.x - this.sizeX - 20;
   }
 
   translateY(y){
@@ -77,6 +92,12 @@ class Movement{
   point(x, y){
    let z = 0;
     this.path[0] = new createVector(x,y,z);
+  }
+
+  line(x,y,l,rotateOffset){
+    let z = 0;
+    this.path[0] = new createVector(x,y,z);
+    this.path[1] = new createVector(x-l*cos(rotateOffset+this.rotOffset),y+l*sin(rotateOffset+this.rotOffset), z);
   }
 
   hypertrochoid(R, r, d, limit, res){
@@ -123,6 +144,8 @@ class Movement{
 
       x = this.translateX(this.path[i].x);
       y = this.translateY(this.path[i].y);
+      //x = this.path[i].x;
+      //y = this.path[i].y;
       z = this.path[i].z;
 
      if (i != 0){

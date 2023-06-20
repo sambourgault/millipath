@@ -2,6 +2,7 @@
 //--let theShader;
 //--let shaderTexture;
 let grid1;
+let grid2;
 
 let theta = 0;
 
@@ -46,8 +47,8 @@ function setup() {
   // shaders require WEBGL mode to work
   createCanvas(windowWidth, windowHeight, WEBGL);
   noStroke();
-  console.log(windowWidth);
-  console.log(width);
+  //console.log(windowWidth);
+  //console.log(width);
 
   directions = new Directions();
   //camera(-width / 2, -600, 800, -width / 2, 0, 300, 0, 0, -1);
@@ -65,8 +66,9 @@ function setup() {
   //--shaderTexture.noStroke();
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   //--grid1 = new Grid(0, 0, shaderTexture);
-  grid1 = new Grid(0, 0);
-  infoBox = new CollapsibleBox(10,470, '300px', "machine specs");
+  grid1 = new Grid(0, 0, 10, 10);
+  grid2 = new Grid(200, 0, 10, 470);
+  infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
   matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
   setupInputs();
   
@@ -83,9 +85,9 @@ function draw() {
   //push();
   //translate(width/2, height/2,0);
   //rotateX(PI);
-  rotateZ(PI);
+  //rotateZ(PI);
   //print(mouseX/200)
-  translate(width/2+sizeX/2,-height/2-sizeY/2,0);
+  //translate(width/2+sizeX/2,-height/2-sizeY/2,0);
   
   //console.log()
   //translate(-width/2, height/2,0);
@@ -134,10 +136,15 @@ function draw() {
     console.log(grid1);
     //grid1.addTexture(shaderTexture);
     grid1.updateGrid(grid1.row,grid1.column);
+    grid2.updateGrid(grid2.row,grid2.column);
   }
 
   // display grid 1
   push();
+  rotateZ(PI);
+  //print(mouseX/200)
+  translate(width/2+sizeX/2,-height/2-sizeY/2,0);
+  
   /*translate(-width/2, -height/2, 0);
   rotateZ(PI);
   translate(width/2, height/2, 0);*/
@@ -154,6 +161,7 @@ function draw() {
   noStroke();
   
   grid1.display();
+  grid2.display();
   directions.display();
   //boundary.display();
   code.display();
@@ -167,7 +175,7 @@ function draw() {
 
   // display movement
   push();
-  mvt.display();
+  mvt.displayStatic();
   pop();
 
   
@@ -176,7 +184,7 @@ function draw() {
   //   console.log("yoooo");
   //   console.log(grid1.path.length);
      //console.log(grid1.path);
-     console.log(grid1.ui.linkState)
+     //console.log(grid1.ui.linkState)
      code.updatePath(grid1.path, mvt, grid1.ui.linkState);
      grid1.changedGrid = false;
    }

@@ -194,11 +194,11 @@ class GCodeGen {
   scaleMvt(point){
     let scale = 1.;
     // linear scale X
-    scale = map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.);
+    //scale = map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.);
     // linear scale Y
-    scale = map((point.y-this.gridP0.y), 0, 1000, 0.2, 2.);
+    //scale = map((point.y-this.gridP0.y), 0, 1000, 0.2, 2.);
     //linear scale XY
-    scale =  2*map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.)*map((point.y-this.gridP0.y), 0, 1000, 0.2, 2.);
+    //scale =  2*map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.)*map((point.y-this.gridP0.y), 0, 1000, 0.2, 2.);
 
     return scale;
   }
@@ -206,11 +206,14 @@ class GCodeGen {
   rotateMvt(mvt, point){
     let rotateOffset = 0;
     // constant
-    rotateOffset = -PI/4;
+    //rotateOffset = PI/4;
 
     // linear in X
     //rotateOffset = map((-point.x+this.gridP0.x), 0, 1000, 0., 2*PI);
     
+    //random 45 degrees
+    rotateOffset = PI/2*int(random(4)) + PI/4;
+
     mvt.rotateOffset = rotateOffset;
     let rotatedPath = mvt.makePath(rotateOffset);
     //console.log(rotatedPath);

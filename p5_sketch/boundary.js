@@ -46,9 +46,9 @@ class Boundary{
         push();
         fill(255, 100);
         //fill(255,0,0);
-        translate(this.offsetX, this.offsetY);
-        rotateZ(-PI);
-        rect(-this.sizeX-20,0,this.sizeX,this.sizeY);
+        //translate(this.offsetX, this.offsetY);
+        //rotateZ(-PI);
+        rect(-this.sizeX-20,height- this.sizeY-20,this.sizeX,this.sizeY);
         //trasnlate(this.)
         //push();
         //rotateZ(PI);
@@ -60,7 +60,7 @@ class Boundary{
         stroke(255,0,0);
         strokeWeight(2);
         push();
-        translate(-this.sizeX/2-20, this.sizeY/2, 20);
+        translate(-this.sizeX/2-20, height- this.sizeY-20+this.sizeY/2, 20);
         //translate(-20,0, 20);
         this.displayPath();
         pop();
@@ -137,6 +137,14 @@ class Boundary{
         }
         // to close the polygon
         this.path[nbSides] = this.path[0];
+      }
+
+      circle(x, y, r){
+        let d = dist(x,y,this.x-this.sizeX/2, this.y+this.sizeY/2);
+        if (d > r){
+          return 0.;
+        }
+        return 1.;
       }
 
       inBound(x, y){
