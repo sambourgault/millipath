@@ -18,17 +18,36 @@ class Movement{
     this.label2.style('font-size', '14px');
     this.label2.style('font-family', 'Poppins');
     this.label2.position(width - this.sizeX-20, 20+this.sizeY);
-    this.makePath();
+    this.makePath(1);
     
   }
 
-  makePath(rotationOffset = 0){
-    //this.point(0,0);
-    //this.path = [];
-    this.line(0,0,50*this.scale, rotationOffset);
-    //this.polygon(100*this.scale, 3, rotationOffset);
-    //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
-    //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
+  makePath(mode = 0, rotationOffset = 0){
+    // maybe clear path
+    // this.path = [];
+
+    switch(mode) {
+      case 0:
+        // one point 
+        this.point(0,0);
+        break;
+      case 1:
+        // line
+        this.line(0,0,50*this.scale, rotationOffset, 5);
+        break;
+      case 2:
+        // polygon
+        this.polygon(100*this.scale, 3, rotationOffset);
+        break;
+      case 3:
+        this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
+        break;
+      case 4:
+        this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
+        break;
+      default:
+        this.point(0,0);
+    }
     return this.path;
   }
   
@@ -94,11 +113,33 @@ class Movement{
     this.path[0] = new createVector(x,y,z);
   }
 
-  line(x,y,l,rotateOffset){
+  line(x,y,l,rotateOffset, nbPoint){
     let z = 0;
-    this.path[0] = new createVector(x,y,z);
-    this.path[1] = new createVector(x-l*cos(rotateOffset+this.rotOffset),y+l*sin(rotateOffset+this.rotOffset), z);
+    let maxX = l*cos(rotateOffset+this.rotOffset);
+    let deltaX = l*cos(rotateOffset+this.rotOffset)/nbPoint;
+    let deltaY = l*sin(rotateOffset+this.rotOffset)/nbPoint;
+    for (let i = 0; i < nbPoint+1; i++){
+      // linear descending in X
+      //z = -i*deltaX/maxX;
+      // positive parabola with min in the middle of the line
+      z = this.parabola(i*deltaX,0,maxX);
+      //console.log(z);
+      this.path[i] = new createVector(x-i*deltaX,y+i*deltaY, z);
+    }
   }
+
+  paarabola(a,x,h,k){
+    let y = a*pow((x-h),2) + k;
+    return y;
+  }
+
+  parabola(x,zero0,zero1){
+    // find a for the deepest y == -1
+    let a = 4/pow(zero1-zero0, 2);
+    let y = a*(x - zero0)*(x - zero1);
+    return y;
+  }
+
 
   hypertrochoid(R, r, d, limit, res){
     let t,x,y,z;

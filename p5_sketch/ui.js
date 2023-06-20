@@ -9,7 +9,7 @@ class UI{
     this.sliders = [];
     this.labels = ["x: " + 0, "y: "+ 0,"size X: " + 200, "size Y: "+200, "spacing X: 25", "spacing Y: 25", "amp: 0", "period: 2", "dist: 50"];
     //this.defaultValues = [0, 0, 500, 500, 800, 800, 0, 0, 250];
-    this.defaultValues = [gridX,gridY,200,200,25,25,0,2,50];
+    this.defaultValues = [gridX,gridY,200,200,50,50,0,2,50];
     this.divs = [];
    
      this.offY = 40;

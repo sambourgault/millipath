@@ -176,7 +176,7 @@ class GCodeGen {
         this.paths[2*i] = [];
         this.typePaths[2*i] = "M";
         for (let k = 0; k < mvt.path.length; k++){
-          this.paths[2*i].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1])*mvt.path[k].x, grid[i-1].y+this.scaleMvt(grid[i-1])*mvt.path[k].y, -maxDepthCut*grid[i-1].z+mvt.path[k].z));
+          this.paths[2*i].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1])*mvt.path[k].x, grid[i-1].y+this.scaleMvt(grid[i-1])*mvt.path[k].y, maxDepthCut*grid[i-1].z+mvt.path[k].z));
         }
         // add retract to safe Z height
         let lastPoint = this.paths[2*i][this.paths[2*i].length-1];
@@ -206,16 +206,16 @@ class GCodeGen {
   rotateMvt(mvt, point){
     let rotateOffset = 0;
     // constant
-    //rotateOffset = PI/4;
+    rotateOffset = PI/4;
 
     // linear in X
     //rotateOffset = map((-point.x+this.gridP0.x), 0, 1000, 0., 2*PI);
     
     //random 45 degrees
-    rotateOffset = PI/2*int(random(4)) + PI/4;
+    //rotateOffset = PI/2*int(random(4)) + PI/4;
 
     mvt.rotateOffset = rotateOffset;
-    let rotatedPath = mvt.makePath(rotateOffset);
+    let rotatedPath = mvt.makePath(1,rotateOffset);
     //console.log(rotatedPath);
     return rotatedPath;
   }
@@ -269,8 +269,8 @@ class GCodeGen {
         //translate(0,0,70);
         let scalePZ = 1.;
         let scaleCZ = 1.;
-        if (previous.z < 0.) scalePZ = 30;
-        if (current.z < 0.) scaleCZ = 30;
+        //if (previous.z < 0.) scalePZ = 30;
+        //if (current.z < 0.) scaleCZ = 30;
         
         
         line(previous.x, previous.y, scalePZ*previous.z, current.x, current.y, scaleCZ*current.z);

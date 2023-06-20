@@ -66,7 +66,7 @@ function setup() {
   //--shaderTexture.noStroke();
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   //--grid1 = new Grid(0, 0, shaderTexture);
-  grid1 = new Grid(0, 0, 10, 10);
+  grid1 = new Grid(20, 20, 10, 10);
   grid2 = new Grid(200, 0, 10, 470);
   infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
   matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
