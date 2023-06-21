@@ -25,7 +25,7 @@ class Movement{
 
   makePath(rotationOffset = 0){
     // maybe clear path
-    // this.path = [];
+    this.path = [];
 
     switch(this.mode) {
       case 0:
@@ -44,6 +44,7 @@ class Movement{
         this.hypertrochoid(50*this.scale,10*this.scale,20*this.scale,100, 10);
         break;
       case 4:
+        // 21
         this.hypotrochoid(10*this.scale,2*this.scale,6*this.scale,21, 360/20);
         break;
       case 5:
@@ -234,12 +235,12 @@ class Movement{
       line(previous.x, previous.y,previous.z,x,y,z);
      }
 
-     if (this.path.length == 1){
+     //if (this.path.length == 1){
       push();
       translate(x,y,z);
-      sphere(2);
+      sphere(4);
       pop();
-     }
+     //}
       
       previous.x = x;
       previous.y = y;

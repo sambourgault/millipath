@@ -5,7 +5,8 @@
 //let grid2;
 let grids = [];
 
-let theta = 0;
+let thetaX = 0;
+let thetaY = 0;
 
 let x;
 let y;
@@ -157,7 +158,8 @@ function draw() {
   translate(width/2, height/2, 0);*/
   //rotateZ(PI);
   translate(0,sizeY/2,0);
-  rotateX(-theta);
+  rotateX(-thetaX);
+  rotateY(thetaY);
   translate(0,-sizeY/2,0);
   noFill();
   stroke(0);
@@ -209,14 +211,15 @@ function draw() {
 
 function mouseDragged() {
   //theta = map(mouseX / width, 0, 1, -1, 1);
-  theta = map((mouseX / width), 0, 1, 0, PI/2);
+  thetaX = map((mouseX / width), 0, 1, 0, PI/2);
+  thetaY = map((mouseY / height), 0, 1, 0, PI/2);
 }
 
 function rotateWorld(){
       //document.querySelector("#div4").innerHTML ="spacing X: " + int(self.spacingX);
   push();
   translate(0,width/2,0);
-  theta = map((this.value() / 1000), 0, 1, 0, PI/2);
+  thetaX = map((this.value() / 1000), 0, 1, 0, PI/2);
   pop();
 }
 
