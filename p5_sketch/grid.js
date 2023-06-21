@@ -2,10 +2,11 @@
 class Grid {
   constructor(x, y, xb, yb, spx = 50, spy = 50, sx = 150, sy = 150) {
     this.visible = false;
+    this.openBox = true;
     //constructor(x, y, textu) {
     const self = this;
     //this.textu = textu;
-    this.ui = new UI(this, xb, yb, x, y, spx, spy, sx, sy);
+    this.ui = new UI(this, this.openBox, xb, yb, x, y, spx, spy, sx, sy);
     //this.x = (-this.ui.sliders[0].value() / 1000) * width;
     this.x = -Number(this.ui.sliders[0].value());
     //this.y = (this.ui.sliders[1].value() / 1000) * width;

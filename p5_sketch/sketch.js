@@ -69,11 +69,11 @@ function setup() {
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   //--grid1 = new Grid(0, 0, shaderTexture);
   grids[0] = new Grid(50, 50, 10, 10, 50, 50);
-  grids[1] = new Grid(200, 50, 10, 470, 25, 25, 140, 140);
-  grids[2] = new Grid(350, 50, 10, 930, 25, 25, 140, 140);
-  grids[3] = new Grid(350, 200, 10, 1390, 25, 25, 175, 140);
-  grids[4] = new Grid(50 + 59,50 + 59, 210, 930, 140,140,141,141);
-  grids[5] = new Grid(50, 200, 210, 1390, 50, 50, 200, 150);
+  grids[1] = new Grid(200, 50, 10, 70, 25, 25, 140, 140);
+  grids[2] = new Grid(350, 50, 10, 130, 25, 25, 140, 140);
+  grids[3] = new Grid(350, 200, 10, 190, 25, 25, 175, 140);
+  grids[4] = new Grid(50 + 59,50 + 59, 10, 250, 140,140,141,141);
+  grids[5] = new Grid(50, 200, 10, 310, 50, 50, 200, 150);
   infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
   matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
   setupInputs();

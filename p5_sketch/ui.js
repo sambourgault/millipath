@@ -1,10 +1,11 @@
 class UI{
-  constructor( grid, x, y, gridX, gridY, spx, spy, sx, sy){
+  constructor( grid, openBox, x, y, gridX, gridY, spx, spy, sx, sy){
     let self = this;
     this.x = x;
     this.y = y;
     this.grid = grid;
     this.visible = false;
+    this.open = openBox;
     //console.log(this.grid);
     this.box =  new CollapsibleBox(this.x, this.y, '450px', "grid specs");
     this.sliders = [];
@@ -13,7 +14,8 @@ class UI{
     //this.defaultValues = [0, 0, 500, 500, 800, 800, 0, 0, 250];
     this.defaultValues = [gridX,gridY,sx,sy,spx,spy,0,2,50];
     this.divs = [];
-   
+    this.visible = createCheckbox('visible', grid.visible).parent(this.box.box);
+
      this.offY = 40;
      this.linkState = true;
      this.linkButton = createButton("linked").parent(this.box.box) ;
@@ -49,7 +51,6 @@ class UI{
     this.linkButton.style('font-size', '14px');
     this.linkButton.style('font-family', 'Poppins');
 
-    this.visible = createCheckbox('visible', grid.visible).parent(this.box.box);
     this.changeVisibility = function(){
       self.grid.visible = this.checked();
     }
