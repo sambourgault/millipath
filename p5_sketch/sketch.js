@@ -30,7 +30,7 @@ let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 16; // mm/s
 let plungeRate = 5; //mm/s
-let maxDepthCut = 1; // mm
+let maxDepthCut = 3; // mm
 let infoBox;
 let matBox;
 let sZIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
@@ -67,11 +67,12 @@ function setup() {
   //--shaderTexture.noStroke();
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   //--grid1 = new Grid(0, 0, shaderTexture);
-  grids[0] = new Grid(25, 25, 10, 10, 50, 50);
-  grids[1] = new Grid(175, 25, 10, 470, 25, 25, 140, 140);
-  grids[2] = new Grid(325, 25, 10, 930, 25, 25, 140, 140);
-  grids[3] = new Grid(475, 25, 10, 1390, 25, 25, 140, 140);
-  grids[4] = new Grid(25 + 70,25 + 70,210, 930, 140,140,141,141);
+  grids[0] = new Grid(50, 50, 10, 10, 50, 50);
+  grids[1] = new Grid(200, 50, 10, 470, 25, 25, 140, 140);
+  grids[2] = new Grid(350, 50, 10, 930, 25, 25, 140, 140);
+  grids[3] = new Grid(350, 200, 10, 1390, 25, 25, 175, 140);
+  grids[4] = new Grid(50 + 59,50 + 59, 210, 930, 140,140,141,141);
+  grids[5] = new Grid(50, 200, 210, 1390, 50, 50, 200, 150);
   infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
   matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
   setupInputs();
@@ -79,6 +80,7 @@ function setup() {
   mvt = new Movement(1, 0, 0);
   mvt2 = new Movement(5, 0,0);
   mvt3 = new Movement(6,0,0);
+  mvt5 = new Movement(4,0,0, 1.5);
   //mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
   boundary = new Boundary(-stockSizeXIn.value()/2,stockSizeYIn.value()/2);
   boundary.setOffset(width/2+sizeX/2,height/2 - boundary.sizeY - 270);
@@ -182,7 +184,7 @@ function draw() {
 
   // display movement
   push();
-  mvt3.displayStatic();
+  mvt5.displayStatic();
   pop();
 
   
@@ -193,6 +195,8 @@ function draw() {
       code.updatePath(i, grids[i].path, mvt2, grids[i].ui.linkState);
     } else if (i == 4){
       code.updatePath(i, grids[i].path, mvt3, grids[i].ui.linkState);
+    } else if (i == 5) {
+      code.updatePath(i, grids[i].path, mvt5, grids[i].ui.linkState);
     } else {
      code.updatePath(i, grids[i].path, mvt, grids[i].ui.linkState);
     } 
@@ -280,4 +284,16 @@ function setupInputs(){
   stockSizeYIn = createInput("610").parent(matBox.box);
   stockSizeYIn.position(offX, 3.5*offY);
 
+}
+
+ParseFloat(10.13, 2, true);
+function ParseFloat(nb,val, test = false) {
+  str = nb.toString();
+
+  if (str.indexOf(".") < 0 || str.slice(str.indexOf("."), str.length-1).length <= val){
+    return nb;
+  } else {
+    str = str.slice(0, (str.indexOf(".")) + val + 1);
+    return Number(str);  
+  }
 }

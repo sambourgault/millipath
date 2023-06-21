@@ -1,7 +1,7 @@
 // cartesian grid
 class Grid {
   constructor(x, y, xb, yb, spx = 50, spy = 50, sx = 150, sy = 150) {
-    this.visible = true;
+    this.visible = false;
     //constructor(x, y, textu) {
     const self = this;
     //this.textu = textu;

@@ -86,11 +86,11 @@ class GCodeGen {
             }
             else{
               self.writer.write(self.allTypePaths[k][j]+"3,"+
-              self.allPaths[k][j][i].x +
+              ParseFloat(self.allPaths[k][j][i].x,3) +
               ", " +
-              self.allPaths[k][j][i].y +
+              ParseFloat(self.allPaths[k][j][i].y,3) +
               ", " +
-              self.allPaths[k][j][i].z +
+              ParseFloat(self.allPaths[k][j][i].z,3) +
               "\n"
               );
             }
@@ -113,6 +113,7 @@ class GCodeGen {
       self.writer.write("END");
       self.writer.close();
     };
+
     this.button.mousePressed(this.generateGCode);
 
     this.beginSimulation = function(){
@@ -154,13 +155,14 @@ class GCodeGen {
       this.rotateMvt(mvt,index,grid[0], 0);
       tempPaths[1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.path[0].y, safeHeight));
       
+      //console.log(maxDepthCut)
       for (let i = 2; i < grid.length+2 ; i++){
         //add feed move
         tempPaths[i] = [];
         tempTypePaths[i] = "M";
         this.rotateMvt(mvt,index,grid[i-2], i-2);
         for (let k = 0; k < mvt.path.length; k++){
-          tempPaths[i].push(new createVector(grid[i-2].x+this.scaleMvt(grid[i-2], index)*mvt.path[k].x, grid[i-2].y+this.scaleMvt(grid[i-2], index)*mvt.path[k].y, -maxDepthCut*grid[i-2].z+mvt.path[k].z));
+          tempPaths[i].push(new createVector(grid[i-2].x+this.scaleMvt(grid[i-2], index)*mvt.path[k].x, grid[i-2].y+this.scaleMvt(grid[i-2], index)*mvt.path[k].y, maxDepthCut*(grid[i-2].z+mvt.path[k].z)));
         }
       }
       // add retract to safe Z height to the last point
@@ -195,7 +197,7 @@ class GCodeGen {
         tempPaths[2*i] = [];
         tempTypePaths[2*i] = "M";
         for (let k = 0; k < mvt.path.length; k++){
-          tempPaths[2*i].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1],index)*mvt.path[k].x, grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.path[k].y, maxDepthCut*grid[i-1].z+mvt.path[k].z));
+          tempPaths[2*i].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1],index)*mvt.path[k].x, grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.path[k].y, maxDepthCut*(grid[i-1].z+mvt.path[k].z)));
         }
         // add retract to safe Z height
         let lastPoint = tempPaths[2*i][tempPaths[2*i].length-1];

@@ -147,6 +147,17 @@ class Boundary{
         return 1.;
       }
 
+      circle2(cx,cy,r,res){
+        let angle = 360/res;
+        let r1 = 10;
+        let p1 = new createVector(10,0);
+        let r2 = 15;
+        let p2 = new createVector(-5,0);
+        for (let i = 0; i < res; i++){
+          this.path[i] = new createVector(20,0);
+        }
+      }
+
       inBound(x, y){
 
       }

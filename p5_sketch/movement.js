@@ -1,5 +1,5 @@
 class Movement{
-  constructor(mode,x, y){
+  constructor(mode,x, y, scale = 1.){
     this.mode = mode;
     this.sizeX = 300;
     this.sizeY = 200;
@@ -8,7 +8,7 @@ class Movement{
     this.offsetX = 0;
     this.offsetY = 0;
     this.rotOffset = 0;
-    this.scale = 0.5;
+    this.scale = scale;
     this.path = [];
     this.label= createDiv("movement xy plane");
     this.label.style('font-size', '14px');
@@ -34,23 +34,23 @@ class Movement{
         break;
       case 1:
         // line
-        this.line(0,0,50*this.scale, rotationOffset, 5);
+        this.line(0,0,25*this.scale, rotationOffset, 5);
         break;
       case 2:
         // polygon
-        this.polygon(100*this.scale, 3, rotationOffset);
+        this.polygon(50*this.scale, 3, rotationOffset);
         break;
       case 3:
-        this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
+        this.hypertrochoid(50*this.scale,10*this.scale,20*this.scale,100, 10);
         break;
       case 4:
-        this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
+        this.hypotrochoid(10*this.scale,2*this.scale,6*this.scale,21, 360/20);
         break;
       case 5:
-        this.chevron(0,0,50*this.scale, rotationOffset, 5);
+        this.chevron(0,0,25*this.scale, rotationOffset, 5);
         break;
       case 6:
-        this.polygon(70/cos(PI/4), 4, rotationOffset);
+        this.polygon(60/cos(PI/4), 4, rotationOffset);
         break;
       default:
         this.point(0,0);
@@ -185,7 +185,7 @@ class Movement{
        t = res*i*PI/180;
        x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
        y = ((R-r)*sin(t) + d*sin((R-r)/r * t));
-       z = map(sqrt(pow(x,2)+pow(y,2)), R-d, R+d, 0.,20.);
+       z = -map(sqrt(pow(x,2)+pow(y,2)), -R-d, R+d, 0.,1.);
        this.path[i] = new createVector(x,y,z);
     }
   }
@@ -196,7 +196,8 @@ class Movement{
       t = res*i*PI/180;
       x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
       y = ((R-r)*sin(t) - d*sin((R-r)/r * t));
-      z = map(sqrt(pow(x,2)+pow(y,2)), R-d, R+d, 0.,20.);
+      z = -1;//-map(abs(sqrt(pow(x,2)+pow(y,2))), R-r-d, R+r+d, 0.,1.);
+      //console.log(z);
       this.path[i] = new createVector(x,y,z);
     }
   }
@@ -219,7 +220,7 @@ class Movement{
     let previous = new createVector(0,0);
     let x,y,z;
     //let scale = 10.;
-    let scale = 1./this.scale;
+    let scale = 3.;
     for (let i = 0; i < this.path.length; i++){
 
 
@@ -240,7 +241,6 @@ class Movement{
       pop();
      }
       
-
       previous.x = x;
       previous.y = y;
       previous.z = z;

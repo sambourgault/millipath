@@ -4,7 +4,7 @@ class UI{
     this.x = x;
     this.y = y;
     this.grid = grid;
-    this.visible = true;
+    this.visible = false;
     //console.log(this.grid);
     this.box =  new CollapsibleBox(this.x, this.y, '450px', "grid specs");
     this.sliders = [];
