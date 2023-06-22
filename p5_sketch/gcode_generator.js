@@ -218,9 +218,9 @@ class GCodeGen {
   scaleMvt(point, gridIndex){
 
     let scale = 1.;
-    if (gridIndex == 2){
+    /*if (gridIndex == 2){
       scale = 0.5;
-    }
+    }*/
     // linear scale X
     //scale = map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.);
     // linear scale Y
@@ -234,13 +234,13 @@ class GCodeGen {
   rotateMvt(mvt, gridIndex, point, pointIndex){
     let rotateOffset = 0;
 
-    if (gridIndex == 0 || gridIndex == 1 ){
+    if (gridIndex == 0 || gridIndex == 1 || gridIndex == 5){
       // constant
-      rotateOffset = PI/4;
+      rotateOffset = PI/4;//PI/4;
     } else if (gridIndex == 2) {
       rotateOffset = PI/2*int(random(4)) + PI/4;
-    } else if (gridIndex == 3 || gridIndex == 5){
-      rotateOffset = PI/4 + (pointIndex % 2) * PI;
+    } else if (gridIndex == 3 ){
+      rotateOffset = (pointIndex % 2) * PI;
       //rotateOffset = 0;
       //console.log(rotateOffset);
     } 
@@ -250,9 +250,9 @@ class GCodeGen {
     
     //random 45 degrees
     //rotateOffset = PI/2*int(random(4)) + PI/4;
-
-    mvt.rotateOffset = rotateOffset;
-    let rotatedPath = mvt.makePath(rotateOffset);
+    
+    mvt.shapeRotOffset = rotateOffset;
+    let rotatedPath = mvt.makePath();
     //console.log(rotatedPath);
     return rotatedPath;
   }

@@ -31,7 +31,7 @@ let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 16; // mm/s
 let plungeRate = 5; //mm/s
-let maxDepthCut = 10; // mm
+let maxDepthCut = 5; // mm
 let infoBox;
 let matBox;
 let sZIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
@@ -74,6 +74,11 @@ function setup() {
   grids[3] = new Grid(350, 200, 10, 190, 25, 25, 175, 140);
   grids[4] = new Grid(50 + 59,50 + 59, 10, 250, 140,140,141,141);
   grids[5] = new Grid(50, 200, 10, 310, 50, 50, 200, 150);
+
+  for (let i = 0; i < grids.length; i++){
+    grids[i].ui.box.collapse();
+  }
+
   infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
   matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
   setupInputs();
@@ -82,7 +87,7 @@ function setup() {
   mvt2 = new Movement(5, 0,0);
   mvt3 = new Movement(6,0,0);
   mvt5 = new Movement(4,0,0, 1.5);
-  mvt7 = new Movement(7, 0,0);
+  mvt7 = new Movement(7,0,0);
   //mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
   boundary = new Boundary(-stockSizeXIn.value()/2,stockSizeYIn.value()/2);
   boundary.setOffset(width/2+sizeX/2,height/2 - boundary.sizeY - 270);
@@ -187,8 +192,8 @@ function draw() {
 
   // display movement
   push();
-  mvt2.displayStatic();
-  //mvt7.displayStatic();
+  //mvt2.displayStatic();
+  mvt7.displayStatic();
   pop();
 
   
@@ -200,7 +205,7 @@ function draw() {
     } else if (i == 4){
       code.updatePath(i, grids[i].path, mvt3, grids[i].ui.linkState);
     } else if (i == 5) {
-      code.updatePath(i, grids[i].path, mvt5, grids[i].ui.linkState);
+      code.updatePath(i, grids[i].path, mvt7, grids[i].ui.linkState);
     } else {
      code.updatePath(i, grids[i].path, mvt, grids[i].ui.linkState);
     } 

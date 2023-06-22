@@ -2,7 +2,7 @@
 class Grid {
   constructor(x, y, xb, yb, spx = 50, spy = 50, sx = 150, sy = 150) {
     this.visible = false;
-    this.openBox = true;
+    this.openBox = false;
     //constructor(x, y, textu) {
     const self = this;
     //this.textu = textu;
@@ -25,9 +25,9 @@ class Grid {
 
     //this.boundaryDist = (this.ui.sliders[8].value() / 1000) * 200;
     this.boundaryDist = Number(this.ui.sliders[8].value());
-    console.log("sizex: "+this.sizeX);
+    //console.log("sizex: "+this.sizeX);
     this.row = int(this.sizeX / this.spacingX);
-    console.log(this.row);
+    //console.log(this.row);
     this.column = int(this.sizeY / this.spacingY);
     this.depthMatrix = [];
     this.initialGridMatrix = [];
@@ -59,7 +59,7 @@ class Grid {
         this.depthMatrix[i][j] = -0.1;
       }
     }
-    
+    //this.ui.box.collapse();
     //console.log("at creation: " + this.gridMatrix[0][0]);
     //this.sinGrid(this.sinAmp, this.sinPeriod);
 

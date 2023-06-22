@@ -7,7 +7,7 @@ class Movement{
     this.y = y ;
     this.offsetX = 0;
     this.offsetY = 0;
-    this.rotOffset = 0;
+    this.shapeRotOffset = 0;
     this.scale = scale;
     this.path = [];
     this.label= createDiv("movement xy plane");
@@ -23,9 +23,10 @@ class Movement{
     this.makePath();
   }
 
-  makePath(rotationOffset = 0, spacingX = 1, spacingY = 1){
+  makePath(spacingX = 1, spacingY = 1){
     // maybe clear path
     this.path = [];
+    //this.shapeRotOffset = shapeRotOffset;
 
     switch(this.mode) {
       case 0:
@@ -34,11 +35,11 @@ class Movement{
         break;
       case 1:
         // line
-        this.line(0,0,25*this.scale, rotationOffset, 5);
+        this.line(0,0,25*this.scale, 0, 5);
         break;
       case 2:
         // polygon
-        this.polygon(50*this.scale, 3, rotationOffset);
+        this.polygon(50*this.scale, 3, 0);
         break;
       case 3:
         this.hypertrochoid(50*this.scale,10*this.scale,20*this.scale,100, 10);
@@ -48,15 +49,16 @@ class Movement{
         this.hypotrochoid(10*this.scale,2*this.scale,6*this.scale,21, 360/20);
         break;
       case 5:
-        this.chevron(0,0,25*this.scale, rotationOffset, 5);
+        this.chevron(0,0,25*this.scale, 0, 5);
         break;
       case 6:
-        this.polygon(60/cos(PI/4), 4, rotationOffset);
+        this.polygon(60/cos(PI/4), 4, 0);
         break;
       case 7:
-        //this.cross(0,0,25*this.scale, rotationOffset, 5);
+        this.cross(0,0,25*this.scale, 0, 5, 4);
+        //console.log(this.path)
         //console.log("rot:"+rotationOffset);
-        this.chevron(0,0,25*this.scale, rotationOffset, 5);
+        //this.chevron(0,0,25*this.scale, rotationOffset, 5);
       default:
         this.point(0,0);
     }
@@ -127,51 +129,33 @@ class Movement{
 
   line(x,y,l,rotateOffset, nbPoint){
     let z = 0;
-    let maxX = l*cos(rotateOffset+this.rotOffset);
-    let deltaX = l*cos(rotateOffset+this.rotOffset)/nbPoint;
-    let deltaY = l*sin(rotateOffset+this.rotOffset)/nbPoint;
+    let maxX = l*cos(rotateOffset+this.shapeRotOffset);
+    
+    let deltaX = l*cos(rotateOffset+this.shapeRotOffset)/nbPoint;
+    let deltaY = l*sin(rotateOffset+this.shapeRotOffset)/nbPoint;
     for (let i = 0; i < nbPoint+1; i++){
       // linear descending in X
       //z = -i*deltaX/maxX;
       // positive parabola with min in the middle of the line
       z = this.parabola(i*deltaX,0,maxX);
       //console.log(z);
-      this.path[i] = new createVector(x-i*deltaX,y+i*deltaY, z);
+      this.path.push(new createVector(x-i*deltaX,y+i*deltaY, z));
     }
   }
 
   chevron(x,y,l,rotateOffset, nbPoint){
-    let z = 0;
-    let maxX = l*cos(rotateOffset+this.rotOffset);
-    let maxY = l*sin(rotateOffset+this.rotOffset);
-    let deltaX = l*cos(rotateOffset+this.rotOffset)/nbPoint;
-    let deltaY = l*sin(rotateOffset+this.rotOffset)/nbPoint;
-    for (let i = 0; i < nbPoint+1; i++){
-      // linear descending in X
-      //z = -i*deltaX/maxX;
-      // positive parabola with min in the middle of the line
-      z = this.parabola(i*deltaX,0,maxX);
-      this.path.push(new createVector(x-i*deltaX+maxX,y+i*deltaY, z));
-      if (i == 0){
-        console.log(this.path[0]);
-      }
-      //console.log(this.path[this.path.length-1]);
-    }
-
-    deltaY = -deltaY;
-    for (let i = 1; i < nbPoint+1; i++){
-      // linear descending in X
-      //z = -i*deltaX/maxX;
-      // positive parabola with min in the middle of the line
-      z = this.parabola(i*deltaX,0,maxX);
-      this.path.push(new createVector(x-i*deltaX,y+i*deltaY+maxY, z));
-    }
-    
+    this.line(x,y,l,rotateOffset+PI/4, nbPoint);
+    this.line(x,y,l,rotateOffset-PI/4, nbPoint);
   }
   
-  cross(x,y,l,rotateOffset, nbPoint){
-    this.chevron(x,y,l,rotateOffset, nbPoint);
-    console.log(this.path);
+  cross(x,y,l,rotateOffset, nbPoint, nbApex){
+    for (let i = 0; i < nbApex; i++){
+      this.line(x,y,l,rotateOffset+i*2*PI/nbApex, nbPoint);
+    }
+    //line(x,y,l,rotateOffset, nbPoint);
+
+    //this.chevron(x,y,l,rotateOffset, nbPoint);
+    //console.log(this.path);
     //this.chevron(x,y,l,rotateOffset+PI, nbPoint)
   }
 
@@ -215,7 +199,7 @@ class Movement{
   polygon(r, nbSides, rotationOffset){
     let t,x,y,z;
     for (let i = 0; i < nbSides; i++){
-      t = 360/nbSides*i*PI/180 + PI/nbSides + rotationOffset + this.rotOffset;
+      t = 360/nbSides*i*PI/180 + PI/nbSides + rotationOffset + this.shapeRotOffset;
       x = r*cos(t);
       y = r*sin(t);
       z = 0;

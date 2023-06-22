@@ -42,9 +42,7 @@ class CollapsibleBox{
         this.h2.position(10, 0);
         this.collapseButton.position(150,10);
         this.collapseButton.style('font-size', '14px');
-        this.collapseButton.style('font-family', 'Poppins');
-
-        
+        this.collapseButton.style('font-family', 'Poppins');        
     }
 
 
