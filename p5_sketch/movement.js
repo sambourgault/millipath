@@ -19,11 +19,11 @@ class Movement{
     this.label2.style('font-size', '14px');
     this.label2.style('font-family', 'Poppins');
     this.label2.position(width - this.sizeX-20, 20+this.sizeY);
-    this.makePath(1);
-    
+    //this.makePath(this.mode);
+    this.makePath();
   }
 
-  makePath(rotationOffset = 0){
+  makePath(rotationOffset = 0, spacingX = 1, spacingY = 1){
     // maybe clear path
     this.path = [];
 
@@ -53,6 +53,10 @@ class Movement{
       case 6:
         this.polygon(60/cos(PI/4), 4, rotationOffset);
         break;
+      case 7:
+        //this.cross(0,0,25*this.scale, rotationOffset, 5);
+        //console.log("rot:"+rotationOffset);
+        this.chevron(0,0,25*this.scale, rotationOffset, 5);
       default:
         this.point(0,0);
     }
@@ -147,11 +151,12 @@ class Movement{
       //z = -i*deltaX/maxX;
       // positive parabola with min in the middle of the line
       z = this.parabola(i*deltaX,0,maxX);
-      //console.log(z);
-      this.path[i] = new createVector(x-i*deltaX+maxX,y+i*deltaY, z);
+      this.path.push(new createVector(x-i*deltaX+maxX,y+i*deltaY, z));
+      if (i == 0){
+        console.log(this.path[0]);
+      }
+      //console.log(this.path[this.path.length-1]);
     }
-    //console.log(this.path.length);
-    //console.log(nbPoint+1);
 
     deltaY = -deltaY;
     for (let i = 1; i < nbPoint+1; i++){
@@ -159,11 +164,15 @@ class Movement{
       //z = -i*deltaX/maxX;
       // positive parabola with min in the middle of the line
       z = this.parabola(i*deltaX,0,maxX);
-      //console.log(z);
-      this.path[nbPoint+i] = new createVector(x-i*deltaX,y+i*deltaY+maxY, z);
+      this.path.push(new createVector(x-i*deltaX,y+i*deltaY+maxY, z));
     }
-
-
+    
+  }
+  
+  cross(x,y,l,rotateOffset, nbPoint){
+    this.chevron(x,y,l,rotateOffset, nbPoint);
+    console.log(this.path);
+    //this.chevron(x,y,l,rotateOffset+PI, nbPoint)
   }
 
   paarabola(a,x,h,k){
@@ -197,7 +206,7 @@ class Movement{
       t = res*i*PI/180;
       x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
       y = ((R-r)*sin(t) - d*sin((R-r)/r * t));
-      z = -1;//-map(abs(sqrt(pow(x,2)+pow(y,2))), R-r-d, R+r+d, 0.,1.);
+      z = -0.5;//-map(abs(sqrt(pow(x,2)+pow(y,2))), R-r-d, R+r+d, 0.,1.);
       //console.log(z);
       this.path[i] = new createVector(x,y,z);
     }
@@ -235,12 +244,12 @@ class Movement{
       line(previous.x, previous.y,previous.z,x,y,z);
      }
 
-     //if (this.path.length == 1){
+     if (this.path.length == 1){
       push();
       translate(x,y,z);
       sphere(4);
       pop();
-     //}
+     }
       
       previous.x = x;
       previous.y = y;

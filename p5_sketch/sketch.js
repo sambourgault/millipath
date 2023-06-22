@@ -22,7 +22,7 @@ let readOnce = false;
 let rotationSlider;
 let rotDiv;
 
-let mvt;
+let mvt, mvt2, mvt3, mvt5, mvt7;
 let boundary;
 let code;
 let codeGenButton;
@@ -31,7 +31,7 @@ let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 16; // mm/s
 let plungeRate = 5; //mm/s
-let maxDepthCut = 3; // mm
+let maxDepthCut = 10; // mm
 let infoBox;
 let matBox;
 let sZIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
@@ -82,6 +82,7 @@ function setup() {
   mvt2 = new Movement(5, 0,0);
   mvt3 = new Movement(6,0,0);
   mvt5 = new Movement(4,0,0, 1.5);
+  mvt7 = new Movement(7, 0,0);
   //mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
   boundary = new Boundary(-stockSizeXIn.value()/2,stockSizeYIn.value()/2);
   boundary.setOffset(width/2+sizeX/2,height/2 - boundary.sizeY - 270);
@@ -159,7 +160,7 @@ function draw() {
   //rotateZ(PI);
   translate(0,sizeY/2,0);
   rotateX(-thetaX);
-  rotateY(thetaY);
+  //rotateY(thetaY);
   translate(0,-sizeY/2,0);
   noFill();
   stroke(0);
@@ -186,7 +187,8 @@ function draw() {
 
   // display movement
   push();
-  mvt5.displayStatic();
+  mvt2.displayStatic();
+  //mvt7.displayStatic();
   pop();
 
   

@@ -14,13 +14,13 @@ class GCodeGen {
     this.writer = createWriter(fileName + ".sbp");
 
     this.writer.write("' "+fileName+"\n");
-
-    // 0 for inch, 1 for metric
-    this.writer.write("IF %(25)=0 THEN GOTO UNIT_ERROR\n");
     // set to absolute distance
     this.writer.write("SA \n");
+    // 0 for inch, 1 for metric
+    this.writer.write("IF %(25)=0 THEN GOTO UNIT_ERROR\n");
     // CN, 90 calls up the My_Variables file to set user variables from a predefined list.
-    // this.writer.write("CN, 90 \n");
+    //this.writer.write("CN, 90 \n");
+    this.writer.write("&Tool = 1\n"); // seems to require this line
     this.writer.write("&PWSafeZ = " + sZIn.value() + "\n"); //mm
     this.writer.write("&PWZorigin = Material Surface\n");
     this.writer.write("&PWMaterial = " + mtIn.value() + "\n"); //mm
@@ -72,7 +72,7 @@ class GCodeGen {
       // link move in Z to go up
       self.writer.write("JZ," + self.allPaths[0][0][0].z + "\n");
       // link move to 0,0 in XY
-      self.writer.write("J2,"+ self.allPaths[0][0][0].x +","+ self.allPaths[0][0][0].y +"\n");
+      self.writer.write("J2,"+ -self.allPaths[0][0][0].x +","+ self.allPaths[0][0][0].y +"\n");
       // add all next link and feed move based on typePaths[j]
 
       // all grids
@@ -86,7 +86,7 @@ class GCodeGen {
             }
             else{
               self.writer.write(self.allTypePaths[k][j]+"3,"+
-              ParseFloat(self.allPaths[k][j][i].x,3) +
+              ParseFloat(-self.allPaths[k][j][i].x,3) +
               ", " +
               ParseFloat(self.allPaths[k][j][i].y,3) +
               ", " +
@@ -234,12 +234,12 @@ class GCodeGen {
   rotateMvt(mvt, gridIndex, point, pointIndex){
     let rotateOffset = 0;
 
-    if (gridIndex == 0 || gridIndex == 1){
+    if (gridIndex == 0 || gridIndex == 1 ){
       // constant
       rotateOffset = PI/4;
     } else if (gridIndex == 2) {
       rotateOffset = PI/2*int(random(4)) + PI/4;
-    } else if (gridIndex == 3){
+    } else if (gridIndex == 3 || gridIndex == 5){
       rotateOffset = PI/4 + (pointIndex % 2) * PI;
       //rotateOffset = 0;
       //console.log(rotateOffset);
