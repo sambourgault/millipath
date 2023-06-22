@@ -68,12 +68,12 @@ function setup() {
   //--shaderTexture.noStroke();
   //grid1 = new Grid(-width / 2 + 175, width / 2 - 200, shaderTexture);
   //--grid1 = new Grid(0, 0, shaderTexture);
-  grids[0] = new Grid(50, 50, 10, 10, 50, 50);
-  grids[1] = new Grid(200, 50, 10, 70, 25, 25, 140, 140);
-  grids[2] = new Grid(350, 50, 10, 130, 25, 25, 140, 140);
-  grids[3] = new Grid(350, 200, 10, 190, 25, 25, 175, 140);
-  grids[4] = new Grid(50 + 59,50 + 59, 10, 250, 140,140,141,141);
-  grids[5] = new Grid(50, 200, 10, 310, 50, 50, 200, 150);
+  grids[0] = new Grid(0, 0, 10, 10, 0, 50, 50, 250, 250);
+  /*grids[1] = new Grid(200, 50, 10, 70, 0, 25, 25, 140, 140);
+  grids[2] = new Grid(350, 50, 10, 130, 0, 25, 25, 140, 140);
+  grids[3] = new Grid(350, 200, 10, 190, 0, 25, 25, 175, 140);
+  grids[4] = new Grid(50 + 59,50 + 59, 10, 250,0, 140,140,141,141);
+  grids[5] = new Grid(50, 200, 10, 310,0, 50, 50, 200, 150);*/
 
   for (let i = 0; i < grids.length; i++){
     grids[i].ui.box.collapse();
@@ -84,13 +84,13 @@ function setup() {
   setupInputs();
   
   mvt = new Movement(1, 0, 0);
-  mvt2 = new Movement(5, 0,0);
-  mvt3 = new Movement(6,0,0);
-  mvt5 = new Movement(4,0,0, 1.5);
-  mvt7 = new Movement(7,0,0);
+  mvt2 = new Movement(5, 0, 0);
+  mvt3 = new Movement(6, 0, 0);
+  mvt5 = new Movement(4, 0, 0, 1.5);
+  mvt7 = new Movement(7, 0, 0);
   //mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
-  boundary = new Boundary(-stockSizeXIn.value()/2,stockSizeYIn.value()/2);
-  boundary.setOffset(width/2+sizeX/2,height/2 - boundary.sizeY - 270);
+  boundary = new Boundary(-100,100);
+  //boundary.setOffset(width/2+sizeX/2,height/2 - boundary.sizeY - 270);
   code = new GCodeGen("test1");
 }
 
@@ -181,7 +181,7 @@ function draw() {
     grids[i].display();
   }
   directions.display();
-  //boundary.display();
+  boundary.display();
   code.display();
   pop();
   
@@ -207,7 +207,7 @@ function draw() {
     } else if (i == 5) {
       code.updatePath(i, grids[i].path, mvt7, grids[i].ui.linkState);
     } else {
-     code.updatePath(i, grids[i].path, mvt, grids[i].ui.linkState);
+     code.updatePath(i, grids[i].path, mvt7, grids[i].ui.linkState);
     } 
      grids[i].changedGrid = false;
    }

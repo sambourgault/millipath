@@ -130,7 +130,6 @@ class GCodeGen {
   
   updatePath(index, grid, mvt, linkState){
     this.movement = mvt;
-    //this.linkState = linkState;
     // clear the index associated to that grid in allPaths
     this.allPaths[index] = [];
     this.allTypePaths[index] = [];
@@ -140,12 +139,9 @@ class GCodeGen {
     tempTypePaths.push("J");
     tempPaths[0] = [];
     tempPaths[0][0] = new createVector(0,0,safeHeight);
-    //this.paths[0][1] = new createVector(grid[0].x+this.mvtScale*mvt.path[0].x, grid[0].y+this.mvtScale*mvt.path[0].y, safeHeight);
-    //this.paths[0][1] = new createVector(grid[0].x, grid[0].y, safeHeight);
     this.gridP0 = grid[0];
     
     // if linked state on 
-    //if (this.linkState == true){
     if (linkState == true){
   
       // add the first jog move from previous position to over current point
@@ -186,22 +182,64 @@ class GCodeGen {
       // if unlinked state on
       for (let i = 1; i < grid.length+1 ; i++){
         // add jog move from previous position to over current point
-        tempPaths[2*i - 1] = [];
-        tempTypePaths[2*i - 1] = "J";
+        //tempPaths[2*i - 1] = [];
+        //tempTypePaths[2*i - 1] = "J";
+        tempPaths.push([]);
+        tempTypePaths.push("J");
         //let previousPathPoint = this.paths[2*i-2][this.paths[2*i-2].length-1];
         //this.paths[2*i-1].push(previousPathPoint);
         this.rotateMvt(mvt,index,grid[i-1], i-1);
-        tempPaths[2*i-1].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1], index)*mvt.path[0].x, grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.path[0].y, safeHeight));
+        let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*mvt.path[0].x;
+        let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.path[0].y;
+        let z = safeHeight;
+        //tempPaths[2*i-1].push(new createVector(x, y, safeHeight));
+        tempPaths[tempPaths.length-1].push(new createVector(x, y, safeHeight));
         
         //add feed move
-        tempPaths[2*i] = [];
-        tempTypePaths[2*i] = "M";
+        //tempPaths[2*i] = [];
+        //tempTypePaths[2*i] = "M";
+        tempPaths.push([]);
+        tempTypePaths.push("M");
         for (let k = 0; k < mvt.path.length; k++){
-          tempPaths[2*i].push(new createVector(grid[i-1].x+this.scaleMvt(grid[i-1],index)*mvt.path[k].x, grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.path[k].y, maxDepthCut*(grid[i-1].z+mvt.path[k].z)));
+          x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*mvt.path[k].x;
+          y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.path[k].y;
+          z = maxDepthCut*(grid[i-1].z+mvt.path[k].z);
+          if (boundary.checkBoundary(0,x,y) <= 0){
+            // point is inside the boundary
+            //tempPaths[2*i].push(new createVector(x, y,z));
+            if (tempPaths[tempPaths.length-1].length == 0){
+              // modify the plunge position
+              //console.log(tempPaths[tempPaths.length-1][1]);
+              //console.log(tempPaths[tempPaths.length-2][0]);
+              tempPaths[tempPaths.length-2][0].x = x;
+              tempPaths[tempPaths.length-2][0].y = y;
+
+            }
+
+            tempPaths[tempPaths.length-1].push(new createVector(x, y,z));
+            //console.log(tempPaths[tempPaths.length-1].length);
+            
+            
+          } else {
+            // outside the boundary
+          }
         }
+        //console.log(tempPaths[2*i]);
         // add retract to safe Z height
-        let lastPoint = tempPaths[2*i][tempPaths[2*i].length-1];
-        tempPaths[2*i].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+        //if (tempPaths[2*i].length != 0){
+        if (tempPaths[tempPaths.length-1].length != 0){
+          //let lastPoint = tempPaths[2*i][tempPaths[2*i].length-1];
+          //tempPaths[2*i].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+          let lastPoint = tempPaths[tempPaths.length-1][tempPaths[tempPaths.length-1].length-1];
+          tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+        } else {
+          // if the mvt points were found all outside the boundary, remove the last two tempPaths.
+          tempPaths.pop();
+          tempPaths.pop();
+          tempTypePaths.pop();
+          tempTypePaths.pop();
+        }
+
       }
       // REHOME at the end
       tempTypePaths.push("J");
@@ -315,7 +353,6 @@ class GCodeGen {
             let scaleCZ = 1.;
             //if (previous.z < 0.) scalePZ = 30;
             //if (current.z < 0.) scaleCZ = 30;
-            
             
             line(previous.x, previous.y, scalePZ*previous.z, current.x, current.y, scaleCZ*current.z);
             pop();

@@ -2,10 +2,10 @@ class Boundary{
     constructor(x, y){
         this.sizeX = 300;
         this.sizeY = 400;
-        //this.x = x ;
-        //this.y = y ;
-        this.x = -this.sizeX/3;
-        this.y = this.sizeY/4;
+        this.x = x ;
+        this.y = y ;
+        //this.x = -this.sizeX/3;
+        //this.y = this.sizeY/4;
         this.offsetX = 0;
         this.offsetY = 0;
         this.scale = 1;
@@ -19,20 +19,36 @@ class Boundary{
         this.makeBoundary();   
     }
 
+    checkBoundary(mode, x, y){
+      let status = -1;
+      switch(mode){
+        case 0:
+          status = this.checkInCircle(x,y, 100);
+          break;
+        default:
+          status = this.checkInCircle(x,y, 100);
+      }
+      //console.log(status);
+      return status;
+    }
+
     makeBoundary(){
         //this.point(0,0);
-        this.polygon(100*this.scale, 10);
-        //this.circle(100*this.scale);
+        //this.polygon(100*this.scale, 10);
+        this.circle(0,0,100*this.scale);
         //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
         //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
     }
 
     checkInCircle(x, y, r){
-      let d = dist(x,y,this.x-this.sizeX/2, this.y+this.sizeY/2);
-      if (d > r){
-        return 0.;
+      let d = dist(this.x, this.y, x, y);
+      if (d < r){
+        return -1.;
+      } else if (d > r){
+        return 1.;
+      } else if (d == r){
+        return 0;
       }
-      return 1.;
     }
 
     setOffset(x, y){
@@ -140,11 +156,17 @@ class Boundary{
       }
 
       circle(x, y, r){
-        let d = dist(x,y,this.x-this.sizeX/2, this.y+this.sizeY/2);
+        /*let d = dist(x,y,this.x-this.sizeX/2, this.y+this.sizeY/2);
         if (d > r){
           return 0.;
         }
-        return 1.;
+        return 1.;*/
+        let nbSides = 20;
+        for (let i = 0; i < nbSides; i++){
+          let angle = i*360/nbSides;
+          this.path.push(new createVector(x+r*cos(angle*PI/180), y+r*sin(angle*PI/180)));
+        }
+        this.path.push(this.path[0]);
       }
 
       circle2(cx,cy,r,res){

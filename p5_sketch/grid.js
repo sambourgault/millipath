@@ -1,8 +1,10 @@
 // cartesian grid
 class Grid {
-  constructor(x, y, xb, yb, spx = 50, spy = 50, sx = 150, sy = 150) {
+  constructor(x, y, xb, yb, mvtMode=0, spx = 50, spy = 50, sx = 150, sy = 150) {
     this.visible = false;
     this.openBox = false;
+    this.mvtMode = mvtMode;
+    this.mvt = new Movement(this.mvtMode, 0, 0);
     //constructor(x, y, textu) {
     const self = this;
     //this.textu = textu;
@@ -41,6 +43,7 @@ class Grid {
     this.firstPoint = true;
     this.changedGrid = false;
     this.path = [];
+    this.paths = [];
 
     for (let i = 0; i < this.row; i++) {
       this.gridMatrix[i] = [];
@@ -62,7 +65,6 @@ class Grid {
     //this.ui.box.collapse();
     //console.log("at creation: " + this.gridMatrix[0][0]);
     //this.sinGrid(this.sinAmp, this.sinPeriod);
-
   }
 
   display() {
