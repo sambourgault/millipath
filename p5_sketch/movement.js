@@ -62,7 +62,8 @@ class Movement{
         this.cross(0,0,25*this.scale, 0, 5, 4);
         break;
       case 8:
-        this.diamond(0,0,25*this.scale, 0, 5);
+        //this.diamond(0,0,25*this.scale, 0, 5);
+        this.line(0,0,spacingX, 0, 5);
         break;
       default:
         this.point(0,0);
@@ -152,6 +153,10 @@ class Movement{
       this.path.push(new createVector(xf,yf, z));
     }
   }
+
+  /*lineGrid(){
+
+  }*/
 
   chevron(x,y,l,rotateOffset, nbPoint){
     this.line(x,y,l,rotateOffset+PI/4, nbPoint);

@@ -235,7 +235,7 @@ class GCodeGen {
         tempTypePaths.push("M");
         for (let k = 0; k < mvt.path.length; k++){
           x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*mvt.path[k].x;
-          y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.path[k].y;
+          y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*mvt.path[k].y;
           z = maxDepthCut*(grid[i-1].z+mvt.path[k].z);
           if (boundary.checkBoundary(0,x,y) <= 0){
             // point is inside the boundary
@@ -330,8 +330,9 @@ class GCodeGen {
     //rotateOffset = PI/2*int(random(4)) + PI/4;
     
     mvt.globalRotOffset = rotateOffset;
-    let rotatedPath = mvt.makePath();
-    //console.log(rotatedPath);
+    let rotatedPath = mvt.makePath(grids[gridIndex].spacingX, grids[gridIndex].spacingY);
+
+    //console.log(grids[gridIndex].spacingX);
     return rotatedPath;
   }
 

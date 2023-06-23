@@ -199,7 +199,7 @@ function draw() {
   
   for (let i = 0; i < grids.length; i++){
    if (grids[i].changedGrid){
-    //console.log("helloo")
+    console.log("helloo")
     if (i == 3){
       code.updatePath(i, grids[i].path, mvt2, grids[i].ui.linkState);
     } else if (i == 4){
