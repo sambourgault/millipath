@@ -145,38 +145,71 @@ class GCodeGen {
     if (linkState == true){
   
       // add the first jog move from previous position to over current point
-      tempPaths[1] = [];
-      tempTypePaths[1] = "J";
+      //tempPaths[1] = [];
+      //tempTypePaths[1] = "J";
+      tempPaths.push([]);
+      tempTypePaths.push("J");
 
       this.rotateMvt(mvt,index,grid[0], 0);
-      tempPaths[1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.path[0].y, safeHeight));
-      
+      //tempPaths[1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.path[0].y, safeHeight));
+      tempPaths[tempPaths.length-1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.path[0].y, safeHeight));
+
       //console.log(maxDepthCut)
       for (let i = 2; i < grid.length+2 ; i++){
         //add feed move
-        tempPaths[i] = [];
-        tempTypePaths[i] = "M";
+        //tempPaths[i] = [];
+        //tempTypePaths[i] = "M";
+        tempPaths.push([]);
+        tempTypePaths.push("M");
         this.rotateMvt(mvt,index,grid[i-2], i-2);
+
         for (let k = 0; k < mvt.path.length; k++){
-          tempPaths[i].push(new createVector(grid[i-2].x+this.scaleMvt(grid[i-2], index)*mvt.path[k].x, grid[i-2].y+this.scaleMvt(grid[i-2], index)*mvt.path[k].y, maxDepthCut*(grid[i-2].z+mvt.path[k].z)));
+          let x = grid[i-2].x+this.scaleMvt(grid[i-2], index)*mvt.path[k].x;
+          let y = grid[i-2].y+this.scaleMvt(grid[i-2], index)*mvt.path[k].y;
+          let z = maxDepthCut*(grid[i-2].z+mvt.path[k].z);
+          //tempPaths[tempPaths.length-1].push(new createVector(x, y, z));
+          
+          if (boundary.checkBoundary(0,x,y) <= 0){
+            // point is inside the boundary
+            //tempPaths[2*i].push(new createVector(x, y,z));
+            if (tempPaths.length == 3 && tempPaths[tempPaths.length-1].length == 0){
+              // modify the first plunge position
+              //console.log(tempPaths[tempPaths.length-1][1]);
+              //console.log(tempPaths[tempPaths.length-2][0]);
+              tempPaths[tempPaths.length-2][0].x = x;
+              tempPaths[tempPaths.length-2][0].y = y;
+            }
+
+            tempPaths[tempPaths.length-1].push(new createVector(x, y,z));            
+            
+          } else {
+            // outside the boundary
+          }
+        }
+
+        // if after adding the mvt the path if empty bc none of the mvt is within the boundary, remove path
+        if (tempPaths[tempPaths.length-1].length == 0){
+            tempPaths.pop();
+            tempTypePaths.pop();
         }
       }
+
       // add retract to safe Z height to the last point
       let nbPaths = tempPaths.length;
       let nbPointsInLast = tempPaths[nbPaths-1].length;
       let lastPoint = tempPaths[nbPaths-1][nbPointsInLast-1];
       //tempTypePaths.push("M");
-      tempPaths[grid.length+1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+      tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
 
       // REHOME at the end
       tempTypePaths.push("J");
       let lastJog = [];
       lastJog.push(tempPaths[0][0]);
       tempPaths.push(lastJog);
+      
+      // add to main paths collection
       this.allPaths[index] = tempPaths;
       this.allTypePaths[index] = tempTypePaths;
-      //console.log("allPaths -->")
-      //console.log(this.allPaths);
 
     } else {
       // if unlinked state on
@@ -239,8 +272,8 @@ class GCodeGen {
           tempTypePaths.pop();
           tempTypePaths.pop();
         }
-
       }
+      
       // REHOME at the end
       tempTypePaths.push("J");
       let lastJog = [];
@@ -251,6 +284,10 @@ class GCodeGen {
       this.allPaths[index] = tempPaths;
       this.allTypePaths[index] = tempTypePaths;
     }
+  }
+
+  reflectMvt(){
+
   }
 
   scaleMvt(point, gridIndex){
@@ -272,16 +309,19 @@ class GCodeGen {
   rotateMvt(mvt, gridIndex, point, pointIndex){
     let rotateOffset = 0;
 
-    if (gridIndex == 0 || gridIndex == 1 || gridIndex == 5){
+    if (gridIndex == 0 || gridIndex == 1 ){ //|| gridIndex == 5
       // constant
-      rotateOffset = PI/4;//PI/4;
+      rotateOffset = 0;//PI/4;
+      //console.log("hello");
     } else if (gridIndex == 2) {
       rotateOffset = PI/2*int(random(4)) + PI/4;
     } else if (gridIndex == 3 ){
       rotateOffset = (pointIndex % 2) * PI;
       //rotateOffset = 0;
       //console.log(rotateOffset);
-    } 
+    } else {
+
+    }
 
     // linear in X
     //rotateOffset = map((-point.x+this.gridP0.x), 0, 1000, 0., 2*PI);
@@ -289,7 +329,7 @@ class GCodeGen {
     //random 45 degrees
     //rotateOffset = PI/2*int(random(4)) + PI/4;
     
-    mvt.shapeRotOffset = rotateOffset;
+    mvt.globalRotOffset = rotateOffset;
     let rotatedPath = mvt.makePath();
     //console.log(rotatedPath);
     return rotatedPath;

@@ -87,7 +87,7 @@ function setup() {
   mvt2 = new Movement(5, 0, 0);
   mvt3 = new Movement(6, 0, 0);
   mvt5 = new Movement(4, 0, 0, 1.5);
-  mvt7 = new Movement(7, 0, 0);
+  mvt7 = new Movement(8, 0, 0);
   //mvt.setOffset(width/2+sizeX/2,-height/2-sizeY/2);
   boundary = new Boundary(-100,100);
   //boundary.setOffset(width/2+sizeX/2,height/2 - boundary.sizeY - 270);

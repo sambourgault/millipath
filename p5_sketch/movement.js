@@ -7,7 +7,11 @@ class Movement{
     this.y = y ;
     this.offsetX = 0;
     this.offsetY = 0;
-    this.shapeRotOffset = 0;
+    this.globalRotOffset = 0;
+    this.reflectX = 1;
+    this.reflectY = 1;
+    this.globalRefX = 1.;
+    this.globalRefY = 1.;
     this.scale = scale;
     this.path = [];
     this.label= createDiv("movement xy plane");
@@ -26,7 +30,7 @@ class Movement{
   makePath(spacingX = 1, spacingY = 1){
     // maybe clear path
     this.path = [];
-    //this.shapeRotOffset = shapeRotOffset;
+    //this.globalRotOffset = globalRotOffset;
 
     switch(this.mode) {
       case 0:
@@ -56,9 +60,10 @@ class Movement{
         break;
       case 7:
         this.cross(0,0,25*this.scale, 0, 5, 4);
-        //console.log(this.path)
-        //console.log("rot:"+rotationOffset);
-        //this.chevron(0,0,25*this.scale, rotationOffset, 5);
+        break;
+      case 8:
+        this.diamond(0,0,25*this.scale, 0, 5);
+        break;
       default:
         this.point(0,0);
     }
@@ -129,17 +134,22 @@ class Movement{
 
   line(x,y,l,rotateOffset, nbPoint){
     let z = 0;
-    let maxX = l*cos(rotateOffset+this.shapeRotOffset);
+    let maxX = l*cos(rotateOffset);
     
-    let deltaX = l*cos(rotateOffset+this.shapeRotOffset)/nbPoint;
-    let deltaY = l*sin(rotateOffset+this.shapeRotOffset)/nbPoint;
+    let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoint;
+    let deltaY = (this.reflectY*this.globalRefY)*l*sin(rotateOffset)/nbPoint;
     for (let i = 0; i < nbPoint+1; i++){
       // linear descending in X
       //z = -i*deltaX/maxX;
       // positive parabola with min in the middle of the line
-      z = this.parabola(i*deltaX,0,maxX);
-      //console.log(z);
-      this.path.push(new createVector(x-i*deltaX,y+i*deltaY, z));
+      z = this.parabola(i*abs(deltaX),0,maxX);
+
+      // global rotation around (0,0);
+      let x0 = (x-i*deltaX);
+      let y0 = (y+i*deltaY);
+      let xf = x0*cos(this.globalRotOffset) - y0*sin(this.globalRotOffset);
+      let yf = x0*sin(this.globalRotOffset) + y0*cos(this.globalRotOffset);
+      this.path.push(new createVector(xf,yf, z));
     }
   }
 
@@ -157,6 +167,21 @@ class Movement{
     //this.chevron(x,y,l,rotateOffset, nbPoint);
     //console.log(this.path);
     //this.chevron(x,y,l,rotateOffset+PI, nbPoint)
+  }
+
+  diamond(x,y,l,rotateOffset, nbPoint){
+    let angle = 60*PI/180;
+    let angle2 = angle + rotateOffset ; //rad
+    //console.log(+this.globalRotOffset);
+    this.line(x+l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
+    this.reflectY = -1;
+    this.line(x+l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
+    this.reflectX = -1;
+    this.line(x-l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
+    this.reflectY = 1;
+    this.line(x-l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
+    this.reflectX = 1;
+
   }
 
   paarabola(a,x,h,k){
@@ -199,7 +224,7 @@ class Movement{
   polygon(r, nbSides, rotationOffset){
     let t,x,y,z;
     for (let i = 0; i < nbSides; i++){
-      t = 360/nbSides*i*PI/180 + PI/nbSides + rotationOffset + this.shapeRotOffset;
+      t = 360/nbSides*i*PI/180 + PI/nbSides + rotationOffset + this.globalRotOffset;
       x = r*cos(t);
       y = r*sin(t);
       z = 0;
