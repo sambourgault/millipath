@@ -133,12 +133,13 @@ class GCodeGen {
     // clear the index associated to that grid in allPaths
     this.allPaths[index] = [];
     this.allTypePaths[index] = [];
-    //add first path point to jog path
+    
+    //HOME: add first path point as jog path
     let tempPaths = [];
     let tempTypePaths = [];
     tempTypePaths.push("J");
-    tempPaths[0] = [];
-    tempPaths[0][0] = new createVector(0,0,safeHeight);
+    tempPaths.push([]);
+    tempPaths[0].push(new createVector(0,0,safeHeight));
     this.gridP0 = grid[0];
     
     // if linked state on 
@@ -150,45 +151,72 @@ class GCodeGen {
       
       this.rotateMvt(mvt,index,grid[0], 0);
       //tempPaths[1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.path[0].y, safeHeight));
-      tempPaths[tempPaths.length-1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.path[0].y, safeHeight));
+      tempPaths[tempPaths.length-1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.paths[0][0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.paths[0][0].y, safeHeight));
       
-      //console.log(maxDepthCut)
+      //go over each grid point
       for (let i = 2; i < grid.length+2 ; i++){
-        //add feed move
-        //tempPaths[i] = [];
-        //tempTypePaths[i] = "M";
-        tempPaths.push([]);
-        tempTypePaths.push("M");
-        this.rotateMvt(mvt,index,grid[i-2], i-2);
-        
-        for (let k = 0; k < mvt.path.length; k++){
-          let x = grid[i-2].x+this.scaleMvt(grid[i-2], index)*mvt.path[k].x;
-          let y = grid[i-2].y+this.scaleMvt(grid[i-2], index)*mvt.path[k].y;
-          let z = maxDepthCut*(grid[i-2].z+mvt.path[k].z);
-          //tempPaths[tempPaths.length-1].push(new createVector(x, y, z));
+
+        // go over each path in movement
+        for (let l = 0; l < mvt.paths.length; l++){
+          // go over each point in path
+          tempPaths.push([]);
+          console.log("new path:" + tempPaths.length);
+          tempTypePaths.push("M");
+          this.rotateMvt(mvt,index,grid[i-2], i-2);
           
-          if (boundary.checkBoundary(0,x,y) <= 0){
-            // point is inside the boundary
-            //tempPaths[2*i].push(new createVector(x, y,z));
-            if (tempPaths.length == 3 && tempPaths[tempPaths.length-1].length == 0){
-              // modify the first plunge position
-              //console.log(tempPaths[tempPaths.length-1][1]);
-              //console.log(tempPaths[tempPaths.length-2][0]);
-              tempPaths[tempPaths.length-2][0].x = x;
-              tempPaths[tempPaths.length-2][0].y = y;
+          
+          let kIn = [];
+          for (let k = 0; k < mvt.paths[l].length; k++){
+            let x = grid[i-2].x+this.scaleMvt(grid[i-2], index)*mvt.paths[l][k].x;
+            let y = grid[i-2].y+this.scaleMvt(grid[i-2], index)*mvt.paths[l][k].y;
+            let z = maxDepthCut*(grid[i-2].z+mvt.paths[l][k].z);
+            //tempPaths[tempPaths.length-1].push(new createVector(x, y, z));
+            
+            if (boundary.checkBoundary(0,x,y) <= 0){
+              // point is inside the boundary
+              if (tempPaths.length == 3 && tempPaths[tempPaths.length-1].length == 0){
+                // modify the first plunge position
+                tempPaths[tempPaths.length-2][0].x = x;
+                tempPaths[tempPaths.length-2][0].y = y;
+              }
+              
+              tempPaths[tempPaths.length-1].push(new createVector(x, y,z));            
+              kIn.push(k);
+            } else {
+              // outside the boundary
+            }
+          }
+          
+          let lastPath = tempPaths[tempPaths.length-1];
+    
+          //remove unconnected points
+          
+          for (let m = 0; m < lastPath.length; m++){
+            let connected = false;
+            if (m == 0){
+              if (kIn[m+1] == kIn[m]+1){
+                connected = true;
+              }
+            } else if (m == lastPath.length-1){
+              if (kIn[m-1] == kIn[m]-1){
+                connected = true;
+              }
+            } else {
+              if (kIn[m+1] == kIn[m]+1 || kIn[m-1] == kIn[m]-1){
+                connected = true;
+              }
             }
             
-            tempPaths[tempPaths.length-1].push(new createVector(x, y,z));            
-            
-          } else {
-            // outside the boundary
+            if (!connected){
+              tempPaths[tempPaths.length-1].splice(m,1);
+            }
           }
-        }
-        
-        // if after adding the mvt the path if empty bc none of the mvt is within the boundary, remove path
-        if (tempPaths[tempPaths.length-1].length == 0){
-          tempPaths.pop();
-          tempTypePaths.pop();
+          
+          // if after adding the mvt the path if empty bc none of the mvt is within the boundary or points connected to one another, remove path
+          if (lastPath.length <= 1){
+            tempPaths.pop();
+            tempTypePaths.pop();
+          }
         }
       }
       
@@ -218,8 +246,7 @@ class GCodeGen {
         for (let l = 0; l < mvt.paths.length; l++){
           // add jog move from previous position to over current point
           tempPaths.push([]);
-          tempTypePaths.push("J");
-          
+          tempTypePaths.push("J"); 
           
           let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*mvt.paths[l][0].x;
           let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.paths[l][0].y;
@@ -272,7 +299,7 @@ class GCodeGen {
               tempPaths[tempPaths.length-1].splice(m,1);
             }
           }
-
+          
           // add retract to safe Z height
           if (lastPath.length > 1 ){     
             let lastPoint = lastPath[lastPath.length-1];

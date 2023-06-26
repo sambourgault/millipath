@@ -327,7 +327,6 @@ class Movement{
       }
 
       // to close the polygon
-      //this.path.push(firstPoint);
       tempPath.push(firstPoint);
       this.paths.push(tempPath);
     }
