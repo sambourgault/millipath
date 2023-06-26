@@ -262,14 +262,17 @@ class GCodeGen {
             x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*mvt.paths[l][k].x;
             y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*mvt.paths[l][k].y;
             z = maxDepthCut*(grid[i-1].z+mvt.paths[l][k].z);
-            if (boundary.checkBoundary(0,x,y) <= 0){
+            
+            let boundaryValue = boundary.checkBoundary(1,x,y);
+            //console.log(boundaryValue);
+            if (boundaryValue <= 0){
               // point is inside the boundary
               if (tempPaths[tempPaths.length-1].length == 0){
                 // modify the plunge position
                 tempPaths[tempPaths.length-2][0].x = x;
                 tempPaths[tempPaths.length-2][0].y = y;
               }
-              tempPaths[tempPaths.length-1].push(new createVector(x,y,z));   
+              tempPaths[tempPaths.length-1].push(new createVector(x,y,(1.-abs(boundaryValue))*2*z));   
               kIn.push(k);     
             } else {
               // outside the boundary

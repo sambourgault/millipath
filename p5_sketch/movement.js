@@ -143,14 +143,14 @@ class Movement{
     this.paths[0].push(new createVector(x,y,z));
   }
   
-  line(x,y,l,rotateOffset, nbPoint){
+  line(x,y,l,rotateOffset, nbPoints){
     let z = 0;
     let maxX = l*cos(rotateOffset);
     let tempPath = [];
     
-    let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoint;
-    let deltaY = (this.reflectY*this.globalRefY)*l*sin(rotateOffset)/nbPoint;
-    for (let i = 0; i < nbPoint+1; i++){
+    let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoints;
+    let deltaY = (this.reflectY*this.globalRefY)*l*sin(rotateOffset)/nbPoints;
+    for (let i = 0; i < nbPoints+1; i++){
       // linear descending in X
       //z = -i*deltaX/maxX;
       // positive parabola with min in the middle of the line
@@ -317,7 +317,7 @@ class Movement{
         let c = sqrt(2)*j*offsetWidth*sqrt(1-cos(angle));
         x = path[i].x + c*dirVector.x;
         y = path[i].y + c*dirVector.y;
-        z = 0;
+        z = -1;
         //this.path.push(new createVector(x, y, z));
         tempPath.push(new createVector(x, y, z));
         if (i == 0){
