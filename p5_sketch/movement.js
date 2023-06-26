@@ -68,14 +68,16 @@ class Movement{
       //this.line(0,0,spacingX, 0, 5);
       
       let p = this.polygon(15/cos(PI/4), 3, 0);
-      this.path = [];
+      //this.path = [];
+      this.paths = [];
       this.concentricShape(p, 5, 3, 0);
       //this.polygon(15/cos(PI/4), 3, 0);
       break;
       default:
       this.point(0,0);
     }
-    return this.path;
+
+    return this.paths;
   }
   
   display(){
@@ -137,12 +139,14 @@ class Movement{
   
   point(x, y){
     let z = 0;
-    this.path[0] = new createVector(x,y,z);
+    this.paths[0] = [];
+    this.paths[0].push(new createVector(x,y,z));
   }
   
   line(x,y,l,rotateOffset, nbPoint){
     let z = 0;
     let maxX = l*cos(rotateOffset);
+    let tempPath = [];
     
     let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoint;
     let deltaY = (this.reflectY*this.globalRefY)*l*sin(rotateOffset)/nbPoint;
@@ -157,8 +161,9 @@ class Movement{
       let y0 = (y+i*deltaY);
       let xf = x0*cos(this.globalRotOffset) - y0*sin(this.globalRotOffset);
       let yf = x0*sin(this.globalRotOffset) + y0*cos(this.globalRotOffset);
-      this.path.push(new createVector(xf,yf, z));
+      tempPath.push(new createVector(xf,yf, z));
     }
+    this.paths.push(tempPath);
   }
   
   chevron(x,y,l,rotateOffset, nbPoint){
@@ -202,48 +207,57 @@ class Movement{
   
   hypertrochoid(R, r, d, limit, res){
     let t,x,y,z;
+    let tempPath = [];
     fill(255, 0);
     for (let i = 0; i < limit; i++){
       t = res*i*PI/180;
       x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
       y = ((R-r)*sin(t) + d*sin((R-r)/r * t));
       z = -map(sqrt(pow(x,2)+pow(y,2)), -R-d, R+d, 0.,1.);
-      this.path[i] = new createVector(x,y,z);
+      tempPath.push(new createVector(x,y,z));
     }
+
+    this.paths.push(tempPath);
   }
   
   hypotrochoid(R, r, d, limit, res){
     let t,x,y,z;
+    let tempPath = [];
+
     for (let i = 0; i < limit; i++){
       t = res*i*PI/180;
       x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
       y = ((R-r)*sin(t) - d*sin((R-r)/r * t));
       z = -0.5;//-map(abs(sqrt(pow(x,2)+pow(y,2))), R-r-d, R+r+d, 0.,1.);
       //console.log(z);
-      this.path[i] = new createVector(x,y,z);
+      tempPath.push(new createVector(x,y,z));
     }
+
+    this.paths.push(tempPath);
   }
   
   polygon(r, nbSides, rotationOffset){
     let t,x,y,z;
-    let path = [];
+    let tempPath = [];
     for (let i = 0; i < nbSides; i++){
       t = 360/nbSides*i*PI/180 + PI/nbSides + rotationOffset + this.globalRotOffset;
       x = r*cos(t);
       y = r*sin(t);
       z = 0;
-      this.path[i] = new createVector(x,y,z);
-      path.push(this.path[this.path.length-1]);
+      tempPath.push(new createVector(x,y,z));
+      //path.push(this.path[this.path.length-1]);
     }
-    // to close the polygon
-    this.path[nbSides] = this.path[0];
-    path.push(this.path[this.path.length-1]);
-    return path;
+    //close the polygon
+    //this.path[nbSides] = this.path[0];
+    tempPath.push(tempPath[0]);
+    this.paths.push(tempPath);
+    return tempPath;
   }
   
   concentricPolygon(r, nbSides, offsetWidth, nbPaths, rotationOffset){
     let t,x,y,z;
     let firstPoint;
+    let tempPath = [];
     for (let j = 0; j < nbPaths; j++){
       let r2 = r - j*offsetWidth;
       for (let i = 0; i < nbSides; i++){
@@ -251,15 +265,18 @@ class Movement{
         x = r2*cos(t);
         y = r2*sin(t);
         z = 0;
-        this.path.push(new createVector(x,y,z));
+        tempPath.push(new createVector(x,y,z));
         if (i == 0){
-          firstPoint = this.path[this.path.length-1];
+          firstPoint = tempPath[tempPath.length-1];
         }
       }
       // to close the polygon
-      this.path.push(firstPoint);
+      tempPath.push(firstPoint);
     }
+
+    this.paths.push(tempPath);
   }
+
   concentricShape(path, offsetWidth, nbPaths, rotationOffset){
     // remove closing point
     if (dist(path[0].x, path[0].y, path[0].z, path[path.length-1].x, path[path.length-1].y, path[path.length-1].z) < 0.01){
@@ -301,7 +318,7 @@ class Movement{
         x = path[i].x + c*dirVector.x;
         y = path[i].y + c*dirVector.y;
         z = 0;
-        this.path.push(new createVector(x, y, z));
+        //this.path.push(new createVector(x, y, z));
         tempPath.push(new createVector(x, y, z));
         if (i == 0){
           //firstPoint = this.path[this.path.length-1];
@@ -310,11 +327,10 @@ class Movement{
       }
 
       // to close the polygon
-      this.path.push(firstPoint);
+      //this.path.push(firstPoint);
       tempPath.push(firstPoint);
       this.paths.push(tempPath);
     }
-    //console.log(this.paths);
   }
   
   
@@ -323,20 +339,21 @@ class Movement{
     let x,y,z;
     //let scale = 10.;
     let scale = 3.;
-    for (let i = 0; i < this.path.length; i++){
+    for (let i = 0; i < this.paths.length; i++){
       
+      for (let j = 0; j < this.paths[i].length; j++){
       
-      x = this.translateX(scale*this.path[i].x);
-      y = this.translateY(scale*this.path[i].y);
+      x = this.translateX(scale*this.paths[i][j].x);
+      y = this.translateY(scale*this.paths[i][j].y);
       //x = this.path[i].x;
       //y = this.path[i].y;
-      z = scale*this.path[i].z;
+      z = scale*this.paths[i][j].z;
       
-      if (i != 0){
+      if (j != 0){
         line(previous.x, previous.y,previous.z,x,y,z);
       }
       
-      if (this.path.length == 1){
+      if (this.paths[i].length == 1){
         push();
         translate(x,y,z);
         sphere(4);
@@ -347,6 +364,7 @@ class Movement{
       previous.y = y;
       previous.z = z;
     }
+  }
   }
   
   

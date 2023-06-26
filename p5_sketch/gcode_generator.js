@@ -212,6 +212,7 @@ class GCodeGen {
     } else {
       // if unlinked state on. go through each point of the grid
       for (let i = 1; i < grid.length+1 ; i++){
+        this.rotateMvt(mvt,index,grid[i-1], i-1);
         
         // go through each path of mvt
         for (let l = 0; l < mvt.paths.length; l++){
@@ -219,7 +220,7 @@ class GCodeGen {
           tempPaths.push([]);
           tempTypePaths.push("J");
           
-          this.rotateMvt(mvt,index,grid[i-1], i-1);
+          
           let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*mvt.paths[l][0].x;
           let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.paths[l][0].y;
           let z = safeHeight;
@@ -272,12 +273,8 @@ class GCodeGen {
             }
           }
 
-         
-          
-          
           // add retract to safe Z height
           if (lastPath.length > 1 ){     
-            console.log(l +": "+ lastPath.length);
             let lastPoint = lastPath[lastPath.length-1];
             tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
           } else {
