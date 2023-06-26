@@ -31,6 +31,7 @@ class Movement{
   makePath(spacingX = 1, spacingY = 1){
     // maybe clear path
     this.path = [];
+    this.paths = [];
     //this.globalRotOffset = globalRotOffset;
     
     switch(this.mode) {
@@ -265,32 +266,35 @@ class Movement{
       path.pop();
     }
 
-    let t,x,y,z;
+    // compute concentric paths
+    let x,y,z;
     let firstPoint;
+    let tempPath = [];
     for (let j = 0; j < nbPaths; j++){
+      tempPath = [];
       for (let i = 0; i < path.length; i++){
+        // first vector
         let previousPathIndex;
         if (i == 0){
           previousPathIndex = path.length-1;
         } else {
           previousPathIndex = i - 1;
         }
-        //let angle1 = atan((path[i].y - path[previousPathIndex].y)/(path[i].x - path[previousPathIndex].x));
         let v1 = p5.Vector.sub(path[previousPathIndex], path[i]);
 
+        //second vector
         let nextPathIndex;
         if (i == path.length-1){
           nextPathIndex = 0;
         } else {
           nextPathIndex = i+1;
         }
-        //let angle2 = atan((path[nextPathIndex].y-path[i].y)/(path[nextPathIndex].x-path[i].x));
         let v2 = p5.Vector.sub(path[nextPathIndex], path[i]);
+        
+        // offset direction
         let dirVector = p5.Vector.add(v1,v2).normalize();
-        let dirAngle = abs(atan(dirVector.y/dirVector.x));
+        //let dirAngle = abs(atan(dirVector.y/dirVector.x));
         let angle = PI-2*abs(v1.angleBetween(v2)/2);
-        //let angle = (angle2-angle1)/2 + angle1;
-
 
         // cosinus law
         let c = sqrt(2)*j*offsetWidth*sqrt(1-cos(angle));
@@ -298,14 +302,19 @@ class Movement{
         y = path[i].y + c*dirVector.y;
         z = 0;
         this.path.push(new createVector(x, y, z));
+        tempPath.push(new createVector(x, y, z));
         if (i == 0){
-          firstPoint = this.path[this.path.length-1];
+          //firstPoint = this.path[this.path.length-1];
+          firstPoint = tempPath[tempPath.length-1];
         }
       }
 
       // to close the polygon
       this.path.push(firstPoint);
+      tempPath.push(firstPoint);
+      this.paths.push(tempPath);
     }
+    //console.log(this.paths);
   }
   
   
