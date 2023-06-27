@@ -162,8 +162,7 @@ class GCodeGen {
           tempPaths.push([]);
           console.log("new path:" + tempPaths.length);
           tempTypePaths.push("M");
-          this.rotateMvt(mvt,index,grid[i-2], i-2);
-          
+          this.rotateMvt(mvt,index,grid[i-2], i-2);      
           
           let kIn = [];
           for (let k = 0; k < mvt.paths[l].length; k++){
@@ -172,7 +171,7 @@ class GCodeGen {
             let z = maxDepthCut*(grid[i-2].z+mvt.paths[l][k].z);
             //tempPaths[tempPaths.length-1].push(new createVector(x, y, z));
             
-            if (boundary.checkBoundary(0,x,y) <= 0){
+            if (boundary.checkBoundary(grids[index].boundaryMode,x,y) <= 0){
               // point is inside the boundary
               if (tempPaths.length == 3 && tempPaths[tempPaths.length-1].length == 0){
                 // modify the first plunge position
@@ -263,7 +262,7 @@ class GCodeGen {
             y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*mvt.paths[l][k].y;
             z = maxDepthCut*(grid[i-1].z+mvt.paths[l][k].z);
             
-            let boundaryValue = boundary.checkBoundary(1,x,y);
+            let boundaryValue = boundary.checkBoundary(grids[index].boundaryMode,x,y);
             //console.log(boundaryValue);
             if (boundaryValue <= 0){
               // point is inside the boundary
@@ -272,7 +271,7 @@ class GCodeGen {
                 tempPaths[tempPaths.length-2][0].x = x;
                 tempPaths[tempPaths.length-2][0].y = y;
               }
-              tempPaths[tempPaths.length-1].push(new createVector(x,y,(1.-abs(boundaryValue))*2*z));   
+              tempPaths[tempPaths.length-1].push(new createVector(x,y,abs(boundaryValue)*z));   
               kIn.push(k);     
             } else {
               // outside the boundary
@@ -350,9 +349,14 @@ class GCodeGen {
   }
   
   rotateMvt(mvt, gridIndex, point, pointIndex){
-    let rotateOffset = 0;
+    let rotateOffset;
+    if (gridIndex == 0 || gridIndex == 1 ){
+     rotateOffset = PI/6;
+    } else {
+      rotateOffset = 0;
+    }
     
-    if (gridIndex == 0 || gridIndex == 1 ){ //|| gridIndex == 5
+    /*if (gridIndex == 0 || gridIndex == 1 ){ //|| gridIndex == 5
       // constant
       rotateOffset = 0;//PI/4;
       //console.log("hello");
@@ -364,7 +368,7 @@ class GCodeGen {
       //console.log(rotateOffset);
     } else {
       
-    }
+    }*/
     
     // linear in X
     //rotateOffset = map((-point.x+this.gridP0.x), 0, 1000, 0., 2*PI);

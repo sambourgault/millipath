@@ -1,10 +1,9 @@
 // cartesian grid
 class Grid {
-  constructor(x, y, xb, yb, mvtMode=0, spx = 50, spy = 50, sx = 150, sy = 150) {
+  constructor(x, y, xb, yb, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) {
     this.visible = false;
     this.openBox = false;
-    this.mvtMode = mvtMode;
-    this.mvt = new Movement(this.mvtMode, 0, 0);
+    this.boundaryMode = boundMode;
     //constructor(x, y, textu) {
     const self = this;
     //this.textu = textu;

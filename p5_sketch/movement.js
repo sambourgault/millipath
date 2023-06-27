@@ -58,10 +58,12 @@ class Movement{
       this.chevron(0,0,25*this.scale, 0, 5);
       break;
       case 6:
-      this.polygon(60/cos(PI/4), 4, 0);
+      //this.polygon(60/cos(PI/4), 4, 0);
+      this.cross(0,0,7*this.scale, 0, 5, 4);
       break;
       case 7:
-      this.cross(0,0,25*this.scale, 0, 5, 4);
+        this.diamond(0,0,10*this.scale, 0, 5);
+      //this.cross(0,0,25*this.scale, 0, 5, 4);
       break;
       case 8:
       //this.diamond(0,0,25*this.scale, 0, 5);
@@ -73,6 +75,12 @@ class Movement{
       this.concentricShape(p, 5, 3, 0);
       //this.polygon(15/cos(PI/4), 3, 0);
       break;
+      case 9:
+      let pp = this.polygon(15/cos(PI/4), 3, 0);
+      this.paths = [];
+      this.concentricShape(pp, -5, 3, 0);
+      break;
+
       default:
       this.point(0,0);
     }
@@ -145,7 +153,7 @@ class Movement{
   
   line(x,y,l,rotateOffset, nbPoints){
     let z = 0;
-    let maxX = l*cos(rotateOffset);
+    let maxX = abs(l*cos(rotateOffset));
     let tempPath = [];
     
     let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoints;
@@ -173,14 +181,14 @@ class Movement{
   
   cross(x,y,l,rotateOffset, nbPoint, nbApex){
     for (let i = 0; i < nbApex; i++){
-      this.line(x,y,l,rotateOffset+i*2*PI/nbApex, nbPoint);
+      let angle = i*2*PI/nbApex;
+      this.line(x,y,l,rotateOffset+angle, nbPoint);
     }
   }
   
   diamond(x,y,l,rotateOffset, nbPoint){
     let angle = 60*PI/180;
     let angle2 = angle + rotateOffset ; //rad
-    //console.log(+this.globalRotOffset);
     this.line(x+l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
     this.reflectY = -1;
     this.line(x+l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
@@ -245,10 +253,8 @@ class Movement{
       y = r*sin(t);
       z = 0;
       tempPath.push(new createVector(x,y,z));
-      //path.push(this.path[this.path.length-1]);
     }
     //close the polygon
-    //this.path[nbSides] = this.path[0];
     tempPath.push(tempPath[0]);
     this.paths.push(tempPath);
     return tempPath;
@@ -310,7 +316,6 @@ class Movement{
         
         // offset direction
         let dirVector = p5.Vector.add(v1,v2).normalize();
-        //let dirAngle = abs(atan(dirVector.y/dirVector.x));
         let angle = PI-2*abs(v1.angleBetween(v2)/2);
 
         // cosinus law

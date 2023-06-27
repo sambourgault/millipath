@@ -1,7 +1,7 @@
 class Boundary{
   constructor(x, y){
-    this.sizeX = 400;
-    this.sizeY = 400;
+    this.sizeX = 300;
+    this.sizeY = 300;
     this.x = x ;
     this.y = y ;
     //this.x = -this.sizeX/3;
@@ -16,7 +16,7 @@ class Boundary{
     this.label.position(width - this.sizeX-20, height- this.sizeY - 40);
     this.shaderProgram;
     this.path = [];
-    
+
     this.vertSrc = this.makeVertexShader();
     this.fragSrc = this.makeFragCircle();
     this.shaderProgram = createShader(this.vertSrc, this.fragSrc);
@@ -27,13 +27,14 @@ class Boundary{
     let status = -1.;
     switch(mode){
       case 0:
-        status = this.checkInCircle(x,y, 100);
-      break;
-
+        status = this.checkNoBoundary();
+        break;
       case 1:
+        status = this.checkInCircle(x,y, 90);
+      break;
+      case 2:
         status = this.checkInSmoothCircle(x,y,60);
       break;
-
       default:
       status = this.checkInCircle(x,y, 100);
     }
@@ -48,6 +49,11 @@ class Boundary{
     //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
     //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
   }
+
+  checkNoBoundary(){
+    console.log();
+    return -1.;
+  }
   
   checkInCircle(x, y, r){
     let d = dist(this.x, this.y, x, y);
@@ -60,15 +66,10 @@ class Boundary{
     }
   }
 
-  // frag func is:
-  //float smoothCircle( vec2 st, vec2 pos, float r){
-    //return smoothstep(r, r+0.5, distance(st, pos));
-  //}
   checkInSmoothCircle(x, y, r){
     let f = this.smoothstep(r, r+40, dist(this.x, this.y, x, y));
-    console.log(f);
     if (f < 1.){
-      return -f;
+      return -(1.-f);
     } else if (f == 1.){
       return 1.;
     }
