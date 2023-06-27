@@ -1,5 +1,6 @@
 let grids = [];
 let mvts = [];
+let boundaries = [];
 
 let thetaX = 0;
 let thetaY = 0;
@@ -47,36 +48,49 @@ function setup() {
   // ortho([left], [right], [bottom], [top], [near], [far])
   ortho(-width, 0, -height, 0, -width, width);
   
+  // MATERIAL info boxes
+  infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
+  matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
+  setupInputs();
 
   //*** GRIDS ***//
   //constructor(x, y, xb, yb, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
+  let pb = 60;
   grids[0] = new Grid(0, 0, 10, 10, 2, 50, 50, 250, 225);
-  grids[1] = new Grid(250, 50, 10, 70, 0, 50, 50, 200, 150);
-  grids[2] = new Grid(50, 200, 10, 130, 0, 25, 25, 140, 140);
-  grids[3] = new Grid(50+25/2, 200+25/2, 10, 190, 0, 25, 25, 140, 140);
+  grids[1] = new Grid(250, 50, 10, 10+1*pb, 0, 50, 50, 200, 150);
+  grids[2] = new Grid(50, 200, 10, 10+2*pb, 0, 25, 25, 140, 140);
+  grids[3] = new Grid(50+25/2, 200+25/2, 10, 10+3*pb, 0, 25, 25, 140, 140);
+  grids[4] = new Grid(25, 350, 10, 10+4*pb,1, 10,25, 150,175);
+  grids[5] = new Grid(225, 350, 10, 10+5*pb,0, 10,150, 150,150);
+  grids[6] = new Grid(425, 350, 10, 10+6*pb,0, 10,25, 100,100);
+
   /*grids[4] = new Grid(50 + 59,50 + 59, 10, 250,0, 140,140,141,141);
   grids[5] = new Grid(50, 200, 10, 310,0, 50, 50, 200, 150);*/
 
   for (let i = 0; i < grids.length; i++){
     grids[i].ui.box.collapse();
   }
-
-  infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
-  matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
-  setupInputs();
   
-  //*** MOVEMENT ***//
-  //mvt = new Movement(1, 0, 0);
-  //mvt2 = new Movement(5, 0, 0);
-  //mvt3 = new Movement(6, 0, 0);
-  //mvt5 = new Movement(4, 0, 0, 1.5);
+  //*** MOVEMENTS ***//
   mvts[0] = new Movement(8, 0, 0);
   mvts[1] = new Movement(9, 0, 0);
   mvts[2] = new Movement(7,0,0);
   mvts[3] = new Movement(6,0,0);
-  
-  boundary = new Boundary(-100,100);
-  code = new GCodeGen("test1");
+  mvts[4] = new Movement(10,0,0);
+  mvts[5] = new Movement(11,0,0);
+  mvts[6] = new Movement(12,0,0);
+
+  //*** BOUNDARIES ***/
+  boundaries[0] = new Boundary(-100,100);
+  boundaries[1] = new Boundary(0,0);
+  boundaries[2] = new Boundary(0,0);
+  boundaries[3] = new Boundary(0,0);
+  boundaries[4] = new Boundary(-100,425);
+  boundaries[5] = new Boundary(0,0);
+  boundaries[6] = new Boundary(0,0);
+
+  // code gen
+  code = new GCodeGen("test2");
 }
 
 function draw() {
@@ -109,19 +123,26 @@ function draw() {
     grids[i].display();
   }
   directions.display();
-  boundary.display();
+  for (let i = 0; i < boundaries.length; i++){
+    if (boundaries[i].x != 0 || boundaries[i].y !=0){
+      boundaries[i].display();
+    }
+  }
   code.display();
   pop();
   
-  // display boundary
-  push();
-  boundary.displayStatic();
-  pop();
+  // display 
+  for (let i = 0; i < boundaries.length; i++){
+    push();
+    boundaries[i].displayStatic();
+    pop();
+  }
 
   // display movement
   push();
-  //mvt2.displayStatic();
-  mvts[mvts.length-1].displayStatic();
+    //mvt2.displayStatic();
+    mvts[mvts.length-1].displayStatic();
+    //mvts[3].displayStatic();
   pop();
 
   

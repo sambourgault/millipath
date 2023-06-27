@@ -30,7 +30,7 @@ class Boundary{
         status = this.checkNoBoundary();
         break;
       case 1:
-        status = this.checkInCircle(x,y, 90);
+        status = this.checkInCircle(x,y, 60);
       break;
       case 2:
         status = this.checkInSmoothCircle(x,y,60);

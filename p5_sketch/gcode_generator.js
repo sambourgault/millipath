@@ -171,7 +171,7 @@ class GCodeGen {
             let z = maxDepthCut*(grid[i-2].z+mvt.paths[l][k].z);
             //tempPaths[tempPaths.length-1].push(new createVector(x, y, z));
             
-            if (boundary.checkBoundary(grids[index].boundaryMode,x,y) <= 0){
+            if (boundaries[index].checkBoundary(grids[index].boundaryMode,x,y) <= 0){
               // point is inside the boundary
               if (tempPaths.length == 3 && tempPaths[tempPaths.length-1].length == 0){
                 // modify the first plunge position
@@ -262,7 +262,7 @@ class GCodeGen {
             y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*mvt.paths[l][k].y;
             z = maxDepthCut*(grid[i-1].z+mvt.paths[l][k].z);
             
-            let boundaryValue = boundary.checkBoundary(grids[index].boundaryMode,x,y);
+            let boundaryValue = boundaries[index].checkBoundary(grids[index].boundaryMode,x,y);
             //console.log(boundaryValue);
             if (boundaryValue <= 0){
               // point is inside the boundary
@@ -328,7 +328,7 @@ class GCodeGen {
     }
   }
   
-  reflectMvt(){
+  reflectMvt(gridIndex){
     
   }
   
@@ -352,7 +352,11 @@ class GCodeGen {
     let rotateOffset;
     if (gridIndex == 0 || gridIndex == 1 ){
      rotateOffset = PI/6;
-    } else {
+    } else if (gridIndex == 6){
+      //if (){
+        rotateOffset = 0;
+      //}
+    }else {
       rotateOffset = 0;
     }
     

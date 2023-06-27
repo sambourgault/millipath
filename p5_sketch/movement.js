@@ -62,7 +62,7 @@ class Movement{
       this.cross(0,0,7*this.scale, 0, 5, 4);
       break;
       case 7:
-        this.diamond(0,0,10*this.scale, 0, 5);
+      this.diamond(0,0,10*this.scale, 0, 5);
       //this.cross(0,0,25*this.scale, 0, 5, 4);
       break;
       case 8:
@@ -70,7 +70,6 @@ class Movement{
       //this.line(0,0,spacingX, 0, 5);
       
       let p = this.polygon(15/cos(PI/4), 3, 0);
-      //this.path = [];
       this.paths = [];
       this.concentricShape(p, 5, 3, 0);
       //this.polygon(15/cos(PI/4), 3, 0);
@@ -80,11 +79,23 @@ class Movement{
       this.paths = [];
       this.concentricShape(pp, -5, 3, 0);
       break;
-
+      
+      case 10:
+      this.line(0,0,spacingY, PI/2, 5);
+      break;
+      
+      case 11:
+      this.line(0,0,spacingY, PI/2, 30, 0,5,8*PI);
+      break;
+      
+      case 12:
+      this.line(0,0,spacingY, PI/2, 30, 0,5,6*PI);
+      break;
+      
       default:
       this.point(0,0);
     }
-
+    
     return this.paths;
   }
   
@@ -151,22 +162,37 @@ class Movement{
     this.paths[0].push(new createVector(x,y,z));
   }
   
-  line(x,y,l,rotateOffset, nbPoints){
+  line(x,y,l,rotateOffset, nbPoints, mode = 0, amp = 0, f = 0){
     let z = 0;
     let maxX = abs(l*cos(rotateOffset));
     let tempPath = [];
     
     let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoints;
     let deltaY = (this.reflectY*this.globalRefY)*l*sin(rotateOffset)/nbPoints;
+    
     for (let i = 0; i < nbPoints+1; i++){
-      // linear descending in X
-      //z = -i*deltaX/maxX;
-      // positive parabola with min in the middle of the line
-      z = this.parabola(i*abs(deltaX),0,maxX);
+      if (mode == 0){
+        // positive parabola with min in the middle of the line
+        z = this.parabola(i*abs(deltaX),0,maxX);
+      } else if (mode == 1){
+        // constant mac depth
+        z = -1;
+      } else if (mode == 2){
+        // linear descending
+        z = -i*deltaX/maxX;
+      }
       
       // global rotation around (0,0);
-      let x0 = (x-i*deltaX);
+
+      let x0;
+      if (deltaY != 0){
+        x0 = (x-i*deltaX+amp*cos(f*i*deltaY/(deltaY*nbPoints)));
+      } else {
+        x0 = (x-i*deltaX);
+      }
       let y0 = (y+i*deltaY);
+      
+      // global rotation operation
       let xf = x0*cos(this.globalRotOffset) - y0*sin(this.globalRotOffset);
       let yf = x0*sin(this.globalRotOffset) + y0*cos(this.globalRotOffset);
       tempPath.push(new createVector(xf,yf, z));
@@ -224,14 +250,14 @@ class Movement{
       z = -map(sqrt(pow(x,2)+pow(y,2)), -R-d, R+d, 0.,1.);
       tempPath.push(new createVector(x,y,z));
     }
-
+    
     this.paths.push(tempPath);
   }
   
   hypotrochoid(R, r, d, limit, res){
     let t,x,y,z;
     let tempPath = [];
-
+    
     for (let i = 0; i < limit; i++){
       t = res*i*PI/180;
       x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
@@ -240,7 +266,7 @@ class Movement{
       //console.log(z);
       tempPath.push(new createVector(x,y,z));
     }
-
+    
     this.paths.push(tempPath);
   }
   
@@ -279,16 +305,16 @@ class Movement{
       // to close the polygon
       tempPath.push(firstPoint);
     }
-
+    
     this.paths.push(tempPath);
   }
-
+  
   concentricShape(path, offsetWidth, nbPaths, rotationOffset){
     // remove closing point
     if (dist(path[0].x, path[0].y, path[0].z, path[path.length-1].x, path[path.length-1].y, path[path.length-1].z) < 0.01){
       path.pop();
     }
-
+    
     // compute concentric paths
     let x,y,z;
     let firstPoint;
@@ -304,7 +330,7 @@ class Movement{
           previousPathIndex = i - 1;
         }
         let v1 = p5.Vector.sub(path[previousPathIndex], path[i]);
-
+        
         //second vector
         let nextPathIndex;
         if (i == path.length-1){
@@ -317,7 +343,7 @@ class Movement{
         // offset direction
         let dirVector = p5.Vector.add(v1,v2).normalize();
         let angle = PI-2*abs(v1.angleBetween(v2)/2);
-
+        
         // cosinus law
         let c = sqrt(2)*j*offsetWidth*sqrt(1-cos(angle));
         x = path[i].x + c*dirVector.x;
@@ -330,7 +356,7 @@ class Movement{
           firstPoint = tempPath[tempPath.length-1];
         }
       }
-
+      
       // to close the polygon
       tempPath.push(firstPoint);
       this.paths.push(tempPath);
@@ -346,29 +372,29 @@ class Movement{
     for (let i = 0; i < this.paths.length; i++){
       
       for (let j = 0; j < this.paths[i].length; j++){
-      
-      x = this.translateX(scale*this.paths[i][j].x);
-      y = this.translateY(scale*this.paths[i][j].y);
-      //x = this.path[i].x;
-      //y = this.path[i].y;
-      z = scale*this.paths[i][j].z;
-      
-      if (j != 0){
-        line(previous.x, previous.y,previous.z,x,y,z);
+        
+        x = this.translateX(scale*this.paths[i][j].x);
+        y = this.translateY(scale*this.paths[i][j].y);
+        //x = this.path[i].x;
+        //y = this.path[i].y;
+        z = scale*this.paths[i][j].z;
+        
+        if (j != 0){
+          line(previous.x, previous.y,previous.z,x,y,z);
+        }
+        
+        if (this.paths[i].length == 1){
+          push();
+          translate(x,y,z);
+          sphere(4);
+          pop();
+        }
+        
+        previous.x = x;
+        previous.y = y;
+        previous.z = z;
       }
-      
-      if (this.paths[i].length == 1){
-        push();
-        translate(x,y,z);
-        sphere(4);
-        pop();
-      }
-      
-      previous.x = x;
-      previous.y = y;
-      previous.z = z;
     }
-  }
   }
   
   
