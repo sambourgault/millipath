@@ -1,6 +1,11 @@
 let grids = [];
 let mvts = [];
 let boundaries = [];
+let mvtTemplate;
+let w = 20;
+let h = 20;
+let sx = 6;
+let sy = 6;
 
 let thetaX = 0;
 let thetaY = 0;
@@ -80,6 +85,8 @@ function setup() {
   mvts[5] = new Movement(11,0,0);
   mvts[6] = new Movement(12,0,0);
 
+  mvtTemplate = new MvtTemplate(sx,sy);
+
   //*** BOUNDARIES ***/
   boundaries[0] = new Boundary(-100,100);
   boundaries[1] = new Boundary(0,0);
@@ -112,10 +119,12 @@ function draw() {
   translate(0,-sizeY/2,0);
   noFill();
   stroke(0);
+  
   push();
   translate(-stockSizeXIn.value()/2, stockSizeYIn.value()/2, -materialThickness/2);
   box(stockSizeXIn.value(), stockSizeYIn.value(), materialThickness);
   pop();
+  
   noStroke();
   
   // display the grids
@@ -164,6 +173,16 @@ function draw() {
       grids[i].changedGrid = false;
     }
   }
+  
+  push();
+  //translate(-width/2-sizeX/2,height/2+sizeY/2,0);
+  //translate(-width+20,height-200);
+  mvtTemplate.display(0,0, color(255,0,0));
+  pop();
+}
+
+function mousePressed(){
+  mvtTemplate.mousePressed();
 }
 
 function mouseDragged() {
