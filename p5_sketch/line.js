@@ -23,14 +23,12 @@ class Line {
       line(x + this.x1, y + this.y1, x + this.x2, y + this.y2);
     }
   
-    mousePressed() {
-        console.log([mouseX, mouseY]);
-        console.log(this.offsetX + (this.x2 + this.x1) / 2);
-        console.log(this.offsetY + (this.y2 + this.y1) / 2);
+    mousePressed(offsetX, offsetY) {
+        
       if (
         dist(
-          mouseX,
-          mouseY,
+          mouseX - offsetX,
+          mouseY - offsetY,
           this.offsetX + (this.x2 + this.x1) / 2,
           this.offsetY + (this.y2 + this.y1) / 2
         ) < 5

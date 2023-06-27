@@ -176,13 +176,13 @@ function draw() {
   
   push();
   //translate(-width/2-sizeX/2,height/2+sizeY/2,0);
-  //translate(-width+20,height-200);
+  translate(-width+20,height-200);
   mvtTemplate.display(0,0, color(255,0,0));
   pop();
 }
 
 function mousePressed(){
-  mvtTemplate.mousePressed();
+  mvtTemplate.mousePressed(20, height-200);
 }
 
 function mouseDragged() {

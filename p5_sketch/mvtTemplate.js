@@ -33,9 +33,9 @@ class MvtTemplate {
       }
     }
   
-    mousePressed() {
+    mousePressed(offsetX, offetY) {
       for (let i = 0; i < this.lines.length; i++) {
-        this.lines[i].mousePressed();
+        this.lines[i].mousePressed(offsetX, offetY);
       }
     }
   }
