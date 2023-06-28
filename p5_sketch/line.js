@@ -17,7 +17,7 @@ class Line {
         stroke(0);
         strokeWeight(3);
       } else {
-        stroke(240);
+        stroke(220);
         strokeWeight(1);
       }
       line(x + this.x1, y + this.y1, x + this.x2, y + this.y2);

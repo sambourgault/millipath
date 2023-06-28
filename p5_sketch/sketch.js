@@ -61,13 +61,13 @@ function setup() {
   //*** GRIDS ***//
   //constructor(x, y, xb, yb, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
   let pb = 60;
-  grids[0] = new Grid(0, 0, 10, 10, 2, 50, 50, 250, 225);
-  grids[1] = new Grid(250, 50, 10, 10+1*pb, 0, 50, 50, 200, 150);
+  grids[0] = new Grid(0, 0, 10, 10, 3, 50, 50, 150, 150);
+  /*grids[1] = new Grid(250, 50, 10, 10+1*pb, 0, 50, 50, 200, 150);
   grids[2] = new Grid(50, 200, 10, 10+2*pb, 0, 25, 25, 140, 140);
   grids[3] = new Grid(50+25/2, 200+25/2, 10, 10+3*pb, 0, 25, 25, 140, 140);
   grids[4] = new Grid(25, 350, 10, 10+4*pb,1, 10,25, 150,175);
   grids[5] = new Grid(225, 350, 10, 10+5*pb,0, 10,150, 150,150);
-  grids[6] = new Grid(425, 350, 10, 10+6*pb,0, 10,25, 100,100);
+  grids[6] = new Grid(425, 350, 10, 10+6*pb,0, 10,25, 100,100);*/
 
   /*grids[4] = new Grid(50 + 59,50 + 59, 10, 250,0, 140,140,141,141);
   grids[5] = new Grid(50, 200, 10, 310,0, 50, 50, 200, 150);*/
@@ -261,10 +261,8 @@ function setupInputs(){
   labelSY.style('width', '170px');
   stockSizeYIn = createInput("610").parent(matBox.box);
   stockSizeYIn.position(offX, 3.5*offY);
-
 }
 
-ParseFloat(10.13, 2, true);
 function ParseFloat(nb,val, test = false) {
   str = nb.toString();
 

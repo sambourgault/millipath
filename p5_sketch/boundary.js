@@ -16,7 +16,7 @@ class Boundary{
     this.label.position(width - this.sizeX-20, height- this.sizeY - 40);
     this.shaderProgram;
     this.path = [];
-
+    
     this.vertSrc = this.makeVertexShader();
     this.fragSrc = this.makeFragCircle();
     this.shaderProgram = createShader(this.vertSrc, this.fragSrc);
@@ -27,13 +27,16 @@ class Boundary{
     let status = -1.;
     switch(mode){
       case 0:
-        status = this.checkNoBoundary();
-        break;
+      status = this.checkNoBoundary();
+      break;
       case 1:
-        status = this.checkInCircle(x,y, 60);
+      status = this.checkInCircle(x,y, 60);
       break;
       case 2:
-        status = this.checkInSmoothCircle(x,y,60);
+      status = this.checkInSmoothCircle(x,y,60);
+      break;
+      case 3:
+      status = this.checkInRectangle(x,y,75,75);
       break;
       default:
       status = this.checkInCircle(x,y, 100);
@@ -44,12 +47,13 @@ class Boundary{
   
   makeBoundary(){
     //this.point(0,0);
-    //this.polygon(100*this.scale, 10);
-    this.circle(0,0,100*this.scale);
+    //this.polygon(100*this.scale, 4);
+    //this.circle(0,0,100*this.scale);
+    this.rectangle(0,0,75, 75);
     //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
     //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
   }
-
+  
   checkNoBoundary(){
     console.log();
     return -1.;
@@ -65,7 +69,7 @@ class Boundary{
       return 0;
     }
   }
-
+  
   checkInSmoothCircle(x, y, r){
     let f = this.smoothstep(r, r+40, dist(this.x, this.y, x, y));
     if (f < 1.){
@@ -74,7 +78,20 @@ class Boundary{
       return 1.;
     }
   }
-
+  
+  // adapted from inigo quilez
+  checkInRectangle(x,y,rx,ry){
+    let dx = abs(x) - rx;
+    let dy = abs(y) - ry;
+    let d = sqrt((max(dx, 0))^2 + max(dy, 0)^2) + min(max(dx,dy),0);
+    
+    if (d <= 0){
+      return -1.
+    } else {
+      return 1.
+    }
+  }
+  
   smoothstep(edge0, edge1, x) {
     // Scale, bias and saturate x to 0..1 range
     x = this.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
@@ -84,9 +101,9 @@ class Boundary{
   
   clamp(x, lowerlimit, upperlimit) {
     if (x < lowerlimit)
-      x = lowerlimit;
+    x = lowerlimit;
     if (x > upperlimit)
-      x = upperlimit;
+    x = upperlimit;
     return x;
   }
   
@@ -111,12 +128,12 @@ class Boundary{
     //translate(this.sizeX/2+grid1.realSizeX/2+20-grid1.x, this.y-this.sizeY/2-grid1.realSizeY/2-grid1.y, 50);//this.sizeY);
     //grid1.display();
     //pop();
-
+    
     // display boundary
     stroke(255,0,0);
     strokeWeight(2);
-
-
+    
+    
     push();
     translate(-this.sizeX/2-20, height- this.sizeY-20+this.sizeY/2, 20);
     //translate(-20,0, 20);
@@ -126,7 +143,7 @@ class Boundary{
     pop();
     noFill();
     noStroke();
-   
+    
   }
   
   display(){
@@ -185,6 +202,7 @@ class Boundary{
     }
   }
   
+  //** Boundary Visualizers **//
   polygon(r, nbSides){
     let t,x,y,z;
     for (let i = 0; i < nbSides; i++){
@@ -196,6 +214,25 @@ class Boundary{
     }
     // to close the polygon
     this.path[nbSides] = this.path[0];
+  }
+  
+  rectangle(x, y, rx, ry){
+    let angle = atan(ry/rx);
+    let refx = 1.;
+    let refy = 1.;
+    for (let i = 0; i < 4; i++){
+      if (i == 1){
+        refx = -1;
+      } else if (i == 2){
+        refy = -1;
+      }
+      else if (i == 3){
+        refx = 1.;
+      }
+      this.path.push(new createVector(x+refx* rx*cos(angle), y + refy*ry*sin(angle)));
+    }
+    // close the path
+    this.path.push(this.path[0]);
   }
   
   circle(x, y, r){
@@ -222,7 +259,7 @@ class Boundary{
       this.path[i] = new createVector(20,0);
     }
   }
-
+  
   makeVertexShader(){
     let vert = `
     attribute vec3 aPosition;
@@ -230,44 +267,40 @@ class Boundary{
     uniform mat4 uProjectionMatrix;
     uniform mat4 uModelViewMatrix;
     varying vec2 vTexCoord;
- 
+    
     void main() {
       vTexCoord = aTexCoord;
       vec4 position = vec4(aPosition, 1.0);
       gl_Position = uProjectionMatrix * uModelViewMatrix * position;
     }
- `;
-
+    `;
+    
     return vert;
   }
   
   makeFragCircle(){
     let frag = `
-   precision mediump float;
-
-   varying vec2 vTexCoord;
-
-   float circle( vec2 st, vec2 pos, float r){
-    return step(r, distance(st, pos));
-  }
-
-  float smoothCircle( vec2 st, vec2 pos, float r, float offset){
-    return smoothstep(r, r+offset, distance(st, pos));
-  }
-
-   void main() {
-     vec2 uv = vTexCoord;
-     float f1 = smoothCircle(uv, vec2(.5,.5), .1, 0.2);
-    //float f1 = circle(uv, vec2(.5), .25);
-     vec3 color = vec3(f1);
-     gl_FragColor = vec4(color, 1.0);
-   }`;
-
-    return frag;
-  }
-  
-  inBound(x, y){
+    precision mediump float;
     
+    varying vec2 vTexCoord;
+    
+    float circle( vec2 st, vec2 pos, float r){
+      return step(r, distance(st, pos));
+    }
+    
+    float smoothCircle( vec2 st, vec2 pos, float r, float offset){
+      return smoothstep(r, r+offset, distance(st, pos));
+    }
+    
+    void main() {
+      vec2 uv = vTexCoord;
+      float f1 = smoothCircle(uv, vec2(.5,.5), .1, 0.2);
+      //float f1 = circle(uv, vec2(.5), .25);
+      vec3 color = vec3(f1);
+      gl_FragColor = vec4(color, 1.0);
+    }`;
+    
+    return frag;
   }
   
   translateX(x){
