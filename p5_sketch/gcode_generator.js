@@ -351,7 +351,7 @@ class GCodeGen {
   rotateMvt(mvt, gridIndex, point, pointIndex){
     let rotateOffset;
     if (gridIndex == 0 || gridIndex == 1 ){
-     rotateOffset = PI/6;
+     rotateOffset = 0;
     } else if (gridIndex == 6){
       //if (){
         rotateOffset = 0;
@@ -381,7 +381,7 @@ class GCodeGen {
     //rotateOffset = PI/2*int(random(4)) + PI/4;
     
     mvt.globalRotOffset = rotateOffset;
-    let rotatedPath = mvt.makePath(grids[gridIndex].spacingX, grids[gridIndex].spacingY);
+    let rotatedPath = mvt.makePath(grids[gridIndex].spacingX, grids[gridIndex].spacingY, pointIndex);
     
     //console.log(grids[gridIndex].spacingX);
     return rotatedPath;

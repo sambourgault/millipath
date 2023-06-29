@@ -24,11 +24,17 @@ class Movement{
     this.label2.style('font-size', '14px');
     this.label2.style('font-family', 'Poppins');
     this.label2.position(width - this.sizeX-20, 20+this.sizeY);
+
+    this.label3= createDiv("movement yz plane");
+    this.label3.style('font-size', '14px');
+    this.label3.style('font-family', 'Poppins');
+    this.label3.position(width - this.sizeX-20, 40+2*this.sizeY);
+
     //this.makePath(this.mode);
     this.makePath();
   }
   
-  makePath(spacingX = 1, spacingY = 1){
+  makePath(spacingX = 1, spacingY = 1, pointIndex = 0){
     // maybe clear path
     this.path = [];
     this.paths = [];
@@ -51,7 +57,6 @@ class Movement{
       this.hypertrochoid(50*this.scale,10*this.scale,20*this.scale,100, 10);
       break;
       case 4:
-      // 21
       this.hypotrochoid(10*this.scale,2*this.scale,6*this.scale,21, 360/20);
       break;
       case 5:
@@ -81,17 +86,45 @@ class Movement{
       break;
       
       case 10:
-      this.line(0,0,spacingY, PI/2, 5);
+      this.line(0,0,spacingY, PI/2, 5, 1);
       break;
       
       case 11:
-      this.line(0,0,spacingY, PI/2, 30, 0,5,8*PI);
+      //this.line(0,0,spacingY, PI/2, 30, 0,5,8*PI);
+      this.line(0,0,spacingY, PI/2, 5, 2);
       break;
       
       case 12:
-      this.line(0,0,spacingY, PI/2, 30, 0,5,6*PI);
+        this.line(0,0,spacingY, PI/2, 5, 0);
+      //this.line(0,0,spacingY, PI/2, 30, 0,5,6*PI);
       break;
-      
+
+      case 13:
+        this.line(0,0,spacingY, PI/2, 10, 3);
+      //this.line(0,0,spacingY, PI/2, 30, 0,5,6*PI);
+      break;
+
+      case 14:
+        //console.log(spacingY);
+        this.sinus(0,0,spacingY, -PI/2, 10);
+      //this.line(0,0,spacingY, PI/2, 30, 0,5,6*PI);
+      break;
+      case 15:
+        this.sinus(0,0,spacingY, -PI/2, 15, 0.5*spacingY);
+      break;
+
+      case 16:
+        this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 30, 20, 10);
+      break;
+
+      case 17:
+        this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 10, 70, 1);
+      break;
+
+      case 18:
+        this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 2*pointIndex, 5, 5);
+      break;
+
       default:
       this.point(0,0);
     }
@@ -99,17 +132,19 @@ class Movement{
     return this.paths;
   }
   
-  display(){
+  /*display(){
     push();
     fill(255, 100);
     translate(this.offsetX, this.offsetY);
     rotateZ(-PI);
     rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
     rect(this.x-this.sizeX-20,this.y+40+this.sizeY,this.sizeX,this.sizeY);
+    rect(this.x-this.sizeX-20,this.y+80+this.sizeY,this.sizeX,this.sizeY);
     this.xyMovement();
     this.xzMovement();
+    this.yzMovement();
     pop();
-  }
+  }*/
   
   displayStatic(){
     push();
@@ -118,10 +153,12 @@ class Movement{
     //rotateZ(-PI);
     rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
     rect(this.x-this.sizeX-20,this.y+40+this.sizeY,this.sizeX,this.sizeY);
+    rect(this.x-this.sizeX-20,this.y+60+2*this.sizeY,this.sizeX,this.sizeY);
     pop();
     
     this.xyMovement();
     this.xzMovement();
+    this.yzMovement();
     //pop();
   }
   
@@ -147,6 +184,17 @@ class Movement{
     this.xyMovement();
     pop();
   }
+
+  yzMovement(){
+    push();
+    translate(this.sizeX/2-20,-this.sizeY/2-20,0);
+    rotateX(PI/2);
+    rotateZ(PI/2);
+    translate(200,this.sizeX/2+20,-6*this.sizeY/2-100);
+    this.xyMovement();
+    pop();
+  }
+  
   
   translateX(x){
     return -x - this.x - this.sizeX - 20;
@@ -180,6 +228,9 @@ class Movement{
       } else if (mode == 2){
         // linear descending
         z = -i*deltaX/maxX;
+      } else if (mode == 3){
+        // cosinus
+        z = this.cosinus(i*abs(deltaX), 0, maxX);
       }
       
       // global rotation around (0,0);
@@ -191,12 +242,58 @@ class Movement{
         x0 = (x-i*deltaX);
       }
       let y0 = (y+i*deltaY);
-      
+
       // global rotation operation
       let xf = x0*cos(this.globalRotOffset) - y0*sin(this.globalRotOffset);
       let yf = x0*sin(this.globalRotOffset) + y0*cos(this.globalRotOffset);
       tempPath.push(new createVector(xf,yf, z));
     }
+    this.paths.push(tempPath);
+  }
+
+  sinus(x, y, l, rotateOffset, nbPoint, period = l){
+    let tempPath = [];
+    //this.globalRotOffset = PI/2
+    let dx = l/nbPoint;
+    let lastY = 0;
+    let nextY, angle, d;
+    let x0,y0,xf,yf;
+    for (let i = 0; i < nbPoint+1; i++){
+      nextY = 5*sin((i+1)*dx*2*PI/period);
+      angle = atan((nextY-lastY)/dx);
+      d = sqrt(pow(dx,2) + pow((nextY-lastY),2));
+      x0 = x-i*dx;
+      y0 = y+lastY;
+      xf = x0*cos(rotateOffset) - y0*sin(rotateOffset);
+      yf = x0*sin(rotateOffset) + y0*cos(rotateOffset);
+      tempPath.push(new createVector(xf,yf,-1));
+      lastY = nextY;
+    }
+
+    this.paths.push(tempPath);
+  }
+
+  perlin(x, y, l, rotateOffset, nbPoint, pointIndex, amp, fx, fy){
+    let tempPath = [];
+    //this.globalRotOffset = PI/2
+    let dx = l/nbPoint;
+    let lastY = amp*noise(0, pointIndex/fy);
+    let nextY, angle, d;
+    let x0,y0,xf,yf;
+    for (let i = 0; i < nbPoint+1; i++){
+      //noiseSeed(random(10));
+      nextY = amp*noise((i+1)*dx/fx, pointIndex/fy);
+      console.log(pointIndex);
+      angle = atan((nextY-lastY)/dx);
+      d = sqrt(pow(dx,2) + pow((nextY-lastY),2));
+      x0 = x-i*dx;
+      y0 = y+lastY;
+      xf = x0*cos(rotateOffset) - y0*sin(rotateOffset);
+      yf = x0*sin(rotateOffset) + y0*cos(rotateOffset);
+      tempPath.push(new createVector(xf,yf,-1));
+      lastY = nextY;
+    }
+
     this.paths.push(tempPath);
   }
   
@@ -226,8 +323,10 @@ class Movement{
     
   }
   
-  paarabola(a,x,h,k){
-    let y = a*pow((x-h),2) + k;
+  // Z function
+  cosinus(x, x0, maxX){
+    let period = maxX;
+    let y = (cos((x-x0)*2*PI/maxX) - 1.)/2.;
     return y;
   }
   
@@ -368,7 +467,8 @@ class Movement{
     let previous = new createVector(0,0);
     let x,y,z;
     //let scale = 10.;
-    let scale = 3.;
+    let scale = 1.;
+    let scaleZ = 10.
     for (let i = 0; i < this.paths.length; i++){
       
       for (let j = 0; j < this.paths[i].length; j++){
@@ -377,7 +477,7 @@ class Movement{
         y = this.translateY(scale*this.paths[i][j].y);
         //x = this.path[i].x;
         //y = this.path[i].y;
-        z = scale*this.paths[i][j].z;
+        z = scaleZ*this.paths[i][j].z;
         
         if (j != 0){
           line(previous.x, previous.y,previous.z,x,y,z);

@@ -36,7 +36,7 @@ class Boundary{
       status = this.checkInSmoothCircle(x,y,60);
       break;
       case 3:
-      status = this.checkInRectangle(x,y,75,75);
+      status = this.checkInRectangle(x,y,50,50);
       break;
       default:
       status = this.checkInCircle(x,y, 100);
@@ -49,7 +49,7 @@ class Boundary{
     //this.point(0,0);
     //this.polygon(100*this.scale, 4);
     //this.circle(0,0,100*this.scale);
-    this.rectangle(0,0,75, 75);
+    this.rectangle(0,0,50, 50);
     //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
     //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
   }
@@ -81,8 +81,8 @@ class Boundary{
   
   // adapted from inigo quilez
   checkInRectangle(x,y,rx,ry){
-    let dx = abs(x) - rx;
-    let dy = abs(y) - ry;
+    let dx = abs(x-this.x) - rx;
+    let dy = abs(y-this.y) - ry;
     let d = sqrt((max(dx, 0))^2 + max(dy, 0)^2) + min(max(dx,dy),0);
     
     if (d <= 0){
@@ -217,7 +217,6 @@ class Boundary{
   }
   
   rectangle(x, y, rx, ry){
-    let angle = atan(ry/rx);
     let refx = 1.;
     let refy = 1.;
     for (let i = 0; i < 4; i++){
@@ -229,7 +228,7 @@ class Boundary{
       else if (i == 3){
         refx = 1.;
       }
-      this.path.push(new createVector(x+refx* rx*cos(angle), y + refy*ry*sin(angle)));
+      this.path.push(new createVector(x+refx* rx, y + refy*ry));
     }
     // close the path
     this.path.push(this.path[0]);

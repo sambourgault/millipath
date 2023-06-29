@@ -27,12 +27,14 @@ let rotDiv;
 let boundary;
 let code;
 let codeGenButton;
-let safeHeight = 20 //mm
+let safeHeight = 6 //mm
 let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 16; // mm/s
-let plungeRate = 5; //mm/s
-let maxDepthCut = 5; // mm
+let plungeRate = 16; //mm/s
+let maxDepthCut = 3; // mm
+let toolSize = 0.25; // in
+let toolSizeMm = toolSize * 25.4; //mm
 let infoBox;
 let matBox;
 let sZIn, sSIn, mSIn, pRIn, mdcIn, tsIn;
@@ -61,7 +63,29 @@ function setup() {
   //*** GRIDS ***//
   //constructor(x, y, xb, yb, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
   let pb = 60;
-  grids[0] = new Grid(0, 0, 10, 10, 3, 50, 50, 150, 150);
+  // line 10mm apart
+  grids[0] = new Grid(15+toolSizeMm/2, 15, 10, 10, 3, (100 - toolSizeMm)/9, 50, 110, 100);
+  // lines 50mm apart
+  grids[1] = new Grid(15+1*120+toolSizeMm/2, 15, 10, 10+1*pb, 3, (100 - toolSizeMm)/4, 50, 125, 100);
+  // lines with linear depth
+  grids[2] = new Grid(15+2*120+toolSizeMm/2, 15, 10, 10+2*pb, 3, (100 - toolSizeMm)/9, 33, 110, 100);
+  // lines with linear depth offset
+  grids[3] = new Grid(15+3*120+toolSizeMm/2, 15, 10, 10+3*pb, 3, (100 - toolSizeMm)/9, 33, 110, 100);  
+  // lines with parabolic depth
+  grids[4] = new Grid(15+4*120+toolSizeMm/2, 15, 10, 10+4*pb, 3, (100 - toolSizeMm)/9, 33, 110, 100);
+
+  // sinus lines with constant depth 
+  grids[5] = new Grid(15+toolSizeMm/2, 15+1*120, 10, 10+5*pb, 3, (100 - toolSizeMm)/9, 50, 110, 100);
+  // sinus lines with constant depth 
+  grids[6] = new Grid(15+1*120+toolSizeMm/2, 15+1*120, 10, 10+6*pb, 3, (100 - toolSizeMm)/9, 50, 110, 100);
+  // perlin noise med
+  grids[7] = new Grid(15+2*120+toolSizeMm/2, 15+1*120, 10, 10+7*pb, 3, (100 - toolSizeMm)/9, 100, 130, 100);
+  // perlin noise low
+  grids[8] = new Grid(15+3*120+toolSizeMm/2, 15+1*120, 10, 10+8*pb, 3, (100 - toolSizeMm)/9, 100, 130, 100);
+  // perlin noise with amp gradation over x
+  grids[9] = new Grid(15+4*120+toolSizeMm/2, 15+1*120, 10, 10+9*pb, 3, (100 - toolSizeMm)/9, 100, 120, 100);
+
+
   /*grids[1] = new Grid(250, 50, 10, 10+1*pb, 0, 50, 50, 200, 150);
   grids[2] = new Grid(50, 200, 10, 10+2*pb, 0, 25, 25, 140, 140);
   grids[3] = new Grid(50+25/2, 200+25/2, 10, 10+3*pb, 0, 25, 25, 140, 140);
@@ -77,24 +101,44 @@ function setup() {
   }
   
   //*** MOVEMENTS ***//
-  mvts[0] = new Movement(8, 0, 0);
-  mvts[1] = new Movement(9, 0, 0);
+  mvts[0] = new Movement(10, 0, 0);
+  mvts[1] = new Movement(10, 0, 0);
+  mvts[2] = new Movement(11, 0, 0);
+  mvts[3] = new Movement(12, 0, 0);
+  mvts[4] = new Movement(13, 0, 0);
+  
+  mvts[5] = new Movement(14, 0, 0);
+  mvts[6] = new Movement(15, 0, 0);
+  mvts[7] = new Movement(16, 0, 0);
+  mvts[8] = new Movement(17, 0, 0);
+  mvts[9] = new Movement(18, 0, 0);
+  /*mvts[1] = new Movement(9, 0, 0);
   mvts[2] = new Movement(7,0,0);
   mvts[3] = new Movement(6,0,0);
   mvts[4] = new Movement(10,0,0);
   mvts[5] = new Movement(11,0,0);
-  mvts[6] = new Movement(12,0,0);
+  mvts[6] = new Movement(12,0,0);*/
 
   mvtTemplate = new MvtTemplate(sx,sy);
 
   //*** BOUNDARIES ***/
-  boundaries[0] = new Boundary(-100,100);
-  boundaries[1] = new Boundary(0,0);
+  boundaries[0] = new Boundary(-65,65);
+  boundaries[1] = new Boundary(-65-1*120,65);
+  boundaries[2] = new Boundary(-65-2*120,65);
+  boundaries[3] = new Boundary(-65-3*120,65);
+  boundaries[4] = new Boundary(-65-4*120,65);
+
+  boundaries[5] = new Boundary(-65,65+1*120);
+  boundaries[6] = new Boundary(-65-1*120,65+1*120);
+  boundaries[7] = new Boundary(-65-2*120,65+1*120);
+  boundaries[8] = new Boundary(-65-3*120,65+1*120);
+  boundaries[9] = new Boundary(-65-4*120,65+1*120);
+  /*boundaries[1] = new Boundary(0,0);
   boundaries[2] = new Boundary(0,0);
   boundaries[3] = new Boundary(0,0);
   boundaries[4] = new Boundary(-100,425);
   boundaries[5] = new Boundary(0,0);
-  boundaries[6] = new Boundary(0,0);
+  boundaries[6] = new Boundary(0,0);*/
 
   // code gen
   code = new GCodeGen("test2");
@@ -116,6 +160,7 @@ function draw() {
   translate(width/2+sizeX/2,-height/2-sizeY/2,0);
   translate(0,sizeY/2,0);
   rotateX(-thetaX);
+  //rotateY(thetaY);
   translate(0,-sizeY/2,0);
   noFill();
   stroke(0);
@@ -240,7 +285,7 @@ function setupInputs(){
   labelTS = createDiv("tool size (in)").parent(infoBox.box);
   labelTS.position(10,6*offY);
   labelTS.style('width', '170px');
-  tsIn = createInput("0.25").parent(infoBox.box);
+  tsIn = createInput(str(toolSize)).parent(infoBox.box);
   tsIn.position(offX, 6.5*offY);
 
   // material
