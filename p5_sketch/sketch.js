@@ -61,14 +61,14 @@ function setup() {
   setupInputs();
 
   //*** GRIDS ***//
-  //constructor(x, y, xb, yb, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
+  //constructor(x, y, xb, yb, gridmode=0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
   let pb = 60;
   // line 10mm apart
-  grids[0] = new Grid(15+toolSizeMm/2, 15+toolSizeMm/2, 10, 10, 0, 3, toolSizeMm*1.5, toolSizeMm*1.5, 110, 110);
+  grids[0] = new Grid(15+toolSizeMm/2, 15+toolSizeMm/2, 10, 10, 0, 3, (100 - toolSizeMm)/4, (100 - toolSizeMm)/4, 120, 120);
   // lines 50mm apart
   grids[1] = new Grid(15+1*120-toolSizeMm/2, 15+toolSizeMm/2, 10, 10+1*pb, 1, 3, toolSizeMm, toolSizeMm*2, 110, 110);
   // lines with linear depth
-  grids[2] = new Grid(15+2*120, 15, 10, 10+2*pb, 0, 3, 10, 10, 120, 120, .25);
+  /*grids[2] = new Grid(15+2*120, 15, 10, 10+2*pb, 0, 3, 10, 10, 120, 120, .25);
   // lines with linear depth offset
   grids[3] = new Grid(15+3*120+30/4, 15, 10, 10+3*pb, 1, 3, 33, 33, 133, 133, .25);  
   // lines with parabolic depth
@@ -101,8 +101,8 @@ function setup() {
   }
   
   //*** MOVEMENTS ***//
-  mvts[0] = new Movement(20, 0, 0);
-  mvts[1] = new Movement(21, 0, 0);
+  mvts[0] = new Movement(25, 0, 0);
+  /*mvts[1] = new Movement(21, 0, 0);
   mvts[2] = new Movement(24, 0, 0);
 
   mvts[3] = new Movement(22, 0, 0);

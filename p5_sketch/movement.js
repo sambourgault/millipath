@@ -148,7 +148,7 @@ class Movement{
         this.line(0,0,spacingY, int(random(0,8))*PI/4, 4, 0);      
         break;
       case 25:
-        this.chevron(0,0,25*this.scale, 0, 5);
+        this.chevron2(0,0,15*this.scale, 0, 5);
         break;
       default:
       this.point(0,0);
@@ -257,6 +257,9 @@ class Movement{
       else if (mode == 4){
         // cosinus
         z = rd*this.parabola(i*abs(deltaX),0,maxX);
+      } else if (mode == 5){
+        // linear ascending
+        z = -1+i*abs(deltaX/maxX);
       }
       
       // global rotation around (0,0);
@@ -326,6 +329,15 @@ class Movement{
   chevron(x,y,l,rotateOffset, nbPoint){
     this.line(x,y,l,rotateOffset+PI/4, nbPoint);
     this.line(x,y,l,rotateOffset-PI/4, nbPoint);
+  }
+
+  chevron2(x,y,l,rotateOffset, nbPoint){
+    let rTool = maxDepthCut*tan(30*PI/180);
+    
+    let angle = atan(rTool/(l/2));
+    let lMove = (l/2)/cos(angle);
+    this.line(x+l/2,y,lMove,-angle, nbPoint,2);
+    this.line(x,y-rTool,lMove,angle, nbPoint,5);
   }
   
   cross(x,y,l,rotateOffset, nbPoint, nbApex){
