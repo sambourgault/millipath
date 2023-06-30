@@ -1,9 +1,10 @@
 // cartesian grid
 class Grid {
-  constructor(x, y, xb, yb, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) {
+  constructor(x, y, xb, yb, mode = 0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
     this.visible = false;
     this.openBox = false;
     this.boundaryMode = boundMode;
+    this.mode = mode;
     //constructor(x, y, textu) {
     const self = this;
     //this.textu = textu;
@@ -16,27 +17,18 @@ class Grid {
     this.sizeX = Number(this.ui.sliders[2].value());
     this.realSizeX = this.sizeX;
     this.UGX = false;
-    //this.sizeY = int((this.ui.sliders[3].value() / 1000) * 400);
     this.sizeY = Number(this.ui.sliders[3].value());
     this.realSizeY = this.sizeY;
-    //this.spacingX = (this.ui.sliders[4].value() / 1000) * 50;
     this.spacingX = Number(this.ui.sliders[4].value());
-    //this.spacingY = (this.ui.sliders[5].value() / 1000) * 50;
     this.spacingY = Number(this.ui.sliders[5].value());
-
-    //this.boundaryDist = (this.ui.sliders[8].value() / 1000) * 200;
     this.boundaryDist = Number(this.ui.sliders[8].value());
-    //console.log("sizex: "+this.sizeX);
     this.row = int(this.sizeX / this.spacingX);
-    //console.log(this.row);
     this.column = int(this.sizeY / this.spacingY);
     this.depthMatrix = [];
     this.initialGridMatrix = [];
     this.gridMatrix = [];
     this.maxDepth = 30;
-    //this.sinAmp = (this.ui.sliders[6].value() / 1000) * 2;
-    this.sinAmp = Number(this.ui.sliders[6].value());
-    //this.sinPeriod = (this.ui.sliders[7].value() / 1000) * 30 + 2;
+    this.sinAmp = sinAmp;//Number(this.ui.sliders[6].value());
     this.sinPeriod = Number(this.ui.sliders[7].value());
     this.bindUI(self);
     this.firstPoint = true;
@@ -144,7 +136,18 @@ class Grid {
         );*/
         
         //c = this.boundaryFunction(-i * this.spacingX + this.x, j2 * this.spacingY + this.y);
-        let x = -i * this.spacingX + this.x;
+        let x;
+        if (this.mode == 0){
+          x = -i * this.spacingX + this.x;
+        } else if (this.mode == 1){
+          //sinusoidal mode
+          x = (this.sinAmp * cos(2*PI/this.sinPeriod * j2) - i) * this.spacingX + this.x;
+        } else if (this.mode == 2){
+          //perlin mode
+          x = (this.sinAmp * noise(i/8, j2/5) - i) * this.spacingX + this.x;
+          //console.log(noise(i/50, j2/70));
+        }
+
         let y = j2 * this.spacingY + this.y;
         c = 0.;
         //c = this.boundaryFunction2(-x,y,50,50,200);
@@ -153,12 +156,8 @@ class Grid {
           j2 * this.spacingY + this.y
         );*/
 
-        tempDepthMatrix[i][j2] = c; //this.depth(c) / 255.0;
-        tempGridMatrix[i][j2] = createVector(
-          -i * this.spacingX + this.x,
-          j2 * this.spacingY + this.y,
-          c //this.depth(c) / 255.0
-        );
+        tempDepthMatrix[i][j2] = c; 
+        tempGridMatrix[i][j2] = createVector(x,y,c);
 
         // now all points are in. movement defines Z.  
         //if ( tempGridMatrix[i][j2].z > 0.01){
@@ -172,7 +171,7 @@ class Grid {
     //console.log("self after:"+this.depthMatrix.length);
     this.row = row;
     this.column = column;
-    this.sinGrid(this.sinAmp, this.sinPeriod);
+    //this.sinGrid(this.sinAmp, this.sinPeriod);
     this.changedGrid = true;
     this.realSizeX = (this.row-1)*this.spacingX;
     this.realSizeY = (this.column-1)*this.spacingY;

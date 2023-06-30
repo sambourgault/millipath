@@ -155,7 +155,7 @@ class GCodeGen {
       
       //go over each grid point
       for (let i = 2; i < grid.length+2 ; i++){
-
+        
         // go over each path in movement
         for (let l = 0; l < mvt.paths.length; l++){
           // go over each point in path
@@ -187,7 +187,7 @@ class GCodeGen {
           }
           
           let lastPath = tempPaths[tempPaths.length-1];
-    
+          
           //remove unconnected points
           
           for (let m = 0; m < lastPath.length; m++){
@@ -263,7 +263,7 @@ class GCodeGen {
             z = maxDepthCut*(grid[i-1].z+mvt.paths[l][k].z);
             
             let boundaryValue = boundaries[index].checkBoundary(grids[index].boundaryMode,x,y);
-            //console.log(boundaryValue);
+            
             if (boundaryValue <= 0){
               // point is inside the boundary
               if (tempPaths[tempPaths.length-1].length == 0){
@@ -278,32 +278,36 @@ class GCodeGen {
             }
           }
           
+          // lastpath will be empty if the whole mvt is outside boundary
           let lastPath = tempPaths[tempPaths.length-1];
-          
           //remove unconnected point
-          for (let m = 0; m < lastPath.length; m++){
-            let connected = false;
-            if (m == 0){
-              if (kIn[m+1] == kIn[m]+1){
-                connected = true;
+          if (mvt.paths.length == 1 && mvt.paths[0].length == 1 && lastPath.length != 0){
+            // don't remove point movement
+          }else {
+            for (let m = 0; m < lastPath.length; m++){
+              let connected = false;
+              if (m == 0){
+                if (kIn[m+1] == kIn[m]+1){
+                  connected = true;
+                }
+              } else if (m == lastPath.length-1){
+                if (kIn[m-1] == kIn[m]-1){
+                  connected = true;
+                }
+              } else {
+                if (kIn[m+1] == kIn[m]+1 || kIn[m-1] == kIn[m]-1){
+                  connected = true;
+                }
               }
-            } else if (m == lastPath.length-1){
-              if (kIn[m-1] == kIn[m]-1){
-                connected = true;
+              
+              if (!connected){
+                tempPaths[tempPaths.length-1].splice(m,1);
               }
-            } else {
-              if (kIn[m+1] == kIn[m]+1 || kIn[m-1] == kIn[m]-1){
-                connected = true;
-              }
-            }
-            
-            if (!connected){
-              tempPaths[tempPaths.length-1].splice(m,1);
             }
           }
           
           // add retract to safe Z height
-          if (lastPath.length > 1 ){     
+          if (lastPath.length > 1 || (mvt.paths.length == 1 && mvt.paths[0].length == 1 && lastPath.length != 0)){     
             let lastPoint = lastPath[lastPath.length-1];
             tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
           } else {
@@ -351,11 +355,13 @@ class GCodeGen {
   rotateMvt(mvt, gridIndex, point, pointIndex){
     let rotateOffset;
     if (gridIndex == 0 || gridIndex == 1 ){
-     rotateOffset = 0;
-    } else if (gridIndex == 6){
-      //if (){
+      rotateOffset = 0;
+    } else if (gridIndex == 4){
+      if (pointIndex % 2 == 0){
+      rotateOffset = PI/2;
+      } else {
         rotateOffset = 0;
-      //}
+      }
     }else {
       rotateOffset = 0;
     }

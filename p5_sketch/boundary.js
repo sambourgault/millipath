@@ -33,10 +33,24 @@ class Boundary{
       status = this.checkInCircle(x,y, 60);
       break;
       case 2:
-      status = this.checkInSmoothCircle(x,y,60);
+      status = this.checkInSmoothCircle(x,y,40);
       break;
       case 3:
       status = this.checkInRectangle(x,y,50,50);
+      break;
+      case 4:
+      if (this.checkInRectangle(x,y,50,50)<0){
+        status = this.checkInSmoothCircle(x,y,0, 50);
+      } else {
+        status = 1.;
+      }
+      break;
+      case 5:
+      if (this.checkInRectangle(x,y,50,50)<0){
+        status = this.checkInSmoothCircle(x,y,0, 50);
+      } else {
+        status = 1.;
+      }
       break;
       default:
       status = this.checkInCircle(x,y, 100);
@@ -70,14 +84,16 @@ class Boundary{
     }
   }
   
-  checkInSmoothCircle(x, y, r){
-    let f = this.smoothstep(r, r+40, dist(this.x, this.y, x, y));
+  checkInSmoothCircle(x, y, r, offset = 20){
+    let f = this.smoothstep(r, r+offset, dist(this.x, this.y, x, y));
     if (f < 1.){
       return -(1.-f);
     } else if (f == 1.){
       return 1.;
     }
   }
+
+ 
   
   // adapted from inigo quilez
   checkInRectangle(x,y,rx,ry){
@@ -293,7 +309,7 @@ class Boundary{
     
     void main() {
       vec2 uv = vTexCoord;
-      float f1 = smoothCircle(uv, vec2(.5,.5), .1, 0.2);
+      float f1 = smoothCircle(uv, vec2(.5,.5), .0, 0.2);
       //float f1 = circle(uv, vec2(.5), .25);
       vec3 color = vec3(f1);
       gl_FragColor = vec4(color, 1.0);

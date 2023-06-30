@@ -7,6 +7,7 @@ class MvtTemplate {
       this.sizeX = sizex;
       this.sizeY = sizey;
       this.lines = [];
+      
       for (let i = 0; i < this.sizeX; i++) {
         for (let j = 0; j < this.sizeY; j++) {
           this.lines.push(

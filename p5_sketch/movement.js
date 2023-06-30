@@ -36,7 +36,7 @@ class Movement{
   
   makePath(spacingX = 1, spacingY = 1, pointIndex = 0){
     // maybe clear path
-    this.path = [];
+    //this.path = [];
     this.paths = [];
     //this.globalRotOffset = globalRotOffset;
     
@@ -66,6 +66,7 @@ class Movement{
       //this.polygon(60/cos(PI/4), 4, 0);
       this.cross(0,0,7*this.scale, 0, 5, 4);
       break;
+      
       case 7:
       this.diamond(0,0,10*this.scale, 0, 5);
       //this.cross(0,0,25*this.scale, 0, 5, 4);
@@ -125,26 +126,39 @@ class Movement{
         this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 2*pointIndex, 5, 5);
       break;
 
+      case 19:
+        this.point(0,0,1 );
+      break;
+
+      case 20:
+        this.line(0+spacingX/2*random(-1,1),0+spacingY/2*random(-1,1),spacingY*2, PI/2+random(-1,1)*PI/8, 4, 4);      
+        break;
+
+      case 21:
+        this.line(0+spacingX/2*random(-1,1),0+spacingY/2*random(-1,1),spacingY/2, PI/2+random(-1,1)*PI/8, 4, 4);      
+        break;
+
+      case 22:
+          this.diamond(0,0,20*this.scale, 0, 5, 2);
+          break;
+      case 23:
+            this.diamond(0,0,10*this.scale, 0, 5, 2);
+            break;
+      case 24:
+        this.line(0,0,spacingY, int(random(0,8))*PI/4, 4, 0);      
+        break;
+      case 25:
+        this.chevron(0,0,25*this.scale, 0, 5);
+        break;
       default:
       this.point(0,0);
     }
     
+    //console.log(this.paths);
     return this.paths;
   }
   
-  /*display(){
-    push();
-    fill(255, 100);
-    translate(this.offsetX, this.offsetY);
-    rotateZ(-PI);
-    rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
-    rect(this.x-this.sizeX-20,this.y+40+this.sizeY,this.sizeX,this.sizeY);
-    rect(this.x-this.sizeX-20,this.y+80+this.sizeY,this.sizeX,this.sizeY);
-    this.xyMovement();
-    this.xzMovement();
-    this.yzMovement();
-    pop();
-  }*/
+
   
   displayStatic(){
     push();
@@ -203,11 +217,18 @@ class Movement{
   translateY(y){
     return -y - this.y + this.sizeY + 20;
   }
-  
-  point(x, y){
-    let z = 0;
-    this.paths[0] = [];
-    this.paths[0].push(new createVector(x,y,z));
+
+  //** Movement functions **//
+  point(x, y, mode = 0){
+    let z;
+    if (mode == 0){
+      z = -1;
+    } else if(mode == 1){
+      z = random(-1, 0.5);
+    }
+    let tempPath = [];
+    tempPath.push(new createVector(x,y,z));
+    this.paths.push(tempPath);
   }
   
   line(x,y,l,rotateOffset, nbPoints, mode = 0, amp = 0, f = 0){
@@ -218,6 +239,7 @@ class Movement{
     let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoints;
     let deltaY = (this.reflectY*this.globalRefY)*l*sin(rotateOffset)/nbPoints;
     
+    let rd = random(0.5,1);
     for (let i = 0; i < nbPoints+1; i++){
       if (mode == 0){
         // positive parabola with min in the middle of the line
@@ -227,10 +249,14 @@ class Movement{
         z = -1;
       } else if (mode == 2){
         // linear descending
-        z = -i*deltaX/maxX;
+        z = -i*abs(deltaX/maxX);
       } else if (mode == 3){
         // cosinus
         z = this.cosinus(i*abs(deltaX), 0, maxX);
+      }
+      else if (mode == 4){
+        // cosinus
+        z = rd*this.parabola(i*abs(deltaX),0,maxX);
       }
       
       // global rotation around (0,0);
@@ -283,7 +309,7 @@ class Movement{
     for (let i = 0; i < nbPoint+1; i++){
       //noiseSeed(random(10));
       nextY = amp*noise((i+1)*dx/fx, pointIndex/fy);
-      console.log(pointIndex);
+      //console.log(pointIndex);
       angle = atan((nextY-lastY)/dx);
       d = sqrt(pow(dx,2) + pow((nextY-lastY),2));
       x0 = x-i*dx;
@@ -309,16 +335,16 @@ class Movement{
     }
   }
   
-  diamond(x,y,l,rotateOffset, nbPoint){
+  diamond(x,y,l,rotateOffset, nbPoint, zmode = 0){
     let angle = 60*PI/180;
     let angle2 = angle + rotateOffset ; //rad
-    this.line(x+l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
+    this.line(x+l*cos(angle2),y,l,rotateOffset+angle, nbPoint, zmode);
     this.reflectY = -1;
-    this.line(x+l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
+    this.line(x+l*cos(angle2),y,l,rotateOffset+angle, nbPoint, zmode);
     this.reflectX = -1;
-    this.line(x-l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
+    this.line(x-l*cos(angle2),y,l,rotateOffset+angle, nbPoint, zmode);
     this.reflectY = 1;
-    this.line(x-l*cos(angle2),y,l,rotateOffset+angle, nbPoint);
+    this.line(x-l*cos(angle2),y,l,rotateOffset+angle, nbPoint, zmode);
     this.reflectX = 1;
     
   }

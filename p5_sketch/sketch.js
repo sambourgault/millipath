@@ -64,18 +64,18 @@ function setup() {
   //constructor(x, y, xb, yb, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
   let pb = 60;
   // line 10mm apart
-  grids[0] = new Grid(15+toolSizeMm/2, 15, 10, 10, 3, (100 - toolSizeMm)/9, 50, 110, 100);
+  grids[0] = new Grid(15+toolSizeMm/2, 15+toolSizeMm/2, 10, 10, 0, 3, toolSizeMm*1.5, toolSizeMm*1.5, 110, 110);
   // lines 50mm apart
-  grids[1] = new Grid(15+1*120+toolSizeMm/2, 15, 10, 10+1*pb, 3, (100 - toolSizeMm)/4, 50, 125, 100);
+  grids[1] = new Grid(15+1*120-toolSizeMm/2, 15+toolSizeMm/2, 10, 10+1*pb, 1, 3, toolSizeMm, toolSizeMm*2, 110, 110);
   // lines with linear depth
-  grids[2] = new Grid(15+2*120+toolSizeMm/2, 15, 10, 10+2*pb, 3, (100 - toolSizeMm)/9, 33, 110, 100);
+  grids[2] = new Grid(15+2*120, 15, 10, 10+2*pb, 0, 3, 10, 10, 120, 120, .25);
   // lines with linear depth offset
-  grids[3] = new Grid(15+3*120+toolSizeMm/2, 15, 10, 10+3*pb, 3, (100 - toolSizeMm)/9, 33, 110, 100);  
+  grids[3] = new Grid(15+3*120+30/4, 15, 10, 10+3*pb, 1, 3, 33, 33, 133, 133, .25);  
   // lines with parabolic depth
-  grids[4] = new Grid(15+4*120+toolSizeMm/2, 15, 10, 10+4*pb, 3, (100 - toolSizeMm)/9, 33, 110, 100);
+  grids[4] = new Grid(15+4*120+20/4, 15, 10, 10+4*pb, 1, 3, 20, 20, 120, 120, .25);
 
   // sinus lines with constant depth 
-  grids[5] = new Grid(15+toolSizeMm/2, 15+1*120, 10, 10+5*pb, 3, (100 - toolSizeMm)/9, 50, 110, 100);
+  /*grids[5] = new Grid(15+toolSizeMm/2, 15+1*120, 10, 10+5*pb, 3, (100 - toolSizeMm)/9, 50, 110, 100);
   // sinus lines with constant depth 
   grids[6] = new Grid(15+1*120+toolSizeMm/2, 15+1*120, 10, 10+6*pb, 3, (100 - toolSizeMm)/9, 50, 110, 100);
   // perlin noise med
@@ -83,7 +83,7 @@ function setup() {
   // perlin noise low
   grids[8] = new Grid(15+3*120+toolSizeMm/2, 15+1*120, 10, 10+8*pb, 3, (100 - toolSizeMm)/9, 100, 130, 100);
   // perlin noise with amp gradation over x
-  grids[9] = new Grid(15+4*120+toolSizeMm/2, 15+1*120, 10, 10+9*pb, 3, (100 - toolSizeMm)/9, 100, 120, 100);
+  grids[9] = new Grid(15+4*120+toolSizeMm/2, 15+1*120, 10, 10+9*pb, 3, (100 - toolSizeMm)/9, 100, 120, 100);*/
 
 
   /*grids[1] = new Grid(250, 50, 10, 10+1*pb, 0, 50, 50, 200, 150);
@@ -101,17 +101,18 @@ function setup() {
   }
   
   //*** MOVEMENTS ***//
-  mvts[0] = new Movement(10, 0, 0);
-  mvts[1] = new Movement(10, 0, 0);
-  mvts[2] = new Movement(11, 0, 0);
-  mvts[3] = new Movement(12, 0, 0);
-  mvts[4] = new Movement(13, 0, 0);
+  mvts[0] = new Movement(20, 0, 0);
+  mvts[1] = new Movement(21, 0, 0);
+  mvts[2] = new Movement(24, 0, 0);
+
+  mvts[3] = new Movement(22, 0, 0);
+  mvts[4] = new Movement(23, 0, 0);
   
-  mvts[5] = new Movement(14, 0, 0);
+  /*mvts[5] = new Movement(14, 0, 0);
   mvts[6] = new Movement(15, 0, 0);
   mvts[7] = new Movement(16, 0, 0);
   mvts[8] = new Movement(17, 0, 0);
-  mvts[9] = new Movement(18, 0, 0);
+  mvts[9] = new Movement(18, 0, 0);*/
   /*mvts[1] = new Movement(9, 0, 0);
   mvts[2] = new Movement(7,0,0);
   mvts[3] = new Movement(6,0,0);
@@ -122,17 +123,17 @@ function setup() {
   mvtTemplate = new MvtTemplate(sx,sy);
 
   //*** BOUNDARIES ***/
-  boundaries[0] = new Boundary(-65,65);
+  boundaries[0] = new Boundary(-64,65);
   boundaries[1] = new Boundary(-65-1*120,65);
   boundaries[2] = new Boundary(-65-2*120,65);
   boundaries[3] = new Boundary(-65-3*120,65);
   boundaries[4] = new Boundary(-65-4*120,65);
 
-  boundaries[5] = new Boundary(-65,65+1*120);
+  /*boundaries[5] = new Boundary(-65,65+1*120);
   boundaries[6] = new Boundary(-65-1*120,65+1*120);
   boundaries[7] = new Boundary(-65-2*120,65+1*120);
   boundaries[8] = new Boundary(-65-3*120,65+1*120);
-  boundaries[9] = new Boundary(-65-4*120,65+1*120);
+  boundaries[9] = new Boundary(-65-4*120,65+1*120);*/
   /*boundaries[1] = new Boundary(0,0);
   boundaries[2] = new Boundary(0,0);
   boundaries[3] = new Boundary(0,0);
