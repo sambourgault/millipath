@@ -150,6 +150,12 @@ class Movement{
       case 25:
         this.chevron2(0,0,15*this.scale, 0, 5);
         break;
+      case 26:
+          this.arrow(0,0,20*this.scale, 0, 5);
+          break;
+      case 27:
+        this.diamondV(0,0,15*this.scale, 0, 5);
+        break;
       default:
       this.point(0,0);
     }
@@ -233,7 +239,7 @@ class Movement{
   
   line(x,y,l,rotateOffset, nbPoints, mode = 0, amp = 0, f = 0){
     let z = 0;
-    let maxX = abs(l*cos(rotateOffset));
+    let maxX = l;//abs(l*cos(rotateOffset));
     let tempPath = [];
     
     let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoints;
@@ -249,7 +255,8 @@ class Movement{
         z = -1;
       } else if (mode == 2){
         // linear descending
-        z = -i*abs(deltaX/maxX);
+        let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
+        z = -i*abs(tempDelta/maxX);
       } else if (mode == 3){
         // cosinus
         z = this.cosinus(i*abs(deltaX), 0, maxX);
@@ -259,7 +266,8 @@ class Movement{
         z = rd*this.parabola(i*abs(deltaX),0,maxX);
       } else if (mode == 5){
         // linear ascending
-        z = -1+i*abs(deltaX/maxX);
+        let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
+        z = -1+i*abs(tempDelta/maxX);
       }
       
       // global rotation around (0,0);
@@ -333,11 +341,26 @@ class Movement{
 
   chevron2(x,y,l,rotateOffset, nbPoint){
     let rTool = maxDepthCut*tan(30*PI/180);
-    
     let angle = atan(rTool/(l/2));
     let lMove = (l/2)/cos(angle);
-    this.line(x+l/2,y,lMove,-angle, nbPoint,2);
-    this.line(x,y-rTool,lMove,angle, nbPoint,5);
+    this.line(x+l/2,y+rTool,lMove,-angle, nbPoint,2);
+    this.line(x,y-0*rTool,lMove,angle, nbPoint,5);
+  }
+
+  arrow(x,y,l,rotateOffset, nbPoint){
+    let rTool = maxDepthCut*tan(30*PI/180);
+    let angle = atan(rTool/(l/2));
+    let lMove = (l/2)/cos(angle);
+    this.line(x,y,lMove,0, nbPoint,2);
+    this.line(x-lMove,y,lMove,2*angle, nbPoint,5);
+    this.line(x-lMove,y,lMove,-2*angle, nbPoint,5);
+    //this.chevron2(x,y,l,rotateOffset, nbPoint);
+    //this.chevron2(x,y,l,rotateOffset-angle, nbPoint);
+  } 
+
+  diamondV(x,y,l,rotateOffset, nbPoint){
+    this.line(x+l/2,y,l/2, 0+rotateOffset, nbPoint, 2);
+    this.line(x,y,l/2, 0+rotateOffset, nbPoint, 5);
   }
   
   cross(x,y,l,rotateOffset, nbPoint, nbApex){
@@ -505,8 +528,8 @@ class Movement{
     let previous = new createVector(0,0);
     let x,y,z;
     //let scale = 10.;
-    let scale = 1.;
-    let scaleZ = 10.
+    let scale = 5.;
+    let scaleZ = 5.
     for (let i = 0; i < this.paths.length; i++){
       
       for (let j = 0; j < this.paths[i].length; j++){

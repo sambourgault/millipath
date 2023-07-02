@@ -4,8 +4,8 @@ let boundaries = [];
 let mvtTemplate;
 let w = 20;
 let h = 20;
-let sx = 6;
-let sy = 6;
+let sx = 5;
+let sy = 5;
 
 let thetaX = 0;
 let thetaY = 0;
@@ -32,7 +32,7 @@ let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 16; // mm/s
 let plungeRate = 16; //mm/s
-let maxDepthCut = 3; // mm
+let maxDepthCut = 5; // mm
 let toolSize = 0.25; // in
 let toolSizeMm = toolSize * 25.4; //mm
 let infoBox;
@@ -64,13 +64,13 @@ function setup() {
   //constructor(x, y, xb, yb, gridmode=0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
   let pb = 60;
   // line 10mm apart
-  grids[0] = new Grid(15+toolSizeMm/2, 15+toolSizeMm/2, 10, 10, 0, 3, (100 - toolSizeMm)/4, (100 - toolSizeMm)/4, 120, 120);
+  grids[0] = new Grid(15, 15, 10, 10, 0, 3, 15, 10, 120, 120);
   // lines 50mm apart
-  grids[1] = new Grid(15+1*120-toolSizeMm/2, 15+toolSizeMm/2, 10, 10+1*pb, 1, 3, toolSizeMm, toolSizeMm*2, 110, 110);
+  grids[1] = new Grid(15+1*120, 15, 10, 10+1*pb, 1, 3, 20, 20, 150, 150, 0.25);
   // lines with linear depth
-  /*grids[2] = new Grid(15+2*120, 15, 10, 10+2*pb, 0, 3, 10, 10, 120, 120, .25);
+  //grids[2] = new Grid(15+2*120+toolSizeMm/2, 15+toolSizeMm/2, 10, 10+2*pb, 0, 3, (100 - toolSizeMm)/4, (100 - toolSizeMm)/4, 120, 120, .25);
   // lines with linear depth offset
-  grids[3] = new Grid(15+3*120+30/4, 15, 10, 10+3*pb, 1, 3, 33, 33, 133, 133, .25);  
+  /*grids[3] = new Grid(15+3*120+30/4, 15, 10, 10+3*pb, 1, 3, 33, 33, 133, 133, .25);  
   // lines with parabolic depth
   grids[4] = new Grid(15+4*120+20/4, 15, 10, 10+4*pb, 1, 3, 20, 20, 120, 120, .25);
 
@@ -102,10 +102,10 @@ function setup() {
   
   //*** MOVEMENTS ***//
   mvts[0] = new Movement(25, 0, 0);
-  /*mvts[1] = new Movement(21, 0, 0);
-  mvts[2] = new Movement(24, 0, 0);
+  mvts[1] = new Movement(26, 0, 0);
+  mvts[2] = new Movement(27, 0, 0);
 
-  mvts[3] = new Movement(22, 0, 0);
+  /*mvts[3] = new Movement(22, 0, 0);
   mvts[4] = new Movement(23, 0, 0);
   
   /*mvts[5] = new Movement(14, 0, 0);

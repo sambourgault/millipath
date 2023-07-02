@@ -354,11 +354,11 @@ class GCodeGen {
   
   rotateMvt(mvt, gridIndex, point, pointIndex){
     let rotateOffset;
-    if (gridIndex == 0 || gridIndex == 1 ){
+    if (gridIndex == 1 ){
       rotateOffset = 0;
-    } else if (gridIndex == 4){
+    } else if (gridIndex == 0){
       if (pointIndex % 2 == 0){
-      rotateOffset = PI/2;
+      rotateOffset = PI;
       } else {
         rotateOffset = 0;
       }
