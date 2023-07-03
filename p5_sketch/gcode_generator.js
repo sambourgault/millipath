@@ -362,6 +362,8 @@ class GCodeGen {
       } else {
         rotateOffset = 0;
       }
+
+      rotateOffset = 0;
     }else {
       rotateOffset = 0;
     }

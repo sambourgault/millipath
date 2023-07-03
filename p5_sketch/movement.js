@@ -156,6 +156,9 @@ class Movement{
       case 27:
         this.diamondV(0,0,15*this.scale, 0, 5);
         break;
+      case 28:
+        this.guiShape(0,0,15*this.scale, 0, 5);
+        break;
       default:
       this.point(0,0);
     }
@@ -244,29 +247,31 @@ class Movement{
     
     let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoints;
     let deltaY = (this.reflectY*this.globalRefY)*l*sin(rotateOffset)/nbPoints;
-    
+    let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
     let rd = random(0.5,1);
     for (let i = 0; i < nbPoints+1; i++){
       if (mode == 0){
+        //let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
         // positive parabola with min in the middle of the line
-        z = this.parabola(i*abs(deltaX),0,maxX);
+        z = this.parabola(i*abs(tempDelta),0,maxX);
       } else if (mode == 1){
         // constant mac depth
         z = -1;
       } else if (mode == 2){
         // linear descending
-        let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
+        //let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
         z = -i*abs(tempDelta/maxX);
       } else if (mode == 3){
         // cosinus
-        z = this.cosinus(i*abs(deltaX), 0, maxX);
+
+        z = this.cosinus(i*abs(tempDelta), 0, maxX);
       }
       else if (mode == 4){
         // cosinus
-        z = rd*this.parabola(i*abs(deltaX),0,maxX);
+        z = rd*this.parabola(i*abs(tempDelta),0,maxX);
       } else if (mode == 5){
         // linear ascending
-        let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
+        //let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
         z = -1+i*abs(tempDelta/maxX);
       }
       
@@ -382,6 +387,16 @@ class Movement{
     this.line(x-l*cos(angle2),y,l,rotateOffset+angle, nbPoint, zmode);
     this.reflectX = 1;
     
+  }
+
+  guiShape(x,y,l,rotateOffset, nbPoint, zmode = 0){
+    //console.log("guifunction")
+    let mapT = mvtTemplate.paths;
+    let scale = w/sx;
+    for (const value of mapT.values()) {
+      //console.log(value);
+      this.line(x-scale*value.x1/h,y+scale*value.y1/w,scale*value.l, rotateOffset+value.angle, nbPoint);
+    }
   }
   
   // Z function
@@ -525,10 +540,16 @@ class Movement{
   
   
   displayPath(){
+    // check if gui has changed
+    if (this.mode == 28 && mvtTemplate.changed){
+      this.makePath();
+      mvtTemplate.changed = false;
+    }
+
     let previous = new createVector(0,0);
     let x,y,z;
     //let scale = 10.;
-    let scale = 5.;
+    let scale = 10.;
     let scaleZ = 5.
     for (let i = 0; i < this.paths.length; i++){
       
