@@ -240,15 +240,16 @@ class Movement{
     this.paths.push(tempPath);
   }
   
-  line(x,y,l,rotateOffset, nbPoints, mode = 0, amp = 0, f = 0){
+  line(x,y,l,theta, nbPoints, mode = 0, amp = 0, f = 0){
     let z = 0;
     let maxX = l;//abs(l*cos(rotateOffset));
     let tempPath = [];
     
-    let deltaX = (this.reflectX*this.globalRefX)*l*cos(rotateOffset)/nbPoints;
-    let deltaY = (this.reflectY*this.globalRefY)*l*sin(rotateOffset)/nbPoints;
+    let deltaX = (this.reflectX*this.globalRefX)*l*cos(theta)/nbPoints;
+    let deltaY = (this.reflectY*this.globalRefY)*l*sin(theta)/nbPoints;
     let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
     let rd = random(0.5,1);
+    
     for (let i = 0; i < nbPoints+1; i++){
       if (mode == 0){
         //let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
@@ -281,9 +282,9 @@ class Movement{
       if (deltaY != 0){
         x0 = (x-i*deltaX+amp*cos(f*i*deltaY/(deltaY*nbPoints)));
       } else {
-        x0 = (x-i*deltaX);
+        x0 = (this.reflectX*this.globalRefX)*(x-i*deltaX);
       }
-      let y0 = (y+i*deltaY);
+      let y0 = (this.reflectY*this.globalRefY)*(y+i*deltaY);
 
       // global rotation operation
       let xf = x0*cos(this.globalRotOffset) - y0*sin(this.globalRotOffset);
