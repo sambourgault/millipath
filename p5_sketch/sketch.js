@@ -6,6 +6,7 @@ let w = 20;
 let h = 20;
 let sx = 4;
 let sy = 4;
+let blabla = 2;
 
 let thetaX = 0;
 let thetaY = 0;
@@ -44,8 +45,9 @@ let title = "milli---path";
 let textArea;
 let myCodeMirror;
 let consoleCodeMirror;
-let codeDiv, codeDivHeader, codeButton, h2;
-let codeDiv2, codeDivHeader2, codeButton2, h2_2;
+let codeDiv, codeDivHeader, runButton, h2;
+let codeDiv2, codeDivHeader2, clearButton, h2_2;
+let saveButton, saveName;
 
 
 
@@ -109,9 +111,9 @@ function setup() {
   }
   
   //*** MOVEMENTS ***//
-  mvts[0] = new Movement(28, 0, 0);
-  /*mvts[1] = new Movement(26, 0, 0);
-  mvts[2] = new Movement(27, 0, 0);
+  mvts[0] = new Movement(0, 0);
+  mvts[1] = new Movement(0, 0);
+  /*mvts[2] = new Movement(27, 0, 0);
   
   /*mvts[3] = new Movement(22, 0, 0);
   mvts[4] = new Movement(23, 0, 0);
@@ -150,7 +152,7 @@ function setup() {
   // code gen
   code = new GCodeGen("test2");
   
-  // code editor
+  // code editor: https://www.youtube.com/watch?v=C3fNuqQeUdY&t=1004s
   codeDiv = createDiv();
   codeDiv.position(10, height);
   codeDiv.style('width', (width/2-20)+'px');
@@ -158,9 +160,18 @@ function setup() {
   h2 = createElement('h3', 'code editor').parent(codeDivHeader);
   h2.style('font-family', 'Poppins');
   h2.style('margin-bottom', '0');
-  codeButton = createButton('run').parent(codeDivHeader);
-  codeButton.style('font-family', 'Poppins');
-  codeButton.style('margin-bottom', '10px');
+  runButton = createButton('run').parent(codeDivHeader);
+  runButton.style('font-family', 'Poppins');
+  runButton.style('margin-bottom', '10px');
+  saveButton = createButton('save').parent(codeDivHeader);
+  saveButton.style('font-family', 'Poppins');
+  saveButton.style('margin-bottom', '10px');
+  saveButton.style('margin-left', '10px');
+  saveName = createInput('').parent(codeDivHeader);
+  saveName.id('filename');
+  saveName.style('font-family', 'Poppins');
+  saveName.style('margin-bottom', '10px');
+  saveName.style('margin-left', '10px');
 
   
   textArea = createElement("TEXTAREA").parent(codeDiv);
@@ -171,6 +182,7 @@ function setup() {
     lineNumbers: true,
     mode: 'javascript',
   });
+
   
   // code editor console
   codeDiv2 = createDiv();
@@ -180,9 +192,9 @@ function setup() {
   h2_2 = createElement('h3', 'console').parent(codeDivHeader2);
   h2_2.style('font-family', 'Poppins');
   h2_2.style('margin-bottom', '0');
-  codeButton2 = createButton('clear').parent(codeDivHeader2);
-  codeButton2.style('font-family', 'Poppins');
-  codeButton2.style('margin-bottom', '10px');
+  clearButton = createButton('clear').parent(codeDivHeader2);
+  clearButton.style('font-family', 'Poppins');
+  clearButton.style('margin-bottom', '10px');
 
   textArea2 = createElement("TEXTAREA").parent(codeDiv2);
   textArea2.class('codemirror_textarea');
@@ -192,46 +204,74 @@ function setup() {
     lineNumbers: false,
     mode: 'javascript',
   });
-  
-  myCodeMirror.on("inputRead",function(cm,obj){
-    //alert("Content Changed");
-    //console.log(cm.getValue("\n"));
-    if (true){
-      //console.log(cm.lastLine());
-      //console.log(cm.getLine(cm.lastLine()));
-      let com = cm.getLine(cm.lastLine());
-      try {
-        let cons = new Function(com);
-        cons();
-      }
-      catch(err){
-        //console.log("erro");
-      }
+
+  runButton.mousePressed(()=> {
+    const codeToRun = myCodeMirror.getValue();
+    try {
+      consoleCodeMirror.replaceRange(`$ `+eval(`${codeToRun}`)+"\n", CodeMirror.Pos(consoleCodeMirror.lastLine()));
+    }
+    catch(err){
+      consoleCodeMirror.replaceRange(`$ `+err+"\n", CodeMirror.Pos(consoleCodeMirror.lastLine()));
     }
   });
+
+  clearButton.mousePressed(_ => consoleCodeMirror.setValue(""));
   
-  /*console.log(textArea.elt.parentNode);
-  
-  myCodeMirror =  CodeMirror(function(elt) {
-    textArea.elt.parentNode.replaceChild(elt, textArea.elt);
-  }, {value: textArea.value});*/
-  
+  saveButton.id('download');
+  saveButton.mousePressed(_ => {
+    const filename = saveName.value();
+    
+    let content = myCodeMirror.getValue();
+    content = content.replace(/\n/g, "\r\n"); // To retain the Line breaks.
+    let blob = new Blob([content], { type: "text/plain"});
+    let anchor = document.createElement("a");
+    if (filename){
+      anchor.download = filename + ".txt";
+    } else {
+      anchor.download = "untitled.txt";
+    }
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.target ="_blank";
+    anchor.style.display = "none"; // just to be safe!
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+  });
 }
 
-function printTest(){
-  console.log("helloo");
-}
+// src: https://foolishdeveloper.com/save-textarea-text-to-a-file-using-javascript/
+/*function downloadFile(filename, content) {
+  console.log("hello?");
+  const element = document.createElement('a');
+  const blob = new Blob([content], { type: 'plain/text'});
+  const fileUrl = URL.createObjectURL(blob);
+  console.log(element);
+  console.log(blob);
+
+  //setAttribute() Sets the value of an attribute on the specified element.
+  element.setAttribute('href', fileUrl); //file location
+  element.setAttribute('download', filename); // file name
+  element.style.display = 'none';
+
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}*/
+
 
 function draw() {
   //console.log(textArea.parentNode);
   background(240);
   
-  if (!readOnce) {
-    readOnce = true;
+  //if (!readOnce) {
+    //readOnce = true;
     for (let i = 0; i < grids.length; i++){
-      grids[i].updateGrid(grids[i].row,grids[i].column);
+      if (grids[i].new){
+        grids[i].updateGrid(grids[i].row,grids[i].column);
+        grids[i].new = false;
+      }
     }
-  }
+  //}
   
   // movement the world for viewport
   push();
@@ -274,7 +314,11 @@ function draw() {
   // display movement
   push();
   //mvt2.displayStatic();
-  mvts[mvts.length-1].displayStatic();
+  for (let i = 0; i < mvts.length; i++){
+    if (mvts[i].visible){
+      mvts[i].displayStatic();
+    }
+  }
   //mvts[3].displayStatic();
   pop();
   

@@ -1,0 +1,20 @@
+// creating a new linepath and adding it to a movement
+let linePaths = [];
+let line1 = new LinePath(0,0,10,5,PI/4);
+linePaths.push(line1);
+console.log(line1.path);
+mvts[2] = new Movement(0,0,0);
+mvts[2].makePath2(linePaths);
+
+// chevron shape
+let linePaths = [];
+let line1 = new LinePath(0,0,10,5,PI/4);
+let line2 = new LinePath(0,0,10,5,PI/4,PI/2);
+linePaths.push(line1);
+linePaths.push(line2);
+mvts[2] = new Movement(0,0,0);
+mvts[2].makePath2(linePaths);
+
+// use predefined cross function
+mvts[2] = new Movement(0,0,0);
+mvts[2].makeCrossPath(2,0,10,5,0,0,6);

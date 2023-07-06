@@ -1,6 +1,8 @@
 class Movement{
-  constructor(mode,x, y, scale = 1.){
-    this.mode = mode;
+  constructor(x, y, scale = 1.){
+    this.mode = 0;
+    this.visible = true;
+    this.staticColor = [random(255), random(255), random(255)];
     this.sizeX = 300;
     this.sizeY = 200;
     this.x = x ;
@@ -13,8 +15,9 @@ class Movement{
     this.globalRefX = 1.;
     this.globalRefY = 1.;
     this.scale = scale;
-    this.path = [];
+
     this.paths = [];
+    this.linePaths = [];
     this.label= createDiv("movement xy plane");
     this.label.style('font-size', '14px');
     this.label.style('font-family', 'Poppins');
@@ -24,17 +27,26 @@ class Movement{
     this.label2.style('font-size', '14px');
     this.label2.style('font-family', 'Poppins');
     this.label2.position(width - this.sizeX-20, 20+this.sizeY);
-
+    
     this.label3= createDiv("movement yz plane");
     this.label3.style('font-size', '14px');
     this.label3.style('font-family', 'Poppins');
     this.label3.position(width - this.sizeX-20, 40+2*this.sizeY);
-
-    //this.makePath(this.mode);
-    this.makePath();
+    
+    // by default the movement path is a point at z = -1 (max depth);
+    this.makePointPath(0,0);
   }
   
-  makePath(spacingX = 1, spacingY = 1, pointIndex = 0){
+  // Create your custon linePaths composition and add it to the movement
+  makePath(linePaths){
+    this.paths = [];
+    
+    for (let i = 0; i < linePaths.length; i++){
+      this.paths.push(linePaths[i].path);
+    }
+  }
+  
+  /*makePath1(spacingX = 1, spacingY = 1, pointIndex = 0){
     // maybe clear path
     //this.path = [];
     this.paths = [];
@@ -96,153 +108,95 @@ class Movement{
       break;
       
       case 12:
-        this.line(0,0,spacingY, PI/2, 5, 0);
+      this.line(0,0,spacingY, PI/2, 5, 0);
       //this.line(0,0,spacingY, PI/2, 30, 0,5,6*PI);
       break;
-
+      
       case 13:
-        this.line(0,0,spacingY, PI/2, 10, 3);
+      this.line(0,0,spacingY, PI/2, 10, 3);
       //this.line(0,0,spacingY, PI/2, 30, 0,5,6*PI);
       break;
-
+      
       case 14:
-        //console.log(spacingY);
-        this.sinus(0,0,spacingY, -PI/2, 10);
+      //console.log(spacingY);
+      this.sinus(0,0,spacingY, -PI/2, 10);
       //this.line(0,0,spacingY, PI/2, 30, 0,5,6*PI);
       break;
       case 15:
-        this.sinus(0,0,spacingY, -PI/2, 15, 0.5*spacingY);
+      this.sinus(0,0,spacingY, -PI/2, 15, 0.5*spacingY);
       break;
-
+      
       case 16:
-        this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 30, 20, 10);
+      this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 30, 20, 10);
       break;
-
+      
       case 17:
-        this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 10, 70, 1);
+      this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 10, 70, 1);
       break;
-
+      
       case 18:
-        this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 2*pointIndex, 5, 5);
+      this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 2*pointIndex, 5, 5);
       break;
-
+      
       case 19:
-        this.point(0,0,1 );
+      this.point(0,0,1 );
       break;
-
+      
       case 20:
-        this.line(0+spacingX/2*random(-1,1),0+spacingY/2*random(-1,1),spacingY*2, PI/2+random(-1,1)*PI/8, 4, 4);      
-        break;
-
+      this.line(0+spacingX/2*random(-1,1),0+spacingY/2*random(-1,1),spacingY*2, PI/2+random(-1,1)*PI/8, 4, 4);      
+      break;
+      
       case 21:
-        this.line(0+spacingX/2*random(-1,1),0+spacingY/2*random(-1,1),spacingY/2, PI/2+random(-1,1)*PI/8, 4, 4);      
-        break;
-
+      this.line(0+spacingX/2*random(-1,1),0+spacingY/2*random(-1,1),spacingY/2, PI/2+random(-1,1)*PI/8, 4, 4);      
+      break;
+      
       case 22:
-          this.diamond(0,0,20*this.scale, 0, 5, 2);
-          break;
+      this.diamond(0,0,20*this.scale, 0, 5, 2);
+      break;
       case 23:
-            this.diamond(0,0,10*this.scale, 0, 5, 2);
-            break;
+      this.diamond(0,0,10*this.scale, 0, 5, 2);
+      break;
       case 24:
-        this.line(0,0,spacingY, int(random(0,8))*PI/4, 4, 0);      
-        break;
+      this.line(0,0,spacingY, int(random(0,8))*PI/4, 4, 0);      
+      break;
       case 25:
-        this.chevron2(0,0,15*this.scale, 0, 5);
-        break;
+      this.chevron2(0,0,15*this.scale, 0, 5);
+      break;
       case 26:
-          this.arrow(0,0,20*this.scale, 0, 5);
-          break;
+      this.arrow(0,0,20*this.scale, 0, 5);
+      break;
       case 27:
-        this.diamondV(0,0,15*this.scale, 0, 5);
-        break;
+      this.diamondV(0,0,15*this.scale, 0, 5);
+      break;
       case 28:
-        this.guiShape(0,0,15*this.scale, 0, 5);
-        break;
+      this.guiShape(0,0,15*this.scale, 0, 5);
+      break;
       default:
       this.point(0,0);
     }
     
     //console.log(this.paths);
     return this.paths;
-  }
-  
-
-  
-  displayStatic(){
-    push();
-    fill(255, 100);
-    //translate(this.offsetX, this.offsetY);
-    //rotateZ(-PI);
-    rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
-    rect(this.x-this.sizeX-20,this.y+40+this.sizeY,this.sizeX,this.sizeY);
-    rect(this.x-this.sizeX-20,this.y+60+2*this.sizeY,this.sizeX,this.sizeY);
-    pop();
-    
-    this.xyMovement();
-    this.xzMovement();
-    this.yzMovement();
-    //pop();
-  }
-  
-  setOffset(x, y){
-    this.offsetX -= x;
-    this.offsetY -= y;
-  }
-  
-  xyMovement(){ 
-    stroke(255,0,0);
-    strokeWeight(2);
-    push();
-    translate(this.sizeX/2, -this.sizeY/2, 20);
-    this.displayPath();
-    pop();
-  }
-  
-  xzMovement(){
-    push();
-    translate(this.sizeX/2+20,-this.sizeY/2-20,0);
-    rotateX(PI/2);
-    translate(-this.sizeX/2-20,0,-4*this.sizeY/2-80);
-    this.xyMovement();
-    pop();
-  }
-
-  yzMovement(){
-    push();
-    translate(this.sizeX/2-20,-this.sizeY/2-20,0);
-    rotateX(PI/2);
-    rotateZ(PI/2);
-    translate(200,this.sizeX/2+20,-6*this.sizeY/2-100);
-    this.xyMovement();
-    pop();
-  }
+  }*/
   
   
-  translateX(x){
-    return -x - this.x - this.sizeX - 20;
-  }
-  
-  translateY(y){
-    return -y - this.y + this.sizeY + 20;
-  }
-
-  //** Movement functions **//
-  point(x, y, mode = 0){
-    let z;
-    if (mode == 0){
-      z = -1;
-    } else if(mode == 1){
-      z = random(-1, 0.5);
-    }
+  //** Predefined Movement Functions **//
+  // Default Movement is a PointPath
+  makePointPath(x, y, z = -1){
+    //let z = z;
     let tempPath = [];
     tempPath.push(new createVector(x,y,z));
     this.paths.push(tempPath);
   }
   
-  line(x,y,l,theta, nbPoints, mode = 0, amp = 0, f = 0){
+  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = 0){
+    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, phi, zMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+  }
+
+  /*line(x,y,l,theta, nbPoints, mode = 0, amp = 0, f = 0){
     let z = 0;
-    let maxX = l;//abs(l*cos(rotateOffset));
+    let maxX = l;
     let tempPath = [];
     
     let deltaX = (this.reflectX*this.globalRefX)*l*cos(theta)/nbPoints;
@@ -264,7 +218,7 @@ class Movement{
         z = -i*abs(tempDelta/maxX);
       } else if (mode == 3){
         // cosinus
-
+        
         z = this.cosinus(i*abs(tempDelta), 0, maxX);
       }
       else if (mode == 4){
@@ -277,7 +231,7 @@ class Movement{
       }
       
       // global rotation around (0,0);
-
+      
       let x0;
       if (deltaY != 0){
         x0 = (x-i*deltaX+amp*cos(f*i*deltaY/(deltaY*nbPoints)));
@@ -285,7 +239,7 @@ class Movement{
         x0 = (this.reflectX*this.globalRefX)*(x-i*deltaX);
       }
       let y0 = (this.reflectY*this.globalRefY)*(y+i*deltaY);
-
+      
       // global rotation operation
       let xf = x0*cos(this.globalRotOffset) - y0*sin(this.globalRotOffset);
       let yf = x0*sin(this.globalRotOffset) + y0*cos(this.globalRotOffset);
@@ -293,7 +247,7 @@ class Movement{
     }
     this.paths.push(tempPath);
   }
-
+  
   sinus(x, y, l, rotateOffset, nbPoint, period = l){
     let tempPath = [];
     //this.globalRotOffset = PI/2
@@ -312,10 +266,10 @@ class Movement{
       tempPath.push(new createVector(xf,yf,-1));
       lastY = nextY;
     }
-
+    
     this.paths.push(tempPath);
   }
-
+  
   perlin(x, y, l, rotateOffset, nbPoint, pointIndex, amp, fx, fy){
     let tempPath = [];
     //this.globalRotOffset = PI/2
@@ -336,16 +290,28 @@ class Movement{
       tempPath.push(new createVector(xf,yf,-1));
       lastY = nextY;
     }
-
+    
     this.paths.push(tempPath);
   }
   
   chevron(x,y,l,rotateOffset, nbPoint){
+    //this.paths.push(new LinePath(x,y,l,nbPoint,));
     this.line(x,y,l,rotateOffset+PI/4, nbPoint);
     this.line(x,y,l,rotateOffset-PI/4, nbPoint);
-  }
+  }*/
 
-  chevron2(x,y,l,rotateOffset, nbPoint){
+  makeChevronPath(x,y,l,nbPoints, theta, zMode){
+    this.paths = [];
+    this.linePaths = [];
+    // first branch
+    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, theta, zMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    // second branch
+    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, PI/2, zMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+  }
+  
+ /* chevron2(x,y,l,rotateOffset, nbPoint){
     let rTool = maxDepthCut*tan(30*PI/180);
     let angle = atan(rTool/(l/2));
     let lMove = (l/2)/cos(angle);
@@ -353,6 +319,8 @@ class Movement{
     this.line(x,y-0*rTool,lMove,angle, nbPoint,5);
   }
 
+  
+  
   arrow(x,y,l,rotateOffset, nbPoint){
     let rTool = maxDepthCut*tan(30*PI/180);
     let angle = atan(rTool/(l/2));
@@ -363,7 +331,7 @@ class Movement{
     //this.chevron2(x,y,l,rotateOffset, nbPoint);
     //this.chevron2(x,y,l,rotateOffset-angle, nbPoint);
   } 
-
+  
   diamondV(x,y,l,rotateOffset, nbPoint){
     this.line(x+l/2,y,l/2, 0+rotateOffset, nbPoint, 2);
     this.line(x,y,l/2, 0+rotateOffset, nbPoint, 5);
@@ -374,9 +342,21 @@ class Movement{
       let angle = i*2*PI/nbApex;
       this.line(x,y,l,rotateOffset+angle, nbPoint);
     }
+  }*/
+
+  makeCrossPath(x,y,l,nbPoints,theta,zMode, nbApex){
+    this.paths = [];
+    this.linePaths = [];
+    
+    for (let i = 0; i < nbApex; i++){
+      let angle = i*2*PI/nbApex + theta;
+      //this.paths.push(new LinePath(x,y,l,nbPoints,angle));
+      this.linePaths.push(new LinePath(x,y,l,nbPoints, angle, angle, zMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    }
   }
   
-  diamond(x,y,l,rotateOffset, nbPoint, zmode = 0){
+  /*diamond(x,y,l,rotateOffset, nbPoint, zmode = 0){
     let angle = 60*PI/180;
     let angle2 = angle + rotateOffset ; //rad
     this.line(x+l*cos(angle2),y,l,rotateOffset+angle, nbPoint, zmode);
@@ -389,7 +369,7 @@ class Movement{
     this.reflectX = 1;
     
   }
-
+  
   guiShape(x,y,l,rotateOffset, nbPoint, zmode = 0){
     //console.log("guifunction")
     let mapT = mvtTemplate.paths;
@@ -537,16 +517,73 @@ class Movement{
       tempPath.push(firstPoint);
       this.paths.push(tempPath);
     }
+  }*/
+  
+  // Display Static Mvt
+  displayStatic(){
+    push();
+    fill(255, 100);
+    noStroke();
+    rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
+    rect(this.x-this.sizeX-20,this.y+40+this.sizeY,this.sizeX,this.sizeY);
+    rect(this.x-this.sizeX-20,this.y+60+2*this.sizeY,this.sizeX,this.sizeY);
+    pop();
+    
+    this.xyMovement();
+    this.xzMovement();
+    this.yzMovement();
+  }
+  
+  setOffset(x, y){
+    this.offsetX -= x;
+    this.offsetY -= y;
+  }
+  
+  xyMovement(){ 
+    stroke(this.staticColor[0],this.staticColor[1],this.staticColor[2]);
+    strokeWeight(2);
+    push();
+    translate(this.sizeX/2, -this.sizeY/2, 20);
+    this.displayPath();
+    pop();
+  }
+  
+  xzMovement(){
+    push();
+    translate(this.sizeX/2+20,-this.sizeY/2-20,0);
+    rotateX(PI/2);
+    translate(-this.sizeX/2-20,0,-4*this.sizeY/2-80);
+    this.xyMovement();
+    pop();
+  }
+  
+  yzMovement(){
+    push();
+    translate(this.sizeX/2-20,-this.sizeY/2-20,0);
+    rotateX(PI/2);
+    rotateZ(PI/2);
+    translate(200,this.sizeX/2+20,-6*this.sizeY/2-100);
+    this.xyMovement();
+    pop();
   }
   
   
+  translateX(x){
+    return -x - this.x - this.sizeX - 20;
+  }
+  
+  translateY(y){
+    return -y - this.y + this.sizeY + 20;
+  }
+
+  // Display Mvt on Grid
   displayPath(){
     // check if gui has changed
     if (this.mode == 28 && mvtTemplate.changed){
       this.makePath();
       mvtTemplate.changed = false;
     }
-
+    
     let previous = new createVector(0,0);
     let x,y,z;
     //let scale = 10.;
@@ -558,8 +595,6 @@ class Movement{
         
         x = this.translateX(scale*this.paths[i][j].x);
         y = this.translateY(scale*this.paths[i][j].y);
-        //x = this.path[i].x;
-        //y = this.path[i].y;
         z = scaleZ*this.paths[i][j].z;
         
         if (j != 0){
@@ -569,7 +604,7 @@ class Movement{
         if (this.paths[i].length == 1){
           push();
           translate(x,y,z);
-          sphere(4);
+          sphere(2);
           pop();
         }
         
@@ -579,7 +614,4 @@ class Movement{
       }
     }
   }
-  
-  
-  
 }

@@ -3,6 +3,7 @@ class Grid {
   constructor(x, y, xb, yb, mode = 0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
     this.visible = false;
     this.openBox = false;
+    this.new = true;
     this.boundaryMode = boundMode;
     this.mode = mode;
     //constructor(x, y, textu) {
@@ -27,7 +28,7 @@ class Grid {
     this.depthMatrix = [];
     this.initialGridMatrix = [];
     this.gridMatrix = [];
-    this.maxDepth = 30;
+    this.maxDepth = 0;
     this.sinAmp = sinAmp;//Number(this.ui.sliders[6].value());
     this.sinPeriod = Number(this.ui.sliders[7].value());
     this.bindUI(self);

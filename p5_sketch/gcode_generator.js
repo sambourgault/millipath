@@ -389,11 +389,15 @@ class GCodeGen {
     //rotateOffset = PI/2*int(random(4)) + PI/4;
     
     mvt.globalRotOffset = rotateOffset;
-    let rotatedPath = mvt.makePath(grids[gridIndex].spacingX, grids[gridIndex].spacingY, pointIndex);
+
+    let rotatedPath = mvt.paths;//mvt.makePath(grids[gridIndex].spacingX, grids[gridIndex].spacingY, pointIndex);
     
+
     //console.log(grids[gridIndex].spacingX);
     return rotatedPath;
   }
+
+
   
   display(){
     if (this.play){
