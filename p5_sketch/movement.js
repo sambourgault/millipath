@@ -18,7 +18,7 @@ class Movement{
 
     this.paths = [];
     this.linePaths = [];
-    this.label= createDiv("movement xy plane");
+    /*this.label= createDiv("movement xy plane");
     this.label.style('font-size', '14px');
     this.label.style('font-family', 'Poppins');
     this.label.position(width - this.sizeX-20, 0);
@@ -31,7 +31,7 @@ class Movement{
     this.label3= createDiv("movement yz plane");
     this.label3.style('font-size', '14px');
     this.label3.style('font-family', 'Poppins');
-    this.label3.position(width - this.sizeX-20, 40+2*this.sizeY);
+    this.label3.position(width - this.sizeX-20, 40+2*this.sizeY);*/
     
     // by default the movement path is a point at z = -1 (max depth);
     this.makePointPath(0,0);
@@ -524,9 +524,9 @@ class Movement{
     push();
     fill(255, 100);
     noStroke();
-    rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
+    /*rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
     rect(this.x-this.sizeX-20,this.y+40+this.sizeY,this.sizeX,this.sizeY);
-    rect(this.x-this.sizeX-20,this.y+60+2*this.sizeY,this.sizeX,this.sizeY);
+    rect(this.x-this.sizeX-20,this.y+60+2*this.sizeY,this.sizeX,this.sizeY);*/
     pop();
     
     this.xyMovement();

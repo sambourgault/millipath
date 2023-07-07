@@ -1,28 +1,45 @@
 // cartesian grid
 class Grid {
-  constructor(x, y, xb, yb, mode = 0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
+  constructor(id, x, y, mode = 0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
     this.visible = false;
     this.openBox = false;
+    this.id = id;
     this.new = true;
     this.boundaryMode = boundMode;
     this.mode = mode;
     //constructor(x, y, textu) {
     const self = this;
+
+    // grid layer component
+    this.layerNameDiv = createDiv("grid"+this.id).parent(gridLayersBox.box);
+    this.layerNameDiv.style('font-size', '14px');
+    this.layerNameDiv.style('font-family', 'Poppins');
+    this.layerNameDiv.position(10, 24+24*this.id);
+    this.visible = createCheckbox('', this.visible).parent(gridLayersBox.box);
+    this.changeVisibility = function(){
+      self.visible = this.checked();
+    }
+    this.visible.changed(this.changeVisibility);
+    //gridLayersBox.box.style("height", gridLayersBox.h+40*this.id+"px" );
+    this.visible.position(50,24+24*this.id);
+    this.visible.style('font-size', '14px');
+    this.visible.style('font-family', 'Poppins');
+
     //this.textu = textu;
-    this.ui = new UI(this, this.openBox, xb, yb, x, y, spx, spy, sx, sy);
+    //this.ui = new UI(this, this.openBox, xb, yb, x, y, spx, spy, sx, sy);
     //this.x = (-this.ui.sliders[0].value() / 1000) * width;
-    this.x = -Number(this.ui.sliders[0].value());
+    this.x = x;//-Number(this.ui.sliders[0].value());
     //this.y = (this.ui.sliders[1].value() / 1000) * width;
-    this.y = Number(this.ui.sliders[1].value());
+    this.y = y; // Number(this.ui.sliders[1].value());
     //this.sizeX = int((this.ui.sliders[2].value() / 1000) * 400);
-    this.sizeX = Number(this.ui.sliders[2].value());
+    this.sizeX = sx; //Number(this.ui.sliders[2].value());
     this.realSizeX = this.sizeX;
     this.UGX = false;
-    this.sizeY = Number(this.ui.sliders[3].value());
+    this.sizeY = sy; //Number(this.ui.sliders[3].value());
     this.realSizeY = this.sizeY;
-    this.spacingX = Number(this.ui.sliders[4].value());
-    this.spacingY = Number(this.ui.sliders[5].value());
-    this.boundaryDist = Number(this.ui.sliders[8].value());
+    this.spacingX = spx; //Number(this.ui.sliders[4].value());
+    this.spacingY = spy; //Number(this.ui.sliders[5].value());
+    //this.boundaryDist = Number(this.ui.sliders[8].value());
     this.row = int(this.sizeX / this.spacingX);
     this.column = int(this.sizeY / this.spacingY);
     this.depthMatrix = [];
@@ -30,8 +47,8 @@ class Grid {
     this.gridMatrix = [];
     this.maxDepth = 0;
     this.sinAmp = sinAmp;//Number(this.ui.sliders[6].value());
-    this.sinPeriod = Number(this.ui.sliders[7].value());
-    this.bindUI(self);
+    this.sinPeriod = 1;//Number(this.ui.sliders[7].value());
+    //this.bindUI(self);
     this.firstPoint = true;
     this.changedGrid = false;
     this.path = [];
@@ -60,15 +77,10 @@ class Grid {
   }
 
   display() {
-    //console.log(this.row);
     for (let i = 0; i < this.row; i++) {
       for (let j = 0; j < this.column; j++) {
         push();
         fill(200);
-        //console.log(this.x);
-        /*translate(this.x-this.sizeX/2,-this.y+this.sizeY/2,0);
-        rotateZ(0.1*millis()/1000);
-        translate(-this.x+this.sizeX/2,this.y-this.sizeY/2,0);*/
 
         translate(
           this.gridMatrix[i][j].x,
@@ -129,14 +141,7 @@ class Grid {
         if ((i + 1) % 2 == 0) {
           j2 = int(column) - 1 - j;
         }
-        //console.log(j2);
         
-       /* c = textu.get(
-          textu.width - (i * this.spacingX - this.x)*textu.width/sizeX,
-          (j2 * this.spacingY + this.y)*textu.height/sizeY
-        );*/
-        
-        //c = this.boundaryFunction(-i * this.spacingX + this.x, j2 * this.spacingY + this.y);
         let x;
         if (this.mode == 0){
           x = -i * this.spacingX + this.x;

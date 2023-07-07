@@ -48,6 +48,10 @@ let consoleCodeMirror;
 let codeDiv, codeDivHeader, runButton, h2;
 let codeDiv2, codeDivHeader2, clearButton, h2_2;
 let saveButton, saveName;
+let gridLayersBox;
+let mvtLabelXY, mvtLabelXZ, mvtLabelYZ, mvtLabelXYDiv;
+let sizeRectX = 300;
+let sizeRectY = 200;
 
 
 
@@ -65,8 +69,10 @@ function setup() {
   ortho(-width, 0, -height, 0, -width, width);
   
   // MATERIAL info boxes
-  infoBox = new CollapsibleBox(210,200, '300px', "machine specs");
-  matBox = new CollapsibleBox(210, 10, '180px', 'material specs');
+  infoBox = new CollapsibleBox(width/2 - 190/2+200,10, '300px', "machine specs");
+  matBox = new CollapsibleBox(width/2 - 190/2, 10, '180px', 'material specs');
+  gridLayersBox = new CollapsibleBox(width/2 - 190/2 - 200,10, '50px', 'grid layers');
+  
   setupInputs();
   mvtTemplate = new MvtTemplate(sx,sy);
   
@@ -74,7 +80,7 @@ function setup() {
   //constructor(x, y, xb, yb, gridmode=0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
   let pb = 60;
   // line 10mm apart
-  grids[0] = new Grid(15, 15, 10, 10, 0, 3, 30, 30, 120, 120);
+  grids[0] = new Grid(0,15, 15, 0, 3, 30, 30, 120, 120);
   // lines 50mm apart
   /*grids[1] = new Grid(15+1*120, 15, 10, 10+1*pb, 1, 3, 20, 20, 150, 150, 0.25);
   // lines with linear depth
@@ -106,9 +112,9 @@ function setup() {
   /*grids[4] = new Grid(50 + 59,50 + 59, 10, 250,0, 140,140,141,141);
   grids[5] = new Grid(50, 200, 10, 310,0, 50, 50, 200, 150);*/
   
-  for (let i = 0; i < grids.length; i++){
+  /*for (let i = 0; i < grids.length; i++){
     grids[i].ui.box.collapse();
-  }
+  }*/
   
   //*** MOVEMENTS ***//
   mvts[0] = new Movement(0, 0);
@@ -129,6 +135,34 @@ function setup() {
   mvts[4] = new Movement(10,0,0);
   mvts[5] = new Movement(11,0,0);
   mvts[6] = new Movement(12,0,0);*/
+  /* mvtLabelXYDiv = createDiv();
+  mvtLabelXYDiv.position(width - sizeRectX -20, 0);
+  mvtLabelXYDiv.style('width', sizeRectX+"px");
+  mvtLabelXYDiv.style("box-shadow","inset 0px 0px 0px 2px #000");
+  mvtLabelXYDiv.style('background-color', 'white')*/
+  mvtLabelXY= createElement('h3'," movement xy plane ");
+  mvtLabelXY.position(width - sizeRectX -20, 0);
+  mvtLabelXY.style('width', sizeRectX-10+"px");
+  //mvtLabelXY.style("box-shadow","inset 0px 0px 0px 2px #000");
+  //mvtLabelXY.style('background-color', 'white')
+  mvtLabelXY.style('font-size', '14px');
+  mvtLabelXY.style('font-family', 'Poppins');
+  mvtLabelXY.style('margin-top', '0');
+  //mvtLabelXY.style('padding-left', '10px');
+  
+  
+  
+  mvtLabelXZ= createElement('h3',"movement xz plane");
+  mvtLabelXZ.style('font-size', '14px');
+  mvtLabelXZ.style('font-family', 'Poppins');
+  mvtLabelXZ.style('margin-top', '0');
+  mvtLabelXZ.position(width - sizeRectX-20, 20+sizeRectY);
+  
+  mvtLabelYZ= createElement('h3',"movement yz plane");
+  mvtLabelYZ.style('font-size', '14px');
+  mvtLabelYZ.style('font-family', 'Poppins');
+  mvtLabelYZ.style('margin-top', '0');
+  mvtLabelYZ.position(width - sizeRectX-20, 40+2*sizeRectY);
   
   //*** BOUNDARIES ***/
   boundaries[0] = new Boundary(-64,65);
@@ -154,25 +188,32 @@ function setup() {
   
   // code editor: https://www.youtube.com/watch?v=C3fNuqQeUdY&t=1004s
   codeDiv = createDiv();
-  codeDiv.position(10, height);
-  codeDiv.style('width', (width/2-20)+'px');
+  codeDiv.position(10, 10);
+  codeDiv.style('width', '400px');
   codeDivHeader = createDiv().parent(codeDiv);
   h2 = createElement('h3', 'code editor').parent(codeDivHeader);
   h2.style('font-family', 'Poppins');
   h2.style('margin-bottom', '0');
+  h2.style('margin-top', '0');
+  h2.style('font-size', '14px');
   runButton = createButton('run').parent(codeDivHeader);
   runButton.style('font-family', 'Poppins');
   runButton.style('margin-bottom', '10px');
+  runButton.style("background-color", "white");
+  runButton.style("border-radius", "0px");
+  runButton.style("border-width", "2px");
   saveButton = createButton('save').parent(codeDivHeader);
   saveButton.style('font-family', 'Poppins');
   saveButton.style('margin-bottom', '10px');
   saveButton.style('margin-left', '10px');
+  saveButton.style("background-color", "white");
+  saveButton.style("border-radius", "0px");
+  saveButton.style("border-width", "2px");
   saveName = createInput('').parent(codeDivHeader);
   saveName.id('filename');
   saveName.style('font-family', 'Poppins');
   saveName.style('margin-bottom', '10px');
   saveName.style('margin-left', '10px');
-
   
   textArea = createElement("TEXTAREA").parent(codeDiv);
   textArea.class('codemirror_textarea');
@@ -182,29 +223,35 @@ function setup() {
     lineNumbers: true,
     mode: 'javascript',
   });
-
+  
   
   // code editor console
   codeDiv2 = createDiv();
-  codeDiv2.position(width/2, height);
-  codeDiv2.style('width', (width/2-10)+'px');
+  codeDiv2.position(10, 390);
+  codeDiv2.style('width', '400px');
   codeDivHeader2 = createDiv().parent(codeDiv2);
+  //codeDivHeader2.style("box-shadow","inset 0px 0px 0px 2px #000");
   h2_2 = createElement('h3', 'console').parent(codeDivHeader2);
   h2_2.style('font-family', 'Poppins');
   h2_2.style('margin-bottom', '0');
+  h2_2.style('margin-top', '0');
+  h2_2.style('font-size', '14px');
   clearButton = createButton('clear').parent(codeDivHeader2);
   clearButton.style('font-family', 'Poppins');
   clearButton.style('margin-bottom', '10px');
-
+  clearButton.style("background-color", "white");
+  clearButton.style("border-radius", "0px");
+  clearButton.style("border-width", "2px");
+  
   textArea2 = createElement("TEXTAREA").parent(codeDiv2);
   textArea2.class('codemirror_textarea');
   textArea2.position(0, height);
   // configs
   consoleCodeMirror = CodeMirror.fromTextArea(textArea2.elt, {
-    lineNumbers: false,
+    lineNumbers: true,
     mode: 'javascript',
   });
-
+  
   runButton.mousePressed(()=> {
     const codeToRun = myCodeMirror.getValue();
     try {
@@ -214,7 +261,7 @@ function setup() {
       consoleCodeMirror.replaceRange(`$ `+err+"\n", CodeMirror.Pos(consoleCodeMirror.lastLine()));
     }
   });
-
+  
   clearButton.mousePressed(_ => consoleCodeMirror.setValue(""));
   
   saveButton.id('download');
@@ -247,12 +294,12 @@ function setup() {
   const fileUrl = URL.createObjectURL(blob);
   console.log(element);
   console.log(blob);
-
+  
   //setAttribute() Sets the value of an attribute on the specified element.
   element.setAttribute('href', fileUrl); //file location
   element.setAttribute('download', filename); // file name
   element.style.display = 'none';
-
+  
   document.body.appendChild(element);
   element.click();
   document.body.removeChild(element);
@@ -264,13 +311,13 @@ function draw() {
   background(240);
   
   //if (!readOnce) {
-    //readOnce = true;
-    for (let i = 0; i < grids.length; i++){
-      if (grids[i].new){
-        grids[i].updateGrid(grids[i].row,grids[i].column);
-        grids[i].new = false;
-      }
+  //readOnce = true;
+  for (let i = 0; i < grids.length; i++){
+    if (grids[i].new){
+      grids[i].updateGrid(grids[i].row,grids[i].column);
+      grids[i].new = false;
     }
+  }
   //}
   
   // movement the world for viewport
@@ -284,6 +331,7 @@ function draw() {
   noFill();
   stroke(0);
   
+  // drawing the stock piece
   push();
   translate(-stockSizeXIn.value()/2, stockSizeYIn.value()/2, -materialThickness/2);
   box(stockSizeXIn.value(), stockSizeYIn.value(), materialThickness);
@@ -311,9 +359,20 @@ function draw() {
     pop();
   }
   
+  
+  push();
+  fill(255);
+  noStroke();
+  rect(-sizeRectX-20,20,sizeRectX,sizeRectY);
+  rect(-sizeRectX-20,40+sizeRectY,sizeRectX,sizeRectY);
+  rect(-sizeRectX-20,60+2*sizeRectY,sizeRectX,sizeRectY);
+  noFill();
+  pop();
+  
   // display movement
   push();
   //mvt2.displayStatic();
+  
   for (let i = 0; i < mvts.length; i++){
     if (mvts[i].visible){
       mvts[i].displayStatic();
@@ -325,7 +384,7 @@ function draw() {
   
   for (let i = 0; i < grids.length; i++){
     if (grids[i].changedGrid){
-      code.updatePath(i, grids[i].path, mvts[i], grids[i].ui.linkState);
+      code.updatePath(i, grids[i].path, mvts[i], grids[i].linkState);
       
       /*console.log("helloo")
       if (i == 3){
@@ -344,7 +403,7 @@ function draw() {
   
   push();
   //translate(-width/2-sizeX/2,height/2+sizeY/2,0);
-  translate(-width+20,height-200);
+  translate(-width+20,height-100);
   mvtTemplate.display(0,0, color(255,0,0));
   pop();
 }
@@ -430,6 +489,9 @@ function setupInputs(){
   labelSY.style('width', '170px');
   stockSizeYIn = createInput("610").parent(matBox.box);
   stockSizeYIn.position(offX, 3.5*offY);
+  
+  matBox.collapse();
+  infoBox.collapse();
 }
 
 function ParseFloat(nb,val, test = false) {

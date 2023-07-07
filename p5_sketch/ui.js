@@ -16,9 +16,9 @@ class UI{
     this.divs = [];
     this.visible = createCheckbox('visible', grid.visible).parent(this.box.box);
 
-     this.offY = 40;
-     this.linkState = false;
-     this.linkButton = createButton("linked").parent(this.box.box) ;
+    this.offY = 40;
+    this.linkState = false;
+    this.linkButton = createButton("linked").parent(this.box.box) ;
     
     for (let i = 0; i < 9; i++){
       this.sliders[i] = createInput((this.defaultValues[i])).parent(this.box.box);
