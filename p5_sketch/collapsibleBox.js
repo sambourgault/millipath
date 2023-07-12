@@ -8,8 +8,8 @@ class CollapsibleBox{
         this.box = createDiv();
         this.box.style("height", this.h);
         this.box.style("box-shadow","inset 0px 0px 0px 2px #000");
-        //this.box.style("border", "solid");
-        //this.box.style("border-width", "medium");
+        //this.box.class("ui-widget-content");
+        //this.box.id("draggable");
         this.h2 = createElement('h3', text).parent(this.box);
         this.h2.style("margin-top", "0px");
         this.h2.style('font-size', '14px');

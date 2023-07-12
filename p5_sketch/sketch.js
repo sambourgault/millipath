@@ -2,6 +2,7 @@ let grids = [];
 let mvts = [];
 let boundaries = [];
 let mvtTemplate;
+let mvtTemplateOffsetX, mvtTemplateOffsetY;
 let w = 20;
 let h = 20;
 let sx = 4;
@@ -52,6 +53,7 @@ let gridLayersBox;
 let mvtLabelXY, mvtLabelXZ, mvtLabelYZ, mvtLabelXYDiv;
 let sizeRectX = 300;
 let sizeRectY = 200;
+let boundaryLabel;
 
 
 
@@ -75,12 +77,14 @@ function setup() {
   
   setupInputs();
   mvtTemplate = new MvtTemplate(sx,sy);
+  mvtTemplateOffsetX = -width+20;
+  mvtTemplateOffsetY = height-100;
   
   //*** GRIDS ***//
-  //constructor(x, y, xb, yb, gridmode=0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
+  //constructor(x, y, gridmode=0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150) 
   let pb = 60;
   // line 10mm apart
-  grids[0] = new Grid(0,15, 15, 0, 3, 30, 30, 120, 120);
+  //grids[0] = new Grid(0,15, 15, 0, 3, 30, 30, 120, 120);
   // lines 50mm apart
   /*grids[1] = new Grid(15+1*120, 15, 10, 10+1*pb, 1, 3, 20, 20, 150, 150, 0.25);
   // lines with linear depth
@@ -117,8 +121,8 @@ function setup() {
   }*/
   
   //*** MOVEMENTS ***//
-  mvts[0] = new Movement(0, 0);
-  mvts[1] = new Movement(0, 0);
+  //mvts[0] = new Movement(0, 0);
+  //mvts[1] = new Movement(0, 0);
   /*mvts[2] = new Movement(27, 0, 0);
   
   /*mvts[3] = new Movement(22, 0, 0);
@@ -165,11 +169,18 @@ function setup() {
   mvtLabelYZ.position(width - sizeRectX-20, 40+2*sizeRectY);
   
   //*** BOUNDARIES ***/
-  boundaries[0] = new Boundary(-64,65);
-  boundaries[1] = new Boundary(-65-1*120,65);
+  boundaries[0] = new Boundary(3,27.4+125,(304.8-240.755)/2+120.3775,125,120.3775);
+  //boundaries[0] = new Boundary(3,125,120.3775,125,120.3775);
+  /*boundaries[1] = new Boundary(-65-1*120,65);
   boundaries[2] = new Boundary(-65-2*120,65);
   boundaries[3] = new Boundary(-65-3*120,65);
-  boundaries[4] = new Boundary(-65-4*120,65);
+  boundaries[4] = new Boundary(-65-4*120,65);*/
+
+   boundaryLabel = createElement('h3',"boundaries");
+   boundaryLabel .style('font-size', '14px');
+   boundaryLabel .style('font-family', 'Poppins');
+   boundaryLabel.style('margin-top', '0');
+   boundaryLabel .position(width - sizeRectX-20, height - sizeRectX);
   
   /*boundaries[5] = new Boundary(-65,65+1*120);
   boundaries[6] = new Boundary(-65-1*120,65+1*120);
@@ -222,7 +233,29 @@ function setup() {
   myCodeMirror = CodeMirror.fromTextArea(textArea.elt, {
     lineNumbers: true,
     mode: 'javascript',
+    extraKeys: {"Ctrl-Space": "autocomplete"}
   });
+
+  /*CodeMirror.hint.javascript = function (myCodeMirror) {
+    var list = Session.get(Template.strSessionDistinctFields) || [];
+    var cursor = myCodeMirror.getCursor();
+    var currentLine = myCodeMirror.getLine(cursor.line);
+    var start = cursor.ch;
+    var end = start;
+    while (end < currentLine.length && /[\w$]+/.test(currentLine.charAt(end))) ++end;
+    while (start && /[\w$]+/.test(currentLine.charAt(start - 1))) --start;
+    var curWord = start != end && currentLine.slice(start, end);
+    var regex = new RegExp('^' + curWord, 'i');
+    var result = {
+        list: (!curWord ? list : list.filter(function (item) {
+            return item.match(regex);
+        })).sort(),
+        from: CodeMirror.Pos(cursor.line, start),
+        to: CodeMirror.Pos(cursor.line, end)
+    };
+
+    return result;
+};*/
   
   
   // code editor console
@@ -250,6 +283,7 @@ function setup() {
   consoleCodeMirror = CodeMirror.fromTextArea(textArea2.elt, {
     lineNumbers: true,
     mode: 'javascript',
+    //extraKeys: {"Ctrl-Space":"autocomplete"}
   });
   
   runButton.mousePressed(()=> {
@@ -307,18 +341,14 @@ function setup() {
 
 
 function draw() {
-  //console.log(textArea.parentNode);
   background(240);
   
-  //if (!readOnce) {
-  //readOnce = true;
   for (let i = 0; i < grids.length; i++){
     if (grids[i].new){
       grids[i].updateGrid(grids[i].row,grids[i].column);
       grids[i].new = false;
     }
   }
-  //}
   
   // movement the world for viewport
   push();
@@ -330,6 +360,7 @@ function draw() {
   translate(0,-sizeY/2,0);
   noFill();
   stroke(0);
+  strokeWeight(2);
   
   // drawing the stock piece
   push();
@@ -352,7 +383,10 @@ function draw() {
   code.display();
   pop();
   
-  // display 
+  // display static boundary
+  //stroke(0);
+  //rect(-sizeRectX-20,height- sizeRectX+20,sizeRectX,sizeRectX);
+  //noStroke();
   for (let i = 0; i < boundaries.length; i++){
     push();
     boundaries[i].displayStatic();
@@ -363,10 +397,13 @@ function draw() {
   push();
   fill(255);
   noStroke();
+  stroke(0);
+  strokeWeight(2);
   rect(-sizeRectX-20,20,sizeRectX,sizeRectY);
   rect(-sizeRectX-20,40+sizeRectY,sizeRectX,sizeRectY);
   rect(-sizeRectX-20,60+2*sizeRectY,sizeRectX,sizeRectY);
   noFill();
+  noStroke();
   pop();
   
   // display movement
@@ -385,32 +422,19 @@ function draw() {
   for (let i = 0; i < grids.length; i++){
     if (grids[i].changedGrid){
       code.updatePath(i, grids[i].path, mvts[i], grids[i].linkState);
-      
-      /*console.log("helloo")
-      if (i == 3){
-        code.updatePath(i, grids[i].path, mvt2, grids[i].ui.linkState);
-      } else if (i == 4){
-        code.updatePath(i, grids[i].path, mvt3, grids[i].ui.linkState);
-      } else if (i == 5) {
-        code.updatePath(i, grids[i].path, mvt7, grids[i].ui.linkState);
-      } else {
-        code.updatePath(i, grids[i].path, mvt7, grids[i].ui.linkState);
-      } */
-      
       grids[i].changedGrid = false;
     }
   }
   
   push();
   //translate(-width/2-sizeX/2,height/2+sizeY/2,0);
-  translate(-width+20,height-100);
+  translate(mvtTemplateOffsetX,mvtTemplateOffsetY);
   mvtTemplate.display(0,0, color(255,0,0));
   pop();
 }
 
 function mousePressed(){
-  mvtTemplate.mousePressed(20, height-200);
-  
+  mvtTemplate.mousePressed(mvtTemplateOffsetX+width, mvtTemplateOffsetY);
 }
 
 function mouseDragged() {
@@ -464,6 +488,9 @@ function setupInputs(){
   labelMDC.style('width', '170px');
   mdcIn = createInput(str(maxDepthCut)).parent(infoBox.box);
   mdcIn.position(offX, 5.5*offY);
+  mdcIn.changed(_ => {
+    maxDepthCut = mdcIn.value();
+  });
   
   labelTS = createDiv("tool size (in)").parent(infoBox.box);
   labelTS.position(10,6*offY);
@@ -481,13 +508,13 @@ function setupInputs(){
   labelSX= createDiv("stock size X (mm)").parent(matBox.box);
   labelSX.position(offX,2*offY);
   labelSX.style('width', '170px');
-  stockSizeXIn = createInput("610").parent(matBox.box);
+  stockSizeXIn = createInput("304.8").parent(matBox.box);
   stockSizeXIn.position(offX, 2.5*offY);
   
   labelSY= createDiv("stock size Y (mm)").parent(matBox.box);
   labelSY.position(offX,3*offY);
   labelSY.style('width', '170px');
-  stockSizeYIn = createInput("610").parent(matBox.box);
+  stockSizeYIn = createInput("304.8").parent(matBox.box);
   stockSizeYIn.position(offX, 3.5*offY);
   
   matBox.collapse();

@@ -15,23 +15,9 @@ class Movement{
     this.globalRefX = 1.;
     this.globalRefY = 1.;
     this.scale = scale;
-
+    
     this.paths = [];
     this.linePaths = [];
-    /*this.label= createDiv("movement xy plane");
-    this.label.style('font-size', '14px');
-    this.label.style('font-family', 'Poppins');
-    this.label.position(width - this.sizeX-20, 0);
-    
-    this.label2= createDiv("movement xz plane");
-    this.label2.style('font-size', '14px');
-    this.label2.style('font-family', 'Poppins');
-    this.label2.position(width - this.sizeX-20, 20+this.sizeY);
-    
-    this.label3= createDiv("movement yz plane");
-    this.label3.style('font-size', '14px');
-    this.label3.style('font-family', 'Poppins');
-    this.label3.position(width - this.sizeX-20, 40+2*this.sizeY);*/
     
     // by default the movement path is a point at z = -1 (max depth);
     this.makePointPath(0,0);
@@ -183,7 +169,6 @@ class Movement{
   //** Predefined Movement Functions **//
   // Default Movement is a PointPath
   makePointPath(x, y, z = -1){
-    //let z = z;
     let tempPath = [];
     tempPath.push(new createVector(x,y,z));
     this.paths.push(tempPath);
@@ -193,61 +178,8 @@ class Movement{
     this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, phi, zMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
-
-  /*line(x,y,l,theta, nbPoints, mode = 0, amp = 0, f = 0){
-    let z = 0;
-    let maxX = l;
-    let tempPath = [];
-    
-    let deltaX = (this.reflectX*this.globalRefX)*l*cos(theta)/nbPoints;
-    let deltaY = (this.reflectY*this.globalRefY)*l*sin(theta)/nbPoints;
-    let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
-    let rd = random(0.5,1);
-    
-    for (let i = 0; i < nbPoints+1; i++){
-      if (mode == 0){
-        //let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
-        // positive parabola with min in the middle of the line
-        z = this.parabola(i*abs(tempDelta),0,maxX);
-      } else if (mode == 1){
-        // constant mac depth
-        z = -1;
-      } else if (mode == 2){
-        // linear descending
-        //let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
-        z = -i*abs(tempDelta/maxX);
-      } else if (mode == 3){
-        // cosinus
-        
-        z = this.cosinus(i*abs(tempDelta), 0, maxX);
-      }
-      else if (mode == 4){
-        // cosinus
-        z = rd*this.parabola(i*abs(tempDelta),0,maxX);
-      } else if (mode == 5){
-        // linear ascending
-        //let tempDelta = sqrt(pow(deltaX,2)+pow(deltaY,2));
-        z = -1+i*abs(tempDelta/maxX);
-      }
-      
-      // global rotation around (0,0);
-      
-      let x0;
-      if (deltaY != 0){
-        x0 = (x-i*deltaX+amp*cos(f*i*deltaY/(deltaY*nbPoints)));
-      } else {
-        x0 = (this.reflectX*this.globalRefX)*(x-i*deltaX);
-      }
-      let y0 = (this.reflectY*this.globalRefY)*(y+i*deltaY);
-      
-      // global rotation operation
-      let xf = x0*cos(this.globalRotOffset) - y0*sin(this.globalRotOffset);
-      let yf = x0*sin(this.globalRotOffset) + y0*cos(this.globalRotOffset);
-      tempPath.push(new createVector(xf,yf, z));
-    }
-    this.paths.push(tempPath);
-  }
   
+  /*
   sinus(x, y, l, rotateOffset, nbPoint, period = l){
     let tempPath = [];
     //this.globalRotOffset = PI/2
@@ -293,13 +225,8 @@ class Movement{
     
     this.paths.push(tempPath);
   }
+  */
   
-  chevron(x,y,l,rotateOffset, nbPoint){
-    //this.paths.push(new LinePath(x,y,l,nbPoint,));
-    this.line(x,y,l,rotateOffset+PI/4, nbPoint);
-    this.line(x,y,l,rotateOffset-PI/4, nbPoint);
-  }*/
-
   makeChevronPath(x,y,l,nbPoints, theta, zMode){
     this.paths = [];
     this.linePaths = [];
@@ -311,14 +238,14 @@ class Movement{
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   
- /* chevron2(x,y,l,rotateOffset, nbPoint){
+  /* chevron2(x,y,l,rotateOffset, nbPoint){
     let rTool = maxDepthCut*tan(30*PI/180);
     let angle = atan(rTool/(l/2));
     let lMove = (l/2)/cos(angle);
     this.line(x+l/2,y+rTool,lMove,-angle, nbPoint,2);
     this.line(x,y-0*rTool,lMove,angle, nbPoint,5);
   }
-
+  
   
   
   arrow(x,y,l,rotateOffset, nbPoint){
@@ -343,18 +270,207 @@ class Movement{
       this.line(x,y,l,rotateOffset+angle, nbPoint);
     }
   }*/
+  
 
+  /**
+   * Make a diamond with a V-shaped bit by going down and up in z
+   * @param {float} x
+   * @param {float} y
+   * @param {float} l
+   * @param {int} nbPoints
+   * @param {float} theta
+   */
+  makeDiamondForVBit(x,y,l,nbPoints, theta){
+    this.paths = [];
+    this.linePaths = [];
+    this.linePaths.push(new LinePath(x+l/2,y,l/2, nbPoints, theta, theta, 1));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    this.linePaths.push(new LinePath(x,y,l/2, nbPoints, theta, theta, 2));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+  }
+  
+  
+  /**
+  * Make a cross path as the movement.
+  * @param {float} x
+  * @param {float} y
+  * @param {float} l
+  * @param {int} nbPoints
+  * @param {float} theta
+  * @param {int} zMode
+  * @param {int} nbApex
+  */
   makeCrossPath(x,y,l,nbPoints,theta,zMode, nbApex){
     this.paths = [];
     this.linePaths = [];
     
     for (let i = 0; i < nbApex; i++){
       let angle = i*2*PI/nbApex + theta;
-      //this.paths.push(new LinePath(x,y,l,nbPoints,angle));
       this.linePaths.push(new LinePath(x,y,l,nbPoints, angle, angle, zMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
   }
+  
+  /**
+  * Make a polygon path as the movement.
+  * @param {float} r - The radius of the polygon.
+  * @param {float} nbSides - The number of sides of the polygon.
+  * @param {int} nbPoints - The number of point in each line composing each side of the polygon.
+  * @param {float} theta - The angle of the polygon with respect with the positive x-axis.
+  * @param {int} zMode - depth mode of linePaths composing the polygon. 
+  */
+  makePolygonPath(r, nbSides, nbPoints, theta, zMode = 0){
+    let t1,t2,x1,x2,y1,y2,l,angle;
+    this.paths = [];
+    this.linePaths = [];
+    
+    for (let i = 0; i < nbSides; i++){
+      t1 = 360/nbSides*i*PI/180  + theta + this.globalRotOffset;
+      t2 = 360/nbSides*(i+1)*PI/180  + theta + this.globalRotOffset;
+      x1 = r*cos(t1);
+      y1 = r*sin(t1);
+      x2 = r*cos(t2);
+      y2 = r*sin(t2);
+      angle =  atan((y2-y1)/(x2-x1));
+      if (x2 < x1){
+        angle += PI;
+      }
+      l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
+      this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    }
+    return this.paths;
+  }
+  
+  /**
+  * Make a polygon-shaped concentric paths as the movement.
+  * @param {float} r
+  * @param {int} nbSides
+  * @param {int} nbPaths
+  * @param {float} offsetWidth
+  * @param {int} nbPoints
+  * @param {float} theta
+  * @param {int} zMode=0
+  */
+  makeConcentricPolygonPath(r, nbSides, nbPaths, offsetWidth, nbPoints, theta, zMode = 0){
+    let t1,t2,x1,x2,y1,y2,l,r2,angle;
+    this.paths = [];
+    this.linePaths = [];
+    
+    for (let j = 0; j < nbPaths; j++){
+      r2 = r - j*offsetWidth;
+      for (let i = 0; i < nbSides; i++){
+        t1 = 360/nbSides*i*PI/180  + theta + this.globalRotOffset;
+        t2 = 360/nbSides*(i+1)*PI/180  + theta + this.globalRotOffset;
+        x1 = r2*cos(t1);
+        y1 = r2*sin(t1);
+        x2 = r2*cos(t2);
+        y2 = r2*sin(t2);
+        angle =  atan((y2-y1)/(x2-x1));
+        if (x2 < x1){
+          angle += PI;
+        }
+        l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
+        this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode));
+        this.paths.push(this.linePaths[this.linePaths.length-1].path);
+        
+      }
+    }
+  }
+  
+  
+  
+  /**
+   * Make an hypertorchoid shape as movement.
+   * @param {float} R
+   * @param {float} r
+   * @param {float} d
+   * @param {int} limit
+   * @param {float} resolution
+   * @param {int} nbPoints
+   * @param {float} theta
+   * @param {int} zMode=0
+   */
+  makeHypertrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0){
+    let t1,t2,x1,x2,y1,y2,l,angle;
+    this.paths = [];
+    this.linePaths = [];
+    
+    for (let i = 0; i < limit; i++){      
+      t1 = resolution*i*PI/180  + theta + this.globalRotOffset;
+      t2 = resolution*(i+1)*PI/180  + theta + this.globalRotOffset;
+      
+      x1 = ((R-r)*cos(t1) + d*cos((R-r)/r * t1));
+      y1 = ((R-r)*sin(t1) + d*sin((R-r)/r * t1));
+      x2 = ((R-r)*cos(t2) + d*cos((R-r)/r * t2));
+      y2 = ((R-r)*sin(t2) + d*sin((R-r)/r * t2));
+      angle =  atan((y2-y1)/(x2-x1));
+      if (x2 < x1){
+        angle += PI;
+      }
+      l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
+      this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    }
+  }
+
+  /**
+   * Make an hypotrochoid shape as movement.
+   * @param {float} R
+   * @param {float} r
+   * @param {float} d
+   * @param {int} limit
+   * @param {float} resolution
+   * @param {int} nbPoints
+   * @param {float} theta
+   * @param {int} zMode=0
+   */
+  makeHypotrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0){
+    let t1,t2,x1,x2,y1,y2,l,angle;
+    this.paths = [];
+    this.linePaths = [];
+    
+    for (let i = 0; i < limit; i++){      
+      t1 = resolution*i*PI/180  + theta + this.globalRotOffset;
+      t2 = resolution*(i+1)*PI/180  + theta + this.globalRotOffset;
+      
+      x1 = ((R-r)*cos(t1) + d*cos((R-r)/r * t1));
+      y1 = ((R-r)*sin(t1) - d*sin((R-r)/r * t1));
+      x2 = ((R-r)*cos(t2) + d*cos((R-r)/r * t2));
+      y2 = ((R-r)*sin(t2) - d*sin((R-r)/r * t2));
+      angle =  atan((y2-y1)/(x2-x1));
+      if (x2 < x1){
+        angle += PI;
+      }
+      l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
+      this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    }
+  }
+
+  /**
+  * Make movement path from GUI movement template. 
+  * @param {int} nbPoints
+  * @param {float} theta
+  * @param {int} zMode=0
+  */
+  makePathWithGUI(nbPoints, theta, zMode = 0){
+    // initialize paths
+    this.paths = [];
+    this.linePaths = [];
+    // take the map data 
+    let mapT = mvtTemplate.paths;
+    let scale = w/sx;
+    
+    for (const value of mapT.values()) {
+      this.linePaths.push(new LinePath(scale*value.x1/w,scale*value.y1/h,scale*value.l, nbPoints, theta+value.angle));//, theta+value.angle, zMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    }
+    
+  }
+  
+  
+  
   
   /*diamond(x,y,l,rotateOffset, nbPoint, zmode = 0){
     let angle = 60*PI/180;
@@ -370,100 +486,6 @@ class Movement{
     
   }
   
-  guiShape(x,y,l,rotateOffset, nbPoint, zmode = 0){
-    //console.log("guifunction")
-    let mapT = mvtTemplate.paths;
-    let scale = w/sx;
-    for (const value of mapT.values()) {
-      //console.log(value);
-      this.line(x-scale*value.x1/h,y+scale*value.y1/w,scale*value.l, rotateOffset+value.angle, nbPoint);
-    }
-  }
-  
-  // Z function
-  cosinus(x, x0, maxX){
-    let period = maxX;
-    let y = (cos((x-x0)*2*PI/maxX) - 1.)/2.;
-    return y;
-  }
-  
-  parabola(x,zero0,zero1){
-    // find a for the deepest y == -1
-    let a = 4/pow(zero1-zero0, 2);
-    let y = a*(x - zero0)*(x - zero1);
-    return y;
-  }
-  
-  
-  hypertrochoid(R, r, d, limit, res){
-    let t,x,y,z;
-    let tempPath = [];
-    fill(255, 0);
-    for (let i = 0; i < limit; i++){
-      t = res*i*PI/180;
-      x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
-      y = ((R-r)*sin(t) + d*sin((R-r)/r * t));
-      z = -map(sqrt(pow(x,2)+pow(y,2)), -R-d, R+d, 0.,1.);
-      tempPath.push(new createVector(x,y,z));
-    }
-    
-    this.paths.push(tempPath);
-  }
-  
-  hypotrochoid(R, r, d, limit, res){
-    let t,x,y,z;
-    let tempPath = [];
-    
-    for (let i = 0; i < limit; i++){
-      t = res*i*PI/180;
-      x = ((R-r)*cos(t) + d*cos((R-r)/r * t));
-      y = ((R-r)*sin(t) - d*sin((R-r)/r * t));
-      z = -0.5;//-map(abs(sqrt(pow(x,2)+pow(y,2))), R-r-d, R+r+d, 0.,1.);
-      //console.log(z);
-      tempPath.push(new createVector(x,y,z));
-    }
-    
-    this.paths.push(tempPath);
-  }
-  
-  polygon(r, nbSides, rotationOffset){
-    let t,x,y,z;
-    let tempPath = [];
-    for (let i = 0; i < nbSides; i++){
-      t = 360/nbSides*i*PI/180 + PI/nbSides + rotationOffset + this.globalRotOffset;
-      x = r*cos(t);
-      y = r*sin(t);
-      z = 0;
-      tempPath.push(new createVector(x,y,z));
-    }
-    //close the polygon
-    tempPath.push(tempPath[0]);
-    this.paths.push(tempPath);
-    return tempPath;
-  }
-  
-  concentricPolygon(r, nbSides, offsetWidth, nbPaths, rotationOffset){
-    let t,x,y,z;
-    let firstPoint;
-    let tempPath = [];
-    for (let j = 0; j < nbPaths; j++){
-      let r2 = r - j*offsetWidth;
-      for (let i = 0; i < nbSides; i++){
-        t = 360/nbSides*i*PI/180 + PI/nbSides + rotationOffset + this.globalRotOffset;
-        x = r2*cos(t);
-        y = r2*sin(t);
-        z = 0;
-        tempPath.push(new createVector(x,y,z));
-        if (i == 0){
-          firstPoint = tempPath[tempPath.length-1];
-        }
-      }
-      // to close the polygon
-      tempPath.push(firstPoint);
-    }
-    
-    this.paths.push(tempPath);
-  }
   
   concentricShape(path, offsetWidth, nbPaths, rotationOffset){
     // remove closing point
@@ -575,7 +597,7 @@ class Movement{
   translateY(y){
     return -y - this.y + this.sizeY + 20;
   }
-
+  
   // Display Mvt on Grid
   displayPath(){
     // check if gui has changed

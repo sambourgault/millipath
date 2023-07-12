@@ -1,12 +1,13 @@
+// MOVEMENT PATHS
+
 // creating a new linepath and adding it to a movement
 let linePaths = [];
 let line1 = new LinePath(0,0,10,5,PI/4);
 linePaths.push(line1);
-console.log(line1.path);
 mvts[2] = new Movement(0,0,0);
 mvts[2].makePath2(linePaths);
 
-// chevron shape
+// custom chevron shape
 let linePaths = [];
 let line1 = new LinePath(0,0,10,5,PI/4);
 let line2 = new LinePath(0,0,10,5,PI/4,PI/2);
@@ -18,3 +19,70 @@ mvts[2].makePath2(linePaths);
 // use predefined cross function
 mvts[2] = new Movement(0,0,0);
 mvts[2].makeCrossPath(2,0,10,5,0,0,6);
+
+// make movemtn with gui object
+mvts[2] = new Movement(0,0,0);
+mvts[2].makePathWithGUI(5,0,0,0);
+
+//make mvt polygon
+mvts[2] = new Movement(0,0,0);
+mvts[2].makePolygonPath(2,3,5,0);
+
+mvts[2] = new Movement(0,0,0);
+mvts[2].makePolygonPath(2,3,5,-PI/6);
+
+// make mvt concentric polygon
+mvts[2] = new Movement(0,0,0);
+mvts[2].makeConcentricPolygonPath(5,3,3,1,3,0);
+
+// make hypertrochoid mvt
+mvts[2] = new Movement(0,0,0);
+mvts[2].makeHypertrochoidPath(5,3,1,10,5,3, 0);
+
+// make hypotrochoid mvt
+mvts[2] = new Movement(0,0,0);
+mvts[2].makeHypotrochoidPath(6,1.5,2.5,10,36,2, 0,3);
+
+// make diamond for v bit mvt
+mvts[2] = new Movement(0,0,0);
+mvts[2].makeDiamondForVBit(0,0,5,5,0);
+
+// initial kumiko-style design
+let linePaths = [];
+let x = 0;
+let y = 0;
+let l = 5;
+let theta = 0;
+let nbPoints = 5;
+for (let i = 0; i < 3; i++){
+theta = i*PI/3;
+linePaths.push(new LinePath(x,y,l/2, nbPoints, theta, theta, 2));
+linePaths.push(new LinePath(x+l/2*cos(theta),y+l/2*sin(theta),l/2, nbPoints, theta, theta, 1));
+
+}
+mvts[2] = new Movement(0,0,0);
+mvts[2].makePath(linePaths);
+
+
+// initial kumiko-style design WITH OFFSET
+let linePaths = [];
+let x = 0;
+let offsetX = 5;
+let y = 0;
+let l = 17.8;
+let theta = 0;
+let nbPoints = 1;
+for (let i = 0; i < 3; i++){
+theta = i*PI/3;
+linePaths.push(new LinePath(x+offsetX*cos(theta),y+offsetX*sin(theta),l/2, nbPoints, theta, theta, 2));
+linePaths.push(new LinePath(x+l/2*cos(theta)+offsetX*cos(theta),y+l/2*sin(theta)+offsetX*sin(theta),l/2, nbPoints, theta, theta, 1));
+
+}
+mvts[0] = new Movement(0,0,0);
+mvts[0].makePath(linePaths);
+
+//*** GRIDS ***//
+//constructor(id, x, y, mode = 0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+let posX = 27.4;
+let posY = 32.0225;
+grids[0] = new Grid(0,posX-0.25*posX,posY,1,3,l+2*offsetX,(l+2*offsetX)*sin(PI/3),320,300, 0.25);

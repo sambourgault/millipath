@@ -38,6 +38,9 @@ class GCodeGen {
     this.button = createButton("save file");
     this.button.position(width/2-35, height - 80);
     this.button.style("font-family", "Poppins");
+    this.button.style("background-color", "white");
+    this.button.style("border-radius", "0px");
+    this.button.style("border-width", "2px");
     
     this.simSlider =  createSlider(0.,1000.,0);
     this.simSlider.addClass("sliders");
@@ -49,11 +52,18 @@ class GCodeGen {
     this.playButton.position(width/2-85, height - 120);
     this.playButton.style("font-family", "Poppins");
     this.playButton.style("width", "75px");
+    this.playButton.style("background-color", "white");
+    this.playButton.style("border-radius", "0px");
+    this.playButton.style("border-width", "2px");
+    
     
     this.pauseButton = createButton("pause");
     this.pauseButton.position(width/2+10, height - 120);
     this.pauseButton.style("font-family", "Poppins");
     this.pauseButton.style("width", "75px");
+    this.pauseButton.style("background-color", "white");
+    this.pauseButton.style("border-radius", "0px");
+    this.pauseButton.style("border-width", "2px");
     
     this.tool = new Tool();
     this.play = false;
@@ -171,7 +181,7 @@ class GCodeGen {
             let z = maxDepthCut*(grid[i-2].z+mvt.paths[l][k].z);
             //tempPaths[tempPaths.length-1].push(new createVector(x, y, z));
             
-            if (boundaries[index].checkBoundary(grids[index].boundaryMode,x,y) <= 0){
+            if (boundaries[index].checkBoundary(x,y) <= 0){
               // point is inside the boundary
               if (tempPaths.length == 3 && tempPaths[tempPaths.length-1].length == 0){
                 // modify the first plunge position
@@ -262,7 +272,7 @@ class GCodeGen {
             y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*mvt.paths[l][k].y;
             z = maxDepthCut*(grid[i-1].z+mvt.paths[l][k].z);
             
-            let boundaryValue = boundaries[index].checkBoundary(grids[index].boundaryMode,x,y);
+            let boundaryValue = boundaries[index].checkBoundary(x,y);
             
             if (boundaryValue <= 0){
               // point is inside the boundary
@@ -422,7 +432,9 @@ class GCodeGen {
     
     this.tool.display(this.allPaths[this.indexKPlay][this.indexJPlay][this.indexPlay]);
     
-    this.displayPath();
+    if (grids.length>0){
+      this.displayPath();
+    }
   }
   
   displayPath() {
@@ -431,6 +443,7 @@ class GCodeGen {
     strokeWeight(2);
     
     // draw each path
+    //console.log(this.allPaths.length);
     for (let k = 0; k < this.allPaths.length; k++){
       if (grids[k].visible){
         //console.log(grids[k].visible);

@@ -1,104 +1,133 @@
 class Boundary{
-  constructor(x, y){
-    this.sizeX = 300;
-    this.sizeY = 300;
-    this.x = x ;
-    this.y = y ;
-    //this.x = -this.sizeX/3;
-    //this.y = this.sizeY/4;
-    this.offsetX = 0;
-    this.offsetY = 0;
-    this.scale = 1;
-    this.path = [];
-    this.label= createDiv("boundaries");
-    this.label.style('font-size', '14px');
-    this.label.style('font-family', 'Poppins');
-    this.label.position(width - this.sizeX-20, height- this.sizeY - 40);
-    this.shaderProgram;
+  constructor(mode, x, y, rX, rY = rX){
+    this.mode = mode;
+    this.x = -x; // center
+    this.y = y; //center
+    this.rX = rX;
+    this.rY = rY;
+    this.frameSizeX = 300;
+    this.frameSizeY = 300;
+    this.scale = 1.;
     this.path = [];
     
+    //shader program
+    this.shaderProgram;    
     this.vertSrc = this.makeVertexShader();
     this.fragSrc = this.makeFragCircle();
     this.shaderProgram = createShader(this.vertSrc, this.fragSrc);
+    
     this.makeBoundary();   
   }
   
-  checkBoundary(mode, x, y){
+  
+  /**
+  * Check if point is within boundary
+  * @param {float} x - Coordinate x of checked point
+  * @param {float} y - Coordinate y of checked point 
+  * @returns {float} status - return <0. if within, 0. if at and >0. if outside boundary
+  */
+  checkBoundary(x, y, customBoundaryCheck = null){
     let status = -1.;
-    switch(mode){
+    switch(this.mode){
+      case -1:
+      // if mode == -1, use custom boundary function
+      status = customBoundaryCheck(x,y);
+      break;
       case 0:
       status = this.checkNoBoundary();
       break;
       case 1:
-      status = this.checkInCircle(x,y, 60);
+      status = this.checkInCircle(x,y);
       break;
       case 2:
-      status = this.checkInSmoothCircle(x,y,40);
+      status = this.checkInSmoothCircle(x,y);
       break;
       case 3:
-      status = this.checkInRectangle(x,y,50,50);
+      status = this.checkInRectangle(x,y);
       break;
       case 4:
-      if (this.checkInRectangle(x,y,50,50)<0){
-        status = this.checkInSmoothCircle(x,y,0, 50);
+      if (this.checkInRectangle(x,y)<0){
+        status = this.checkInSmoothCircle(x,y);
       } else {
         status = 1.;
       }
       break;
       case 5:
-      if (this.checkInRectangle(x,y,50,50)<0){
-        status = this.checkInSmoothCircle(x,y,0, 50);
+      if (this.checkInRectangle(x,y)<0){
+        status = this.checkInSmoothCircle(x,y);
       } else {
         status = 1.;
       }
       break;
       default:
-      status = this.checkInCircle(x,y, 100);
+      status = this.checkNoBoundary();
     }
-    //console.log(status);
     return status;
   }
   
-  makeBoundary(){
-    //this.point(0,0);
-    //this.polygon(100*this.scale, 4);
-    //this.circle(0,0,100*this.scale);
-    this.rectangle(0,0,50, 50);
-    //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
-    //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
+  makeBoundary(customBoundary = null){
+    switch(this.mode){
+      case -1:
+      customBoundary;
+      break;
+
+      case 0:
+      break;
+
+      case 1:
+      break;
+
+      case 2:
+      break;
+
+      case 3:
+      this.rectangle();
+      break;
+
+      case 4:
+      break;
+
+      case 5:
+      break;    
+
+      //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
+      //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
+    }
   }
   
   checkNoBoundary(){
-    console.log();
+    // no boundary so point always within
     return -1.;
   }
   
-  checkInCircle(x, y, r){
+  checkInCircle(x, y){
     let d = dist(this.x, this.y, x, y);
-    if (d < r){
+    if (d < this.rx){
       return -1.;
-    } else if (d > r){
+    } else if (d > this.rx){
       return 1.;
-    } else if (d == r){
+    } else if (d == this.rx){
       return 0;
     }
   }
   
-  checkInSmoothCircle(x, y, r, offset = 20){
-    let f = this.smoothstep(r, r+offset, dist(this.x, this.y, x, y));
+  checkInSmoothCircle(x, y, offset = 20){
+    let f = this.smoothstep(this.rx, this.rx+offset, dist(this.x, this.y, x, y));
     if (f < 1.){
       return -(1.-f);
     } else if (f == 1.){
       return 1.;
     }
   }
-
- 
+  
+  
   
   // adapted from inigo quilez
-  checkInRectangle(x,y,rx,ry){
-    let dx = abs(x-this.x) - rx;
-    let dy = abs(y-this.y) - ry;
+  checkInRectangle(x,y){
+    let dx = abs(-x+this.x) - this.rX;
+    //console.log(-x);
+    let dy = abs(y-this.y) - this.rY;
+    
     let d = sqrt((max(dx, 0))^2 + max(dy, 0)^2) + min(max(dx,dy),0);
     
     if (d <= 0){
@@ -122,37 +151,24 @@ class Boundary{
     x = upperlimit;
     return x;
   }
-  
-  setOffset(x, y){
-    this.offsetX = -x;
-    this.offsetY = -y;
-  }
+
   
   displayStatic(){
     //frame
     push();
     fill(255, 100);
-    //fill(255,0,0);
-    //translate(this.offsetX, this.offsetY);
-    //rotateZ(-PI);
     shader(this.shaderProgram);
-    rect(-this.sizeX-20,height- this.sizeY-20,this.sizeX,this.sizeY);
+    strokeWeight(2);
+    stroke(0);
+    rect(-this.frameSizeX-20,height- this.frameSizeY+20,this.frameSizeX,this.frameSizeY);
     resetShader();
-    //trasnlate(this.)
-    //push();
-    //rotateZ(PI);
-    //translate(this.sizeX/2+grid1.realSizeX/2+20-grid1.x, this.y-this.sizeY/2-grid1.realSizeY/2-grid1.y, 50);//this.sizeY);
-    //grid1.display();
-    //pop();
     
     // display boundary
     stroke(255,0,0);
     strokeWeight(2);
     
-    
     push();
-    translate(-this.sizeX/2-20, height- this.sizeY-20+this.sizeY/2, 20);
-    //translate(-20,0, 20);
+    translate(-this.frameSizeX/2-20, height-this.frameSizeY+20+this.frameSizeY/2, 20);
     this.displayPath();
     pop();
     
@@ -169,14 +185,13 @@ class Boundary{
     strokeWeight(2);
     
     for (let i = 0; i < this.path.length; i++){
-      
       x = this.path[i].x;
       y = this.path[i].y;
       z = this.path[i].z;
       
       if (i != 0){
         push();
-        translate(this.x, this.y, 0);
+        //translate(this.x, this.y, 0);
         line(previous.x, previous.y,previous.z,x,y,z);
         pop();
       }
@@ -188,15 +203,12 @@ class Boundary{
   }
   
   
-  
   displayPath(){
     let previous = new createVector(0,0);
     let x,y,z;
     stroke(0,0,255);
     for (let i = 0; i < this.path.length; i++){
       
-      //x = this.translateX(this.path[i].x);
-      //y = this.translateY(this.path[i].y);
       x = this.path[i].x;
       y = this.path[i].y;
       z = this.path[i].z;
@@ -232,7 +244,7 @@ class Boundary{
     this.path[nbSides] = this.path[0];
   }
   
-  rectangle(x, y, rx, ry){
+  rectangle(){
     let refx = 1.;
     let refy = 1.;
     for (let i = 0; i < 4; i++){
@@ -244,22 +256,17 @@ class Boundary{
       else if (i == 3){
         refx = 1.;
       }
-      this.path.push(new createVector(x+refx* rx, y + refy*ry));
+      this.path.push(new createVector(this.x-refx*this.rX, this.y + refy*this.rY));
     }
     // close the path
     this.path.push(this.path[0]);
   }
   
-  circle(x, y, r){
-    /*let d = dist(x,y,this.x-this.sizeX/2, this.y+this.sizeY/2);
-    if (d > r){
-      return 0.;
-    }
-    return 1.;*/
+  circle(){
     let nbSides = 20;
     for (let i = 0; i < nbSides; i++){
       let angle = i*360/nbSides;
-      this.path.push(new createVector(x+r*cos(angle*PI/180), y+r*sin(angle*PI/180)));
+      this.path.push(new createVector(this.x+this.rX*cos(angle*PI/180), this.y+this.rY*sin(angle*PI/180)));
     }
     this.path.push(this.path[0]);
   }

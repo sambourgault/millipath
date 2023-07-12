@@ -1,6 +1,7 @@
 // cartesian grid
 class Grid {
   constructor(id, x, y, mode = 0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
+    
     this.visible = false;
     this.openBox = false;
     this.id = id;
@@ -15,20 +16,20 @@ class Grid {
     this.layerNameDiv.style('font-size', '14px');
     this.layerNameDiv.style('font-family', 'Poppins');
     this.layerNameDiv.position(10, 24+24*this.id);
-    this.visible = createCheckbox('', this.visible).parent(gridLayersBox.box);
+    this.visibleBox = createCheckbox('', this.visible).parent(gridLayersBox.box);
     this.changeVisibility = function(){
       self.visible = this.checked();
     }
-    this.visible.changed(this.changeVisibility);
+    this.visibleBox.changed(this.changeVisibility);
     //gridLayersBox.box.style("height", gridLayersBox.h+40*this.id+"px" );
-    this.visible.position(50,24+24*this.id);
-    this.visible.style('font-size', '14px');
-    this.visible.style('font-family', 'Poppins');
+    this.visibleBox.position(50,24+24*this.id);
+    this.visibleBox.style('font-size', '14px');
+    this.visibleBox.style('font-family', 'Poppins');
 
     //this.textu = textu;
     //this.ui = new UI(this, this.openBox, xb, yb, x, y, spx, spy, sx, sy);
     //this.x = (-this.ui.sliders[0].value() / 1000) * width;
-    this.x = x;//-Number(this.ui.sliders[0].value());
+    this.x = -x;//-Number(this.ui.sliders[0].value());
     //this.y = (this.ui.sliders[1].value() / 1000) * width;
     this.y = y; // Number(this.ui.sliders[1].value());
     //this.sizeX = int((this.ui.sliders[2].value() / 1000) * 400);
@@ -47,7 +48,7 @@ class Grid {
     this.gridMatrix = [];
     this.maxDepth = 0;
     this.sinAmp = sinAmp;//Number(this.ui.sliders[6].value());
-    this.sinPeriod = 1;//Number(this.ui.sliders[7].value());
+    this.sinPeriod = 2;//Number(this.ui.sliders[7].value());
     //this.bindUI(self);
     this.firstPoint = true;
     this.changedGrid = false;
@@ -71,9 +72,6 @@ class Grid {
         this.depthMatrix[i][j] = -0.1;
       }
     }
-    //this.ui.box.collapse();
-    //console.log("at creation: " + this.gridMatrix[0][0]);
-    //this.sinGrid(this.sinAmp, this.sinPeriod);
   }
 
   display() {

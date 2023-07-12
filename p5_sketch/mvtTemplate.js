@@ -34,13 +34,13 @@ class MvtTemplate {
     }
   
     display(x, y, col) {
-      //fill(255);
-      strokeWeight(2);
-      stroke(col);
-      rect(x + this.x, y + this.y, this.w * this.sizeX, this.h * this.sizeY);
       for (let i = 0; i < this.lines.length; i++) {
         this.lines[i].display(x, y);
       }
+
+      strokeWeight(2);
+      stroke(col);
+      rect(x + this.x, y + this.y, this.w * this.sizeX, this.h * this.sizeY);
     }
   
     mousePressed(offsetX, offetY) {
@@ -49,12 +49,10 @@ class MvtTemplate {
         this.lines[i].mousePressed(this.paths, offsetX, offetY);
         if (this.lines[i].changed == true && this.changed == false){
           this.changed = true;
-          //console.log("mvt")
           this.lines[i].changed == false;
         }
       }
 
-      //console.log(this.paths);
     }
   }
   

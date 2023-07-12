@@ -45,18 +45,10 @@ class Line {
           this.y2 = ytemp;
           this.l = dist(this.x1/w,this.y1/h,this.x2/w,this.y2/h);
           this.angle = atan((this.y2-this.y1)/(this.x2-this.x1));
-          
           paths.delete(this.id);
         } else {
           paths.set(this.id, this);
         }
-
-        /*console.log(this.x1);
-       
-        console.log(this.y1);
-        console.log(this.x2);
-        console.log(this.y2);
-        console.log(this.angle);*/
         
       } else {
         this.changed = false;

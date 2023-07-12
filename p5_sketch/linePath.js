@@ -22,7 +22,7 @@ class LinePath{
         this.makePath();
     }
     
-    makePath(){
+    makePath(offsetX=0, offsetY=0){
         let z = 0;
         let max = this.l;
         this.path = [];
@@ -48,17 +48,16 @@ class LinePath{
                 z = this.parabola(i*abs(tempDelta),0,max);
             }
 
-            let x0 = this.x + i*tempDelta;
-            let y0 = this.y + this.amp*cos(2*PI*i/this.period);
+            let x0 = i*tempDelta;
+            let y0 = this.amp*cos(2*PI*i/this.period);
             
             // rotation matrix operation around (0,0)
             let x1 = x0*cos(this.theta) - y0*sin(this.theta);
             let y1 = x0*sin(this.theta) + y0*cos(this.theta);
 
-            //reflection matrix operation
-            let xf = x1*cos(2*this.phi) + y1*sin(2*this.phi);
-            let yf = x1*sin(2*this.phi) - y1*cos(2*this.phi);
-
+            //reflection matrix operation and final translation
+            let xf = x1*cos(2*this.phi) + y1*sin(2*this.phi) + this.x;
+            let yf = x1*sin(2*this.phi) - y1*cos(2*this.phi) + this.y;
             this.path.push(new createVector(-xf,yf,z));
         }
         return this.path;
