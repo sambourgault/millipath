@@ -166,6 +166,7 @@ class Movement{
   }*/
   
   
+  
   //** Predefined Movement Functions **//
   // Default Movement is a PointPath
   makePointPath(x, y, z = -1){
@@ -245,9 +246,7 @@ class Movement{
     this.line(x+l/2,y+rTool,lMove,-angle, nbPoint,2);
     this.line(x,y-0*rTool,lMove,angle, nbPoint,5);
   }
-  
-  
-  
+    
   arrow(x,y,l,rotateOffset, nbPoint){
     let rTool = maxDepthCut*tan(30*PI/180);
     let angle = atan(rTool/(l/2));
@@ -258,28 +257,19 @@ class Movement{
     //this.chevron2(x,y,l,rotateOffset, nbPoint);
     //this.chevron2(x,y,l,rotateOffset-angle, nbPoint);
   } 
+
   
-  diamondV(x,y,l,rotateOffset, nbPoint){
-    this.line(x+l/2,y,l/2, 0+rotateOffset, nbPoint, 2);
-    this.line(x,y,l/2, 0+rotateOffset, nbPoint, 5);
-  }
-  
-  cross(x,y,l,rotateOffset, nbPoint, nbApex){
-    for (let i = 0; i < nbApex; i++){
-      let angle = i*2*PI/nbApex;
-      this.line(x,y,l,rotateOffset+angle, nbPoint);
-    }
   }*/
   
-
+  
   /**
-   * Make a diamond with a V-shaped bit by going down and up in z
-   * @param {float} x
-   * @param {float} y
-   * @param {float} l
-   * @param {int} nbPoints
-   * @param {float} theta
-   */
+  * Make a diamond with a V-shaped bit by going down and up in z
+  * @param {float} x
+  * @param {float} y
+  * @param {float} l
+  * @param {int} nbPoints
+  * @param {float} theta
+  */
   makeDiamondForVBit(x,y,l,nbPoints, theta){
     this.paths = [];
     this.linePaths = [];
@@ -379,18 +369,17 @@ class Movement{
   }
   
   
-  
   /**
-   * Make an hypertorchoid shape as movement.
-   * @param {float} R
-   * @param {float} r
-   * @param {float} d
-   * @param {int} limit
-   * @param {float} resolution
-   * @param {int} nbPoints
-   * @param {float} theta
-   * @param {int} zMode=0
-   */
+  * Make an hypertorchoid shape as movement.
+  * @param {float} R
+  * @param {float} r
+  * @param {float} d
+  * @param {int} limit
+  * @param {float} resolution
+  * @param {int} nbPoints
+  * @param {float} theta
+  * @param {int} zMode=0
+  */
   makeHypertrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0){
     let t1,t2,x1,x2,y1,y2,l,angle;
     this.paths = [];
@@ -413,18 +402,18 @@ class Movement{
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
   }
-
+  
   /**
-   * Make an hypotrochoid shape as movement.
-   * @param {float} R
-   * @param {float} r
-   * @param {float} d
-   * @param {int} limit
-   * @param {float} resolution
-   * @param {int} nbPoints
-   * @param {float} theta
-   * @param {int} zMode=0
-   */
+  * Make an hypotrochoid shape as movement.
+  * @param {float} R
+  * @param {float} r
+  * @param {float} d
+  * @param {int} limit
+  * @param {float} resolution
+  * @param {int} nbPoints
+  * @param {float} theta
+  * @param {int} zMode=0
+  */
   makeHypotrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0){
     let t1,t2,x1,x2,y1,y2,l,angle;
     this.paths = [];
@@ -447,7 +436,7 @@ class Movement{
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
   }
-
+  
   /**
   * Make movement path from GUI movement template. 
   * @param {int} nbPoints
@@ -468,8 +457,6 @@ class Movement{
     }
     
   }
-  
-  
   
   
   /*diamond(x,y,l,rotateOffset, nbPoint, zmode = 0){
@@ -543,14 +530,6 @@ class Movement{
   
   // Display Static Mvt
   displayStatic(){
-    push();
-    fill(255, 100);
-    noStroke();
-    /*rect(this.x-this.sizeX-20,this.y+20,this.sizeX,this.sizeY);
-    rect(this.x-this.sizeX-20,this.y+40+this.sizeY,this.sizeX,this.sizeY);
-    rect(this.x-this.sizeX-20,this.y+60+2*this.sizeY,this.sizeX,this.sizeY);*/
-    pop();
-    
     this.xyMovement();
     this.xzMovement();
     this.yzMovement();

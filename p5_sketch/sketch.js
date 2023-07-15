@@ -169,8 +169,10 @@ function setup() {
   mvtLabelYZ.position(width - sizeRectX-20, 40+2*sizeRectY);
   
   //*** BOUNDARIES ***/
-  boundaries[0] = new Boundary(3,27.4+125,(304.8-240.755)/2+120.3775,125,120.3775);
-  //boundaries[0] = new Boundary(3,125,120.3775,125,120.3775);
+  //boundaries[0] = new Boundary(3,27.4+125,(304.8-240.755)/2+120.3775,125,120.3775);
+  //boundaries[0] = new Boundary(2,27.4+125,(304.8-240.755)/2+120.3775,50,50);
+
+  boundaries[0] = new Boundary(3,125,120.3775,125,120.3775);
   /*boundaries[1] = new Boundary(-65-1*120,65);
   boundaries[2] = new Boundary(-65-2*120,65);
   boundaries[3] = new Boundary(-65-3*120,65);
@@ -421,6 +423,8 @@ function draw() {
   
   for (let i = 0; i < grids.length; i++){
     if (grids[i].changedGrid){
+      //console.log("yoo");
+      //console.log(grids[i].rotations);
       code.updatePath(i, grids[i].path, mvts[i], grids[i].linkState);
       grids[i].changedGrid = false;
     }

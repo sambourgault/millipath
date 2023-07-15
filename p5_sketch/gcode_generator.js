@@ -159,7 +159,7 @@ class GCodeGen {
       tempPaths.push([]);
       tempTypePaths.push("J");
       
-      this.rotateMvt(mvt,index,grid[0], 0);
+      //this.rotateMvt(mvt,index,grid[0], 0);
       //tempPaths[1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.path[0].y, safeHeight));
       tempPaths[tempPaths.length-1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.paths[0][0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.paths[0][0].y, safeHeight));
       
@@ -172,7 +172,7 @@ class GCodeGen {
           tempPaths.push([]);
           console.log("new path:" + tempPaths.length);
           tempTypePaths.push("M");
-          this.rotateMvt(mvt,index,grid[i-2], i-2);      
+          //this.rotateMvt(mvt,index,grid[i-2], i-2);      
           
           let kIn = [];
           for (let k = 0; k < mvt.paths[l].length; k++){
@@ -248,17 +248,33 @@ class GCodeGen {
       
     } else {
       // if unlinked state on. go through each point of the grid
+      //console.log(grids[index].rotations);
       for (let i = 1; i < grid.length+1 ; i++){
-        this.rotateMvt(mvt,index,grid[i-1], i-1);
+        //this.rotateMvt(mvt,index,grid[i-1], i-1);
+        //console.log(index);
+        let rotatedMvtPaths
+        let reflectedPaths;
+        if (grids[index].reflections.length != 0){
+          reflectedPaths = this.reflectMvt(mvt.paths, grids[index].reflections[i-1]);
+          rotatedMvtPaths = this.rotateMvt(reflectedPaths, grids[index].rotations[i-1]);
+
+        } else {
+          rotatedMvtPaths = this.rotateMvt(mvt.paths, grids[index].rotations[i-1]);
+        }
+        
+
         
         // go through each path of mvt
-        for (let l = 0; l < mvt.paths.length; l++){
+        for (let l = 0; l < rotatedMvtPaths.length; l++){
           // add jog move from previous position to over current point
           tempPaths.push([]);
           tempTypePaths.push("J"); 
           
-          let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*mvt.paths[l][0].x;
-          let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*mvt.paths[l][0].y;
+          //let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].x;
+          //let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].y;
+          let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x;
+          let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][0].y;
+
           let z = safeHeight;
           tempPaths[tempPaths.length-1].push(new createVector(x, y, safeHeight));
           
@@ -268,13 +284,15 @@ class GCodeGen {
           
           let kIn = [];
           for (let k = 0; k < mvt.paths[l].length; k++){
-            x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*mvt.paths[l][k].x;
-            y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*mvt.paths[l][k].y;
-            z = maxDepthCut*(grid[i-1].z+mvt.paths[l][k].z);
+            //x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].x;
+            //y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].y;
+            x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x;
+            y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y;
+            z = maxDepthCut*(grid[i-1].z+rotatedMvtPaths[l][k].z);
             
             let boundaryValue = boundaries[index].checkBoundary(x,y);
             
-            if (boundaryValue <= 0){
+            if (boundaryValue <= 0 && grids[index].visibleMvts[i-1] == 1){
               // point is inside the boundary
               if (tempPaths[tempPaths.length-1].length == 0){
                 // modify the plunge position
@@ -291,7 +309,7 @@ class GCodeGen {
           // lastpath will be empty if the whole mvt is outside boundary
           let lastPath = tempPaths[tempPaths.length-1];
           //remove unconnected point
-          if (mvt.paths.length == 1 && mvt.paths[0].length == 1 && lastPath.length != 0){
+          if (rotatedMvtPaths.length == 1 && rotatedMvtPaths[0].length == 1 && lastPath.length != 0){
             // don't remove point movement
           }else {
             for (let m = 0; m < lastPath.length; m++){
@@ -317,7 +335,7 @@ class GCodeGen {
           }
           
           // add retract to safe Z height
-          if (lastPath.length > 1 || (mvt.paths.length == 1 && mvt.paths[0].length == 1 && lastPath.length != 0)){     
+          if (lastPath.length > 1 || (rotatedMvtPaths.length == 1 && rotatedMvtPaths[0].length == 1 && lastPath.length != 0)){     
             let lastPoint = lastPath[lastPath.length-1];
             tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
           } else {
@@ -342,69 +360,21 @@ class GCodeGen {
     }
   }
   
-  reflectMvt(gridIndex){
-    
+  //** TRANSFORMS on mvt paths **//
+
+  rotateMvt(paths, angle){
+    let rotatedPaths = rotatePath(paths, angle);
+    return rotatedPaths;
   }
-  
-  scaleMvt(point, gridIndex){
-    
-    let scale = 1.;
-    /*if (gridIndex == 2){
-      scale = 0.5;
-    }*/
-    // linear scale X
-    //scale = map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.);
-    // linear scale Y
-    //scale = map((point.y-this.gridP0.y), 0, 1000, 0.2, 2.);
-    //linear scale XY
-    //scale =  2*map((-point.x+this.gridP0.x), 0, 1000, 0.2, 2.)*map((point.y-this.gridP0.y), 0, 1000, 0.2, 2.);
-    
-    return scale;
+
+  reflectMvt(paths, angle){
+    let rotatedPaths = reflectPath(paths, angle);
+    return rotatedPaths;
   }
-  
-  rotateMvt(mvt, gridIndex, point, pointIndex){
-    let rotateOffset;
-    if (gridIndex == 1 ){
-      rotateOffset = 0;
-    } else if (gridIndex == 0){
-      if (pointIndex % 2 == 0){
-      rotateOffset = PI;
-      } else {
-        rotateOffset = 0;
-      }
 
-      rotateOffset = 0;
-    }else {
-      rotateOffset = 0;
-    }
-    
-    /*if (gridIndex == 0 || gridIndex == 1 ){ //|| gridIndex == 5
-      // constant
-      rotateOffset = 0;//PI/4;
-      //console.log("hello");
-    } else if (gridIndex == 2) {
-      rotateOffset = PI/2*int(random(4)) + PI/4;
-    } else if (gridIndex == 3 ){
-      rotateOffset = (pointIndex % 2) * PI;
-      //rotateOffset = 0;
-      //console.log(rotateOffset);
-    } else {
-      
-    }*/
-    
-    // linear in X
-    //rotateOffset = map((-point.x+this.gridP0.x), 0, 1000, 0., 2*PI);
-    
-    //random 45 degrees
-    //rotateOffset = PI/2*int(random(4)) + PI/4;
-    
-    mvt.globalRotOffset = rotateOffset;
-
-    let rotatedPath = mvt.paths;//mvt.makePath(grids[gridIndex].spacingX, grids[gridIndex].spacingY, pointIndex);
-    
-
-    //console.log(grids[gridIndex].spacingX);
-    return rotatedPath;
+  scaleMvt(mvt,scale){
+    let scaledPaths = scalePath(mvt.paths, scale);
+    return scaledPaths;
   }
 
 

@@ -1,5 +1,5 @@
 class Boundary{
-  constructor(mode, x, y, rX, rY = rX){
+  constructor(mode, x, y, rX, rY = rX, rC = 0){
     this.mode = mode;
     this.x = -x; // center
     this.y = y; //center
@@ -52,13 +52,7 @@ class Boundary{
         status = 1.;
       }
       break;
-      case 5:
-      if (this.checkInRectangle(x,y)<0){
-        status = this.checkInSmoothCircle(x,y);
-      } else {
-        status = 1.;
-      }
-      break;
+      
       default:
       status = this.checkNoBoundary();
     }
@@ -68,27 +62,24 @@ class Boundary{
   makeBoundary(customBoundary = null){
     switch(this.mode){
       case -1:
-      customBoundary;
+      customBoundary(this.x, this.y, this.rX, this.rY);
       break;
 
       case 0:
       break;
 
       case 1:
+      this.circle();
       break;
-
       case 2:
+      this.smoothCircle();
       break;
-
       case 3:
       this.rectangle();
       break;
 
       case 4:
-      break;
-
-      case 5:
-      break;    
+      break; 
 
       //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);
       //this.hypotrochoid(100*this.scale,20*this.scale,60*this.scale,21, 360/20);
@@ -111,8 +102,8 @@ class Boundary{
     }
   }
   
-  checkInSmoothCircle(x, y, offset = 20){
-    let f = this.smoothstep(this.rx, this.rx+offset, dist(this.x, this.y, x, y));
+  checkInSmoothCircle(x, y, offset = 4){
+    let f = this.smoothstep(this.rX, this.rX+offset, dist(this.x, this.y, x, y));
     if (f < 1.){
       return -(1.-f);
     } else if (f == 1.){
@@ -136,6 +127,18 @@ class Boundary{
       return 1.
     }
   }
+
+  checkInPolygon(x,y){
+
+  }
+
+  checkInRoundedRectangle(x,y){
+
+  }
+
+  checkInRoundedPolygon(x,y){
+
+  }
   
   smoothstep(edge0, edge1, x) {
     // Scale, bias and saturate x to 0..1 range
@@ -154,7 +157,7 @@ class Boundary{
 
   
   displayStatic(){
-    //frame
+    //depth map
     push();
     fill(255, 100);
     shader(this.shaderProgram);
@@ -191,7 +194,7 @@ class Boundary{
       
       if (i != 0){
         push();
-        //translate(this.x, this.y, 0);
+        translate(this.x, this.y, 0);
         line(previous.x, previous.y,previous.z,x,y,z);
         pop();
       }
@@ -256,17 +259,28 @@ class Boundary{
       else if (i == 3){
         refx = 1.;
       }
-      this.path.push(new createVector(this.x-refx*this.rX, this.y + refy*this.rY));
+      //this.path.push(new createVector(this.x-refx*this.rX, this.y + refy*this.rY));
+      this.path.push(new createVector(-refx*this.rX, refy*this.rY));
+
     }
     // close the path
     this.path.push(this.path[0]);
   }
   
   circle(){
-    let nbSides = 20;
+    let nbSides = 30;
     for (let i = 0; i < nbSides; i++){
       let angle = i*360/nbSides;
-      this.path.push(new createVector(this.x+this.rX*cos(angle*PI/180), this.y+this.rY*sin(angle*PI/180)));
+      this.path.push(new createVector(this.rX*cos(angle*PI/180), this.rY*sin(angle*PI/180)));
+    }
+    this.path.push(this.path[0]);
+  }
+
+  smoothCircle(){
+    let nbSides = 30;
+    for (let i = 0; i < nbSides; i++){
+      let angle = i*360/nbSides;
+      this.path.push(new createVector(this.rX*cos(angle*PI/180),this.rY*sin(angle*PI/180)));
     }
     this.path.push(this.path[0]);
   }

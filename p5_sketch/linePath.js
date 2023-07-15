@@ -22,7 +22,7 @@ class LinePath{
         this.makePath();
     }
     
-    makePath(offsetX=0, offsetY=0){
+    makePath(customZMode = null, offsetX=0, offsetY=0){
         let z = 0;
         let max = this.l;
         this.path = [];
@@ -46,6 +46,8 @@ class LinePath{
             } else if (this.zMode  == 4){
                 // positive parabola with min in the middle of the line
                 z = this.parabola(i*abs(tempDelta),0,max);
+            } else if (this.zMode == 5){
+                
             }
 
             let x0 = i*tempDelta;

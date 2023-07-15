@@ -86,3 +86,12 @@ mvts[0].makePath(linePaths);
 let posX = 27.4;
 let posY = 32.0225;
 grids[0] = new Grid(0,posX-0.25*posX,posY,1,3,l+2*offsetX,(l+2*offsetX)*sin(PI/3),320,300, 0.25);
+
+
+// for smooth circle boundary
+mvts[0] = new Movement(0,0,0);
+boundary[0] = new Boundary(2,27.4+125,(304.8-240.755)/2+120.3775,50);
+grids[0] = new Grid(0,20,20,0,2,10,10,50,50);
+
+mvts[0] = new Movement(0,0,0);
+grids[0] = new Grid(0,99,99,0,6,6,116,116);

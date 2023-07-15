@@ -1,12 +1,12 @@
 // cartesian grid
 class Grid {
-  constructor(id, x, y, mode = 0, boundMode=0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
+  constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
     
     this.visible = false;
     this.openBox = false;
     this.id = id;
     this.new = true;
-    this.boundaryMode = boundMode;
+    //this.boundaryMode = boundMode;
     this.mode = mode;
     //constructor(x, y, textu) {
     const self = this;
@@ -53,7 +53,12 @@ class Grid {
     this.firstPoint = true;
     this.changedGrid = false;
     this.path = [];
-    this.paths = [];
+    this.rotations = [];
+    this.reflections = [];
+    this.scales = [];
+    this.scaleZ = [];
+    this.visibleMvts = [];
+
 
     for (let i = 0; i < this.row; i++) {
       this.gridMatrix[i] = [];
@@ -69,9 +74,14 @@ class Grid {
           1
         );
 
-        this.depthMatrix[i][j] = -0.1;
+        this.depthMatrix[i][j] = 0;
+        this.rotations.push(0);
+        this.scales.push(1.);
+        this.scaleZ.push(1.);
+        this.visibleMvts.push(1.);
       }
     }
+
   }
 
   display() {
@@ -129,6 +139,9 @@ class Grid {
     let tempGridMatrix = [];
     this.firstPoint = true;
     this.path = [];
+    //this.rotations = [];
+    //this.reflections = [];
+    //this.scales = [];
     //console.log(this.spacingY);
 
     for (let i = 0; i < int(row); i++) {
@@ -165,7 +178,11 @@ class Grid {
 
         // now all points are in. movement defines Z.  
         //if ( tempGridMatrix[i][j2].z > 0.01){
-          this.path.push(tempGridMatrix[i][j2]);
+        this.path.push(tempGridMatrix[i][j2]);
+        // no rotations
+       // if (this.rotations.length == 0){
+         // this.rotations.push(0);
+        //}
        // }
       }
     }
@@ -179,6 +196,133 @@ class Grid {
     this.changedGrid = true;
     this.realSizeX = (this.row-1)*this.spacingX;
     this.realSizeY = (this.column-1)*this.spacingY;
+  }
+
+  addRotations(rotationMatrix){
+    this.rotations = [];
+    //check if dimensions works
+    if (rotationMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (rotationMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < rotationMatrix.length; i++){
+      for (let j = 0; j < rotationMatrix[i].length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.rotations.push(rotationMatrix[i][j2]);
+        //console.log(rotationMatrix[i][j2]);
+      }
+    }
+    //console.log(this.rotations);
+    this.changedGrid = true;
+  }
+
+  addReflections(reflectionMatrix){
+    this.reflections = [];
+    //check if dimensions works
+    if (reflectionMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (reflectionMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < reflectionMatrix.length; i++){
+      for (let j = 0; j < reflectionMatrix[i].length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.reflections.push(reflectionMatrix[i][j2]);
+      }
+    }
+    this.changedGrid = true;
+  }
+
+  addScales(scaleMatrix){
+    this.scales = [];
+    //check if dimensions works
+    if (scaleMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (scaleMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < scaleMatrix.length; i++){
+      for (let j = 0; j < scaleMatrix[i].length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.scales.push(scaleMatrix[i][j2]);
+      }
+    }
+    this.changedGrid = true;
+  }
+
+  addScalesZ(scaleZMatrix){
+    this.scalesZ = [];
+    //check if dimensions works
+    if (scaleZMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (scaleZMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < scaleZMatrix.length; i++){
+      for (let j = 0; j < scaleZMatrix[i].length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.scalesZ.push(scaleZMatrix[i][j2]);
+      }
+    }
+    this.changedGrid = true;
+  }
+
+  addMvtVisibility(visMatrix){
+    this.visibleMvts = [];
+    //check if dimensions works
+    if (visMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (visMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < visMatrix.length; i++){
+      for (let j = 0; j < visMatrix[i].length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.visibleMvts.push(visMatrix[i][j2]);
+      }
+    }
+    this.changedGrid = true;
   }
 
   boundaryFunction(x, y){
@@ -213,101 +357,4 @@ class Grid {
   }
 
   //2D pattern
-
-  bindUI(self) {
-    this.updateX = function () {
-      //console.log(self.changedGrid);
-      //self.x = Number((-this.value() / 1000) * width);
-      self.x = Number(-this.value());
-      //document.querySelector("#div0").innerHTML = "x: " + int(-self.x);
-      self.updateGrid(self.row, self.column);
-      //self.changedGrid = true;
-    };
-    this.ui.sliders[0].changed(this.updateX);
-
-    this.updateY = function () {
-      //console.log(this.value());
-      //self.y = Number((this.value() / 1000) * width);
-      self.y = Number(this.value());
-      //document.querySelector("#div1").innerHTML = "y: " + int(self.y);
-      self.updateGrid(self.row, self.column);
-      //self.changedGrid = true;
-    };
-    this.ui.sliders[1].changed(this.updateY);
-
-    this.updateSizeX = function () {
-      //self.changedGrid = true;
-      //console.log(self);
-      //self.sizeX = Number((this.value() / 1000) * 400);
-      self.sizeX = Number(this.value());
-      //self.row = int(self.sizeX);//int(self.sizeX / self.spacingX);
-      self.updateGrid(int(self.sizeX / self.spacingX), self.column);
-      //document.querySelector("#div2").innerHTML = "size X: " + int(self.sizeX);
-      //self.UGX = true;
-    };
-    this.ui.sliders[2].changed(this.updateSizeX);
-
-    this.updateSizeY = function () {
-      //self.changedGrid = true;
-      //console.log(this.value());
-      //self.sizeY = Number((this.value() / 1000) * 400);
-      self.sizeY = Number(this.value());
-      //self.column = int(self.sizeY); //int(self.sizeY / self.spacingY);
-      self.updateGrid(self.row, int(self.sizeY / self.spacingY));
-      //document.querySelector("#div3").innerHTML = "size Y: " + int(self.sizeY);
-    };
-    this.ui.sliders[3].changed(this.updateSizeY);
-
-    this.updateDensX = function () {
-      //self.changedGrid = true;
-      //console.log(this.value());
-      //self.spacingX = Number((this.value() / 1000) * 50);
-      self.spacingX = Number(this.value());
-      //self.row = int(self.sizeX / self.spacingX);
-      self.updateGrid(int(self.sizeX / self.spacingX), self.column);
-      //document.querySelector("#div4").innerHTML = "spacing X: " + int(self.spacingX);
-    };
-    this.ui.sliders[4].changed(this.updateDensX);
-
-    this.updateDensY = function () {
-      //self.changedGrid = true;
-      //console.log(this.value());
-      //self.spacingY = Number((this.value() / 1000) * 50);
-      self.spacingY = Number(this.value());
-      //self.column = int(self.sizeY / self.spacingY);
-      self.updateGrid( self.row, int(self.sizeY / self.spacingY));
-      //document.querySelector("#div5").innerHTML ="spacing Y: " + int(self.spacingY);
-    };
-    this.ui.sliders[5].changed(this.updateDensY);
-
-    this.updateBoundaryDist = function(){
-      //self.boundaryDist = Number(this.value()/1000 * 200);
-      self.boundaryDist = Number(this.value());
-      self.updateGrid( self.row, self.column);
-      //document.querySelector("#div8").innerHTML = "dist: " + int(self.boundaryDist);
-    }
-    this.ui.sliders[8].changed(this.updateBoundaryDist);
-
-    this.updateSinAmp = function () {
-      //self.changedGrid = true;
-      //self.sinAmp = Number((this.value() / 1000) * 2.);
-      self.sinAmp = Number(this.value());
-      //self.sinGrid(self.sinAmp, self.sinPeriod);
-      self.updateGrid( self.row, self.column);
-      //document.querySelector("#div6").innerHTML ="amp: " + float(self.sinAmp);
-    };
-    this.ui.sliders[6].changed(this.updateSinAmp);
-
-    this.updateSinPeriod = function () {
-      //self.changedGrid = true;
-      //self.sinPeriod = int(Number((this.value() / 1000) * 50))+2;
-      self.sinPeriod = Number(this.value());
-      //self.sinGrid(self.sinAmp, self.sinPeriod);
-      self.updateGrid( self.row, self.column);
-      //document.querySelector("#div7").innerHTML = "period: " + int(self.sinPeriod);
-    };
-    this.ui.sliders[7].changed(this.updateSinPeriod);
-
-
-  }
 }
