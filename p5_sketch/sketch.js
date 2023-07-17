@@ -54,6 +54,7 @@ let mvtLabelXY, mvtLabelXZ, mvtLabelYZ, mvtLabelXYDiv;
 let sizeRectX = 300;
 let sizeRectY = 200;
 let boundaryLabel;
+let templateLabel;
 
 
 
@@ -73,11 +74,19 @@ function setup() {
   // MATERIAL info boxes
   infoBox = new CollapsibleBox(width/2 - 190/2+200,10, '300px', "machine specs");
   matBox = new CollapsibleBox(width/2 - 190/2, 10, '180px', 'material specs');
-  gridLayersBox = new CollapsibleBox(width/2 - 190/2 - 200,10, '50px', 'grid layers');
+  gridLayersBox = new CollapsibleBox(width/2 - 190/2 - 200,10, '24px', 'grid layers');
   
   setupInputs();
+
+  //template gui
+  templateLabel = createElement('h3', 'movement gui');
+  templateLabel.position(10,height-100-sy-20);
+  templateLabel.style('font-family', 'Poppins');
+  templateLabel.style('margin-bottom', '0');
+  templateLabel.style('margin-top', '0');
+  templateLabel.style('font-size', '14px');
   mvtTemplate = new MvtTemplate(sx,sy);
-  mvtTemplateOffsetX = -width+20;
+  mvtTemplateOffsetX = -width+10;
   mvtTemplateOffsetY = height-100;
   
   //*** GRIDS ***//
@@ -172,7 +181,7 @@ function setup() {
   //boundaries[0] = new Boundary(3,27.4+125,(304.8-240.755)/2+120.3775,125,120.3775);
   //boundaries[0] = new Boundary(2,27.4+125,(304.8-240.755)/2+120.3775,50,50);
 
-  boundaries[0] = new Boundary(3,125,120.3775,125,120.3775);
+  //boundaries[0] = new Boundary(3,125,120.3775,125,120.3775);
   /*boundaries[1] = new Boundary(-65-1*120,65);
   boundaries[2] = new Boundary(-65-2*120,65);
   boundaries[3] = new Boundary(-65-3*120,65);
@@ -258,6 +267,8 @@ function setup() {
 
     return result;
 };*/
+
+
   
   
   // code editor console
@@ -349,6 +360,8 @@ function draw() {
     if (grids[i].new){
       grids[i].updateGrid(grids[i].row,grids[i].column);
       grids[i].new = false;
+      gridLayersBox.box.size(gridLayersBox.box.width, (grids.length+1)*24);
+      gridLayersBox.h = (grids.length+1)*24+"px";
     }
   }
   
