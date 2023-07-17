@@ -354,7 +354,7 @@ function setup() {
 
 
 function draw() {
-  background(240);
+  background(230);
   
   for (let i = 0; i < grids.length; i++){
     if (grids[i].new){
@@ -402,6 +402,9 @@ function draw() {
   //stroke(0);
   //rect(-sizeRectX-20,height- sizeRectX+20,sizeRectX,sizeRectX);
   //noStroke();
+  stroke(0);
+  strokeWeight(2);
+  rect(- sizeRectX-20, height-sizeRectX+20, sizeRectX, sizeRectX);
   for (let i = 0; i < boundaries.length; i++){
     push();
     boundaries[i].displayStatic();

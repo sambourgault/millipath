@@ -443,7 +443,7 @@ class Movement{
   * @param {float} theta
   * @param {int} zMode=0
   */
-  makePathWithGUI(nbPoints, theta, zMode = 0){
+  makeGuiPath(nbPoints, theta, zMode = 0){
     // initialize paths
     this.paths = [];
     this.linePaths = [];
@@ -452,7 +452,7 @@ class Movement{
     let scale = w/sx;
     
     for (const value of mapT.values()) {
-      this.linePaths.push(new LinePath(scale*value.x1/w,scale*value.y1/h,scale*value.l, nbPoints, theta+value.angle));//, theta+value.angle, zMode));
+      this.linePaths.push(new LinePath(scale*value.x1/w,scale*value.y1/h,scale*value.l, nbPoints, theta+value.angle, theta+value.angle, zMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
     
@@ -578,7 +578,7 @@ class Movement{
   }
   
   // Display Mvt on Grid
-  displayPath(){
+  displayPath(scale = 1.){
     // check if gui has changed
     if (this.mode == 28 && mvtTemplate.changed){
       this.makePath();
@@ -588,7 +588,7 @@ class Movement{
     let previous = new createVector(0,0);
     let x,y,z;
     //let scale = 10.;
-    let scale = 10.;
+    //let scale = 10.;
     let scaleZ = 5.
     for (let i = 0; i < this.paths.length; i++){
       

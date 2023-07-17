@@ -202,12 +202,12 @@ class Grid {
     this.rotations = [];
     //check if dimensions works
     if (rotationMatrix.length != this.row){
-      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      console.log("This rotation matrix doesn't have the same number of rows as the grid.");
       return;
     }
 
     if (rotationMatrix[0].length != this.column){
-      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      console.log("This rotation matrix doesn't have the same number of columns as the grid.");
       return;
     }
 
@@ -218,10 +218,8 @@ class Grid {
           j2 = this.column - 1 - j;
         }
         this.rotations.push(rotationMatrix[i][j2]);
-        //console.log(rotationMatrix[i][j2]);
       }
     }
-    //console.log(this.rotations);
     this.changedGrid = true;
   }
 

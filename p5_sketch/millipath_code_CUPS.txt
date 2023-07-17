@@ -127,26 +127,25 @@ grids[0].addReflections(reflections);
 
 //**** grid rotation setup
 
-boundaries[0] = new Boundary(3,120+10,60+10,240/2,120/2);
-
 mvts[0] = new Movement(0,0);
-mvts[0].makePathWithGUI(2,0);
+mvts[0].makeGuiPath(1,0,3);
 
-//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-grids[0] = new Grid(0,10,10,0,20,20,250,150);
+boundaries[0] = new Boundary(3, 120, 60, 120, 60);
 
-rotations= [];
+grids[0] = new Grid(0, 0, 0, 0, 20, 20, 240, 120);
+
+rotations = [];
 
 for (let i = 0; i < grids[0].row; i++){
   rotations[i] = [];
   for (let j = 0; j < grids[0].column; j++){
     if ((i+j) % 2 == 0){
-    	rotations[i][j] = 0;
+    rotations[i][j] = 0;
     } else {
-    	rotations[i][j] = PI/2;
+    rotations[i][j] = PI/2;
     }
-    
   }
 }
 
 grids[0].addRotations(rotations);
+

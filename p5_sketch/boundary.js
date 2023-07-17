@@ -160,7 +160,7 @@ class Boundary{
     //depth map
     push();
     fill(255, 100);
-    shader(this.shaderProgram);
+    //shader(this.shaderProgram);
     strokeWeight(2);
     stroke(0);
     rect(-this.frameSizeX-20,height- this.frameSizeY+20,this.frameSizeX,this.frameSizeY);
