@@ -9,6 +9,8 @@ class Boundary{
     this.frameSizeY = 300;
     this.scale = 1.;
     this.path = [];
+    this.reverse = false;
+    this.reverseMultiplier = 1;
     
     //shader program
     this.shaderProgram;    
@@ -17,9 +19,22 @@ class Boundary{
     this.shaderProgram = createShader(this.vertSrc, this.fragSrc);
     
     this.makeBoundary();   
+    
   }
   
-  
+  /**
+   * Inverse the boundary effect
+   * @param {boolean} reverseState
+   */
+  reverseBoundary(reverseState){
+    this.reverse = reverseState;
+    if (this.reverse){
+      this.reverseMultiplier = -1;
+    } else {
+      this.reverseMultiplier = 1;
+    }
+  }
+
   /**
   * Check if point is within boundary
   * @param {float} x - Coordinate x of checked point
@@ -56,7 +71,7 @@ class Boundary{
       default:
       status = this.checkNoBoundary();
     }
-    return status;
+    return status*this.reverseMultiplier;
   }
   
   makeBoundary(customBoundary = null){
@@ -184,7 +199,11 @@ class Boundary{
   display(){
     let previous = new createVector(0,0);
     let x,y,z;
-    stroke(0,0,255);
+    if (!this.reverse){
+      stroke(0,0,255);
+    }  else {
+      stroke(255,0,0);
+    }
     strokeWeight(2);
     
     for (let i = 0; i < this.path.length; i++){
@@ -209,7 +228,12 @@ class Boundary{
   displayPath(){
     let previous = new createVector(0,0);
     let x,y,z;
-    stroke(0,0,255);
+    if (!this.reverse){
+      stroke(0,0,255);
+    }  else {
+      stroke(255,0,0);
+    }    
+    
     for (let i = 0; i < this.path.length; i++){
       
       x = this.path[i].x;
