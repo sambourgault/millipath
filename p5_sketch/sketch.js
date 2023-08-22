@@ -191,7 +191,7 @@ function setup() {
    boundaryLabel .style('font-size', '14px');
    boundaryLabel .style('font-family', 'Poppins');
    boundaryLabel.style('margin-top', '0');
-   boundaryLabel .position(width - sizeRectX-20, height - sizeRectX);
+   boundaryLabel .position(width - sizeRectX-20, height - sizeRectX - 30);
   
   /*boundaries[5] = new Boundary(-65,65+1*120);
   boundaries[6] = new Boundary(-65-1*120,65+1*120);
@@ -404,7 +404,7 @@ function draw() {
   //noStroke();
   stroke(0);
   strokeWeight(2);
-  rect(- sizeRectX-20, height-sizeRectX+20, sizeRectX, sizeRectX);
+  rect(- sizeRectX-20, height-sizeRectX-10, sizeRectX, sizeRectX);
   for (let i = 0; i < boundaries.length; i++){
     push();
     boundaries[i].displayStatic();

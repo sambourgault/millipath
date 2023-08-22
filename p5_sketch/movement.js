@@ -18,6 +18,7 @@ class Movement{
     
     this.paths = [];
     this.linePaths = [];
+    //this.customZmode = customZmode;
     
     // by default the movement path is a point at z = -1 (max depth);
     this.makePointPath(0,0);
@@ -175,8 +176,8 @@ class Movement{
     this.paths.push(tempPath);
   }
   
-  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = 0){
-    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, phi, zMode));
+  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = 0, customZMode = null){
+    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, phi, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   
@@ -228,14 +229,14 @@ class Movement{
   }
   */
   
-  makeChevronPath(x,y,l,nbPoints, theta, zMode){
+  makeChevronPath(x,y,l,nbPoints, theta, zMode, customZMode = null){
     this.paths = [];
     this.linePaths = [];
     // first branch
-    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, theta, zMode));
+    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, theta, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
     // second branch
-    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, PI/2, zMode));
+    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, PI/2, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   
@@ -270,12 +271,12 @@ class Movement{
   * @param {int} nbPoints
   * @param {float} theta
   */
-  makeDiamondForVBit(x,y,l,nbPoints, theta){
+  makeDiamondForVBit(x,y,l,nbPoints, theta, customZMode = null){
     this.paths = [];
     this.linePaths = [];
-    this.linePaths.push(new LinePath(x+l/2,y,l/2, nbPoints, theta, theta, 1));
+    this.linePaths.push(new LinePath(x+l/2,y,l/2, nbPoints, theta, theta, 1, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
-    this.linePaths.push(new LinePath(x,y,l/2, nbPoints, theta, theta, 2));
+    this.linePaths.push(new LinePath(x,y,l/2, nbPoints, theta, theta, 2, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   
@@ -290,13 +291,13 @@ class Movement{
   * @param {int} zMode
   * @param {int} nbApex
   */
-  makeCrossPath(x,y,l,nbPoints,theta,zMode, nbApex){
+  makeCrossPath(x,y,l,nbPoints,theta,zMode, nbApex, customZMode = null){
     this.paths = [];
     this.linePaths = [];
     
     for (let i = 0; i < nbApex; i++){
       let angle = i*2*PI/nbApex + theta;
-      this.linePaths.push(new LinePath(x,y,l,nbPoints, angle, angle, zMode));
+      this.linePaths.push(new LinePath(x,y,l,nbPoints, angle, angle, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
   }
@@ -309,7 +310,7 @@ class Movement{
   * @param {float} theta - The angle of the polygon with respect with the positive x-axis.
   * @param {int} zMode - depth mode of linePaths composing the polygon. 
   */
-  makePolygonPath(r, nbSides, nbPoints, theta, zMode = 0){
+  makePolygonPath(r, nbSides, nbPoints, theta, zMode = 0, customZMode = null){
     let t1,t2,x1,x2,y1,y2,l,angle;
     this.paths = [];
     this.linePaths = [];
@@ -326,7 +327,7 @@ class Movement{
         angle += PI;
       }
       l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
-      this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode));
+      this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
     return this.paths;
@@ -342,7 +343,7 @@ class Movement{
   * @param {float} theta
   * @param {int} zMode=0
   */
-  makeConcentricPolygonPath(r, nbSides, nbPaths, offsetWidth, nbPoints, theta, zMode = 0){
+  makeConcentricPolygonPath(r, nbSides, nbPaths, offsetWidth, nbPoints, theta, zMode = 0, customZMode = null){
     let t1,t2,x1,x2,y1,y2,l,r2,angle;
     this.paths = [];
     this.linePaths = [];
@@ -361,7 +362,7 @@ class Movement{
           angle += PI;
         }
         l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
-        this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode));
+        this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode, customZMode));
         this.paths.push(this.linePaths[this.linePaths.length-1].path);
         
       }
@@ -380,7 +381,7 @@ class Movement{
   * @param {float} theta
   * @param {int} zMode=0
   */
-  makeHypertrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0){
+  makeHypertrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0, customZMode = null){
     let t1,t2,x1,x2,y1,y2,l,angle;
     this.paths = [];
     this.linePaths = [];
@@ -398,7 +399,7 @@ class Movement{
         angle += PI;
       }
       l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
-      this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode));
+      this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
   }
@@ -414,7 +415,7 @@ class Movement{
   * @param {float} theta
   * @param {int} zMode=0
   */
-  makeHypotrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0){
+  makeHypotrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0, customZMode = null){
     let t1,t2,x1,x2,y1,y2,l,angle;
     this.paths = [];
     this.linePaths = [];
@@ -432,7 +433,7 @@ class Movement{
         angle += PI;
       }
       l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
-      this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode));
+      this.linePaths.push(new LinePath(x1,y1,l,nbPoints, angle, angle, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
   }
@@ -443,7 +444,7 @@ class Movement{
   * @param {float} theta
   * @param {int} zMode=0
   */
-  makeGuiPath(nbPoints, theta, zMode = 0){
+  makeGuiPath(nbPoints, theta, zMode = 0, customZMode = null){
     // initialize paths
     this.paths = [];
     this.linePaths = [];
@@ -452,7 +453,7 @@ class Movement{
     let scale = w/sx;
     
     for (const value of mapT.values()) {
-      this.linePaths.push(new LinePath(scale*value.x1/w,scale*value.y1/h,scale*value.l, nbPoints, theta+value.angle, theta+value.angle, zMode));
+      this.linePaths.push(new LinePath(scale*value.x1/w,scale*value.y1/h,scale*value.l, nbPoints, theta+value.angle, theta+value.angle, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
     

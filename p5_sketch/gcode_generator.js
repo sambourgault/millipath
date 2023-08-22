@@ -291,6 +291,7 @@ class GCodeGen {
             z = maxDepthCut*(grid[i-1].z+rotatedMvtPaths[l][k].z);
             
             let boundaryValue = boundaries[index].checkBoundary(x,y);
+            console.log(boundaryValue);
             
             if (boundaryValue <= 0 && grids[index].visibleMvts[i-1] == 1){
               // point is inside the boundary

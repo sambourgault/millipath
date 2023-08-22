@@ -1,5 +1,5 @@
 class Boundary{
-  constructor(mode, x, y, rX, rY = rX, rC = 0){
+  constructor(mode, x, y, rX, rY = rX, checkCustomBoundary = null){
     this.mode = mode;
     this.x = -x; // center
     this.y = y; //center
@@ -10,12 +10,19 @@ class Boundary{
     this.scale = 1.;
     this.path = [];
     
+    
     //shader program
     this.shaderProgram;    
     this.vertSrc = this.makeVertexShader();
     this.fragSrc = this.makeFragCircle();
     this.shaderProgram = createShader(this.vertSrc, this.fragSrc);
     
+    if (checkCustomBoundary != null){
+      this.checkCustomBoundary = checkCustomBoundary;
+    } else {
+      this.checkCustomBoundary = null;
+    }
+
     this.makeBoundary();   
   }
   
@@ -26,12 +33,12 @@ class Boundary{
   * @param {float} y - Coordinate y of checked point 
   * @returns {float} status - return <0. if within, 0. if at and >0. if outside boundary
   */
-  checkBoundary(x, y, customBoundaryCheck = null){
+  checkBoundary(x, y){
     let status = -1.;
     switch(this.mode){
       case -1:
       // if mode == -1, use custom boundary function
-      status = customBoundaryCheck(x,y);
+      status = this.checkCustomBoundary(x,y);
       break;
       case 0:
       status = this.checkNoBoundary();
@@ -62,7 +69,8 @@ class Boundary{
   makeBoundary(customBoundary = null){
     switch(this.mode){
       case -1:
-      customBoundary(this.x, this.y, this.rX, this.rY);
+      //customBoundary(this.x, this.y, this.rX, this.rY);
+      this.circle();
       break;
 
       case 0:
@@ -163,7 +171,7 @@ class Boundary{
     //shader(this.shaderProgram);
     strokeWeight(2);
     stroke(0);
-    rect(-this.frameSizeX-20,height- this.frameSizeY+20,this.frameSizeX,this.frameSizeY);
+    rect(-this.frameSizeX-20,height- this.frameSizeY+30,this.frameSizeX,this.frameSizeY);
     resetShader();
     
     // display boundary

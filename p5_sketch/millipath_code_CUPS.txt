@@ -128,6 +128,7 @@ grids[0].addReflections(reflections);
 //**** grid rotation setup
 
 mvts[0] = new Movement(0,0);
+//nbPoints, theta, zMode = 0
 mvts[0].makeGuiPath(1,0,3);
 
 boundaries[0] = new Boundary(3, 120, 60, 120, 60);
@@ -149,3 +150,33 @@ for (let i = 0; i < grids[0].row; i++){
 
 grids[0].addRotations(rotations);
 
+/// custom boundaries
+mvts[0] = new Movement(0,0);
+
+let bb = function circleBoundary(x,y){
+  cx = 100;
+  cy = 100;
+  rx = 50;
+  
+  let d = dist(cx, cy, -x, y);
+
+    if (d < rx){
+      return -1.;
+    } else if (d > rx){
+      return 1.;
+    } else if (d == rx){
+      return 0;
+    }
+}
+
+boundaries[0] = new Boundary(-1, 100,100,50,50, bb);
+grids[0] = new Grid(0, 0, 0, 0, 20, 20, 400, 400);
+
+
+// custom Z modemvts[0] = new Movement(0,0);
+
+let zz = function randomZ(){
+  return random(-1,0);
+}
+
+mvts[0].makeLinePath(0,0,30,5,0,0,-1,zz)

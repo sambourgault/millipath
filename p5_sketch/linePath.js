@@ -1,5 +1,5 @@
 class LinePath{
-    constructor(x,y,l,nbPoints, theta, phi = theta, zMode = 0, amp = 0, p = 1){
+    constructor(x,y,l,nbPoints, theta, phi = theta, zMode = 0, customZMode = null, amp = 0, p = 1){
         // line position
         this.x = x;
         this.y = y;
@@ -19,10 +19,10 @@ class LinePath{
         // path
         this.path = [];
         // visualized on the movement
-        this.makePath();
+        this.makePath(customZMode);
     }
     
-    makePath(customZMode = null, offsetX=0, offsetY=0){
+    makePath(customZMode = null){
         let z = 0;
         let max = this.l;
         this.path = [];
@@ -31,7 +31,11 @@ class LinePath{
         let rd = random(0.5,1);
         
         for (let i = 0; i < this.nbPoints+1; i++){
-            if (this.zMode == 0){                
+            if (this.zMode == -1){
+                if (customZMode != null){
+                    z = customZMode(i);
+                }
+            } else if (this.zMode == 0){                
                 // constant max depth
                 z = -1;
             } else if (this.zMode == 1){
