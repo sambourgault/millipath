@@ -1,5 +1,5 @@
 class LinePath{
-    constructor(x,y,l,nbPoints, theta, phi = theta, zMode = 0, customZMode = null, amp = 0, p = 1){
+    constructor(x,y,l,nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null, amp = 0, p = 1){
         // line position
         this.x = x;
         this.y = y;
@@ -35,19 +35,19 @@ class LinePath{
                 if (customZMode != null){
                     z = customZMode(i);
                 }
-            } else if (this.zMode == 0){                
+            } else if (this.zMode == "FLAT"){                
                 // constant max depth
                 z = -1;
-            } else if (this.zMode == 1){
+            } else if (this.zMode == "LINEAR_UP"){
                 // linear ascending: begins at deepest z = -1 and goes to z = 0 
                 z = -1+i*abs(tempDelta/max);
-            } else if (this.zMode  == 2){
+            } else if (this.zMode  == "LINEAR_DOWN"){
                 // linear descending: begins at z = 0 and goes to z = -1
                 z = -i*abs(tempDelta/max);
-            } else if (this.zMode  == 3){
+            } else if (this.zMode  == "COS"){
                 // cosinus
                 z = this.cosinus(i*abs(tempDelta), 0, max);
-            } else if (this.zMode  == 4){
+            } else if (this.zMode  == "PARABOLA"){
                 // positive parabola with min in the middle of the line
                 z = this.parabola(i*abs(tempDelta),0,max);
             } else if (this.zMode == 5){

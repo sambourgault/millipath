@@ -51,23 +51,23 @@ class Boundary{
   checkBoundary(x, y){
     let status = -1.;
     switch(this.mode){
-      case -1:
+      case "CUSTOM":
       // if mode == -1, use custom boundary function
       status = this.checkCustomBoundary(x,y);
       break;
-      case 0:
+      case "NONE":
       status = this.checkNoBoundary();
       break;
-      case 1:
+      case "CIRCLE":
       status = this.checkInCircle(x,y);
       break;
-      case 2:
+      case "SMOOTH_CIRCLE":
       status = this.checkInSmoothCircle(x,y);
       break;
-      case 3:
+      case "RECTANGLE":
       status = this.checkInRectangle(x,y);
       break;
-      case 4:
+      case "SMOOTH_RECTANGLE":
       if (this.checkInRectangle(x,y)<0){
         status = this.checkInSmoothCircle(x,y);
       } else {
@@ -83,25 +83,25 @@ class Boundary{
   
   makeBoundary(customBoundary = null){
     switch(this.mode){
-      case -1:
+      case "CUSTOM":
       //customBoundary(this.x, this.y, this.rX, this.rY);
       this.circle();
       break;
 
-      case 0:
+      case "NONE":
       break;
 
-      case 1:
+      case "CIRCLE":
       this.circle();
       break;
-      case 2:
+      case "SMOOTH_CIRCLE":
       this.smoothCircle();
       break;
-      case 3:
+      case "RECTANGLE":
       this.rectangle();
       break;
 
-      case 4:
+      case "SMOOTH_RECTANGLE":
       break; 
 
       //this.hypertrochoid(100*this.scale,20*this.scale,40*this.scale,100, 10);

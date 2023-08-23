@@ -1,6 +1,6 @@
 // cartesian grid
 class Grid {
-  constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
+  constructor(id, x, y, mode = "LINEAR", spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
     
     this.visible = false;
     this.openBox = false;
@@ -154,12 +154,12 @@ class Grid {
         }
         
         let x;
-        if (this.mode == 0){
+        if (this.mode == "LINEAR"){
           x = -i * this.spacingX + this.x;
-        } else if (this.mode == 1){
+        } else if (this.mode == "SIN"){
           //sinusoidal mode
           x = (this.sinAmp * cos(2*PI/this.sinPeriod * j2) - i) * this.spacingX + this.x;
-        } else if (this.mode == 2){
+        } else if (this.mode == "PERLIN"){
           //perlin mode
           x = (this.sinAmp * noise(i/8, j2/5) - i) * this.spacingX + this.x;
           //console.log(noise(i/50, j2/70));

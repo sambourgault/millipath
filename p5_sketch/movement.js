@@ -1,6 +1,6 @@
 class Movement{
   constructor(x, y, scale = 1.){
-    this.mode = 0;
+    this.mode = "FLAT";
     this.visible = true;
     this.staticColor = [random(255), random(255), random(255)];
     this.sizeX = 300;
@@ -176,7 +176,7 @@ class Movement{
     this.paths.push(tempPath);
   }
   
-  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = 0, customZMode = null){
+  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
     this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, phi, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
@@ -310,7 +310,7 @@ class Movement{
   * @param {float} theta - The angle of the polygon with respect with the positive x-axis.
   * @param {int} zMode - depth mode of linePaths composing the polygon. 
   */
-  makePolygonPath(r, nbSides, nbPoints, theta, zMode = 0, customZMode = null){
+  makePolygonPath(r, nbSides, nbPoints, theta, zMode = "FLAT", customZMode = null){
     let t1,t2,x1,x2,y1,y2,l,angle;
     this.paths = [];
     this.linePaths = [];
@@ -343,7 +343,7 @@ class Movement{
   * @param {float} theta
   * @param {int} zMode=0
   */
-  makeConcentricPolygonPath(r, nbSides, nbPaths, offsetWidth, nbPoints, theta, zMode = 0, customZMode = null){
+  makeConcentricPolygonPath(r, nbSides, nbPaths, offsetWidth, nbPoints, theta, zMode = "FLAT", customZMode = null){
     let t1,t2,x1,x2,y1,y2,l,r2,angle;
     this.paths = [];
     this.linePaths = [];
@@ -381,7 +381,7 @@ class Movement{
   * @param {float} theta
   * @param {int} zMode=0
   */
-  makeHypertrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0, customZMode = null){
+  makeHypertrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = "FLAT", customZMode = null){
     let t1,t2,x1,x2,y1,y2,l,angle;
     this.paths = [];
     this.linePaths = [];
@@ -415,7 +415,7 @@ class Movement{
   * @param {float} theta
   * @param {int} zMode=0
   */
-  makeHypotrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode = 0, customZMode = null){
+  makeHypotrochoidPath(R, r, d, limit, resolution, nbPoints, theta, zMode =  "FLAT", customZMode = null){
     let t1,t2,x1,x2,y1,y2,l,angle;
     this.paths = [];
     this.linePaths = [];
@@ -444,7 +444,7 @@ class Movement{
   * @param {float} theta
   * @param {int} zMode=0
   */
-  makeGuiPath(nbPoints, theta, zMode = 0, customZMode = null){
+  makeGuiPath(nbPoints, theta, zMode = "FLAT", customZMode = null){
     // initialize paths
     this.paths = [];
     this.linePaths = [];
