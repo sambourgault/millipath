@@ -64,6 +64,15 @@ class GCodeGen {
     this.pauseButton.style("background-color", "white");
     this.pauseButton.style("border-radius", "0px");
     this.pauseButton.style("border-width", "2px");
+
+    this.hideJog = false;
+    this.hideJogButton = createButton("hide jog");
+    this.hideJogButton.position(width/2+105, height - 120);
+    this.hideJogButton.style("font-family", "Poppins");
+    this.hideJogButton.style("width", "75px");
+    this.hideJogButton.style("background-color", "white");
+    this.hideJogButton.style("border-radius", "0px");
+    this.hideJogButton.style("border-width", "2px");
     
     this.tool = new Tool();
     this.play = false;
@@ -136,6 +145,11 @@ class GCodeGen {
       self.play = false;
     }
     this.pauseButton.mousePressed(this.pauseSimulation);
+
+    this.hideJogMove = function(){
+      self.hideJog = !self.hideJog;
+    }
+    this.hideJogButton.mousePressed(this.hideJogMove);
   }
   
   updatePath(index, grid, mvt, linkState){
@@ -425,27 +439,33 @@ class GCodeGen {
             stroke(255, 0, 0);
           }
           
-          for (let i = 0; i < this.allPaths[k][j].length; i++){
-            let previous;
-            if (i == 0 && j != 0){
-              previous = this.allPaths[k][j-1][this.allPaths[k][j-1].length - 1];
-            } else if (i == 0 && j == 0){
-              previous = new createVector(0,0,safeHeight);
-            } else {
-              previous = this.allPaths[k][j][i-1];
-            }
-            let current = this.allPaths[k][j][i];
-            push();
-            //translate(0,0,70);
-            let scalePZ = 1.;
-            let scaleCZ = 1.;
-            //if (previous.z < 0.) scalePZ = 30;
-            //if (current.z < 0.) scaleCZ = 30;
-            
-            line(previous.x, previous.y, scalePZ*previous.z, current.x, current.y, scaleCZ*current.z);
-            pop();
+          //console.log("hidejob: " + this.hideJog + ", type: " + this.allTypePaths[k][j]);
+          if (this.hideJog == true && this.allTypePaths[k][j] == "J"){
+          } else {
+            for (let i = 0; i < this.allPaths[k][j].length; i++){
+              let previous;
+              if (i == 0 && j != 0){
+                previous = this.allPaths[k][j-1][this.allPaths[k][j-1].length - 1];
+              } else if (i == 0 && j == 0){
+                previous = new createVector(0,0,safeHeight);
+              } else {
+                previous = this.allPaths[k][j][i-1];
+              }
+
+              let current = this.allPaths[k][j][i];
+              push();
+              //translate(0,0,70);
+              let scalePZ = 1.;
+              let scaleCZ = 1.;
+              //if (previous.z < 0.) scalePZ = 30;
+              //if (current.z < 0.) scaleCZ = 30;
+              
+              line(previous.x, previous.y, scalePZ*previous.z, current.x, current.y, scaleCZ*current.z);
+              
+              pop();
           }
         }
+      }
       }
     }
     noStroke();

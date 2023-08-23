@@ -56,6 +56,7 @@ let sizeRectY = 200;
 let boundaryLabel;
 let templateLabel;
 
+let showOnlyCutButton;
 
 
 function setup() {
