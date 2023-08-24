@@ -1,4 +1,3 @@
-// ADD ROTATIONS && SCALING && MVT VISIBILITY
 mvts[0] = new Movement(0,0, 4);
 mvts[0].makeGuiPath(2,0, "FLAT");
 boundaries[0] = new Boundary("NONE",0,0,250,130);
