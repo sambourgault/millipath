@@ -32,9 +32,9 @@ let codeGenButton;
 let safeHeight = 6 //mm
 let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
-let moveSpeed = 16; // mm/s
+let moveSpeed = 5; // mm/s
 let plungeRate = 16; //mm/s
-let maxDepthCut = 5; // mm
+let maxDepthCut = 3; // mm
 let toolSize = 0.25; // in
 let toolSizeMm = toolSize * 25.4; //mm
 let infoBox;

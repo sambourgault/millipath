@@ -184,7 +184,7 @@ class GCodeGen {
         for (let l = 0; l < mvt.paths.length; l++){
           // go over each point in path
           tempPaths.push([]);
-          console.log("new path:" + tempPaths.length);
+          //console.log("new path:" + tempPaths.length);
           tempTypePaths.push("M");
           //this.rotateMvt(mvt,index,grid[i-2], i-2);      
           
@@ -305,7 +305,7 @@ class GCodeGen {
             z = maxDepthCut*(grid[i-1].z+rotatedMvtPaths[l][k].z);
             
             let boundaryValue = boundaries[index].checkBoundary(x,y);
-            console.log(boundaryValue);
+            //console.log(boundaryValue);
             
             if (boundaryValue <= 0 && grids[index].visibleMvts[i-1] == 1){
               // point is inside the boundary

@@ -31,7 +31,7 @@ class LinePath{
         let rd = random(0.5,1);
         
         for (let i = 0; i < this.nbPoints+1; i++){
-            if (this.zMode == -1){
+            if (this.zMode == "CUSTOM"){
                 if (customZMode != null){
                     z = customZMode(i);
                 }

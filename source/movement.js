@@ -450,9 +450,11 @@ class Movement{
     this.linePaths = [];
     // take the map data 
     let mapT = mvtTemplate.paths;
-    let scale = w/sx;
+    //let scale = w/sx;
+    let scale = this.scale;
     
     for (const value of mapT.values()) {
+      //console.log(value);
       this.linePaths.push(new LinePath(scale*value.x1/w,scale*value.y1/h,scale*value.l, nbPoints, theta+value.angle, theta+value.angle, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }

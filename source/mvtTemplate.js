@@ -52,7 +52,6 @@ class MvtTemplate {
           this.lines[i].changed == false;
         }
       }
-
     }
   }
   
