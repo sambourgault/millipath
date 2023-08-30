@@ -171,9 +171,15 @@ class Movement{
   //** Predefined Movement Functions **//
   // Default Movement is a PointPath
   makePointPath(x, y, z = -1){
-    let tempPath = [];
+    /*let tempPath = [];
+
     tempPath.push(new createVector(x,y,z));
-    this.paths.push(tempPath);
+    this.paths.push(tempPath);*/
+    this.linePaths.push(new LinePath(x,y,0,1, 0, 0, "CUSTOM", function (i){
+      //console.log(z);
+      return z;}));
+    //console.log(this.linePaths[this.linePaths.length-1].path);
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   
   makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
@@ -300,6 +306,67 @@ class Movement{
       this.linePaths.push(new LinePath(x,y,l,nbPoints, angle, angle, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
+  }
+
+  /**
+   * Make a rectangle path as the movement.
+   * @param {any} rx
+   * @param {any} ry
+   * @param {any} nbPoints
+   * @param {any} theta
+   * @param {any} zMode
+   * @param {any} customZMode=null
+   * @returns {any}
+   */
+  makeRectanglePath(rx,ry,nbPoints,theta,zMode,customZMode = null){
+    this.paths = [];
+    this.linePaths = [];
+    
+    this.linePaths.push(new LinePath(-rx,-ry,2*rx,nbPoints, theta, theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    this.linePaths.push(new LinePath(rx,-ry,2*ry,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    this.linePaths.push(new LinePath(rx,ry,2*rx,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    this.linePaths.push(new LinePath(-rx,ry,2*ry,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+  }
+
+  /**
+   * Make dogbone openings for joinery
+   * @param {any} rx
+   * @param {any} ry
+   * @param {any} nbPoints
+   * @param {any} theta
+   * @param {any} boneMode
+   * @param {any} zMode
+   * @param {any} customZMode=null
+   * @returns {any}
+   */
+  makeDogBonePath(rx,ry,nbPoints,theta,boneMode,zMode,customZMode = null){
+    this.paths = [];
+    this.linePaths = [];  
+    if (boneMode == "ONE_SIDE"){
+      this.linePaths.push(new LinePath(-rx,-ry,2*rx+toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    } else if (boneMode == "TWO_SIDE") {
+      this.linePaths.push(new LinePath(-rx-toolSizeMm/2,-ry,2*rx+2*toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    }
+
+    this.linePaths.push(new LinePath(rx,-ry,2*ry,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+
+    if (boneMode == "ONE_SIDE"){
+      this.linePaths.push(new LinePath(rx+toolSizeMm/2,ry,2*rx+toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    } else if (boneMode == "TWO_SIDE") {
+      this.linePaths.push(new LinePath(rx+toolSizeMm/2,ry,2*rx+2*toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    }
+
+    this.linePaths.push(new LinePath(-rx,ry,2*ry,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   
   /**

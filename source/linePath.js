@@ -28,8 +28,19 @@ class LinePath{
         this.path = [];
         
         let tempDelta = this.l/this.nbPoints;
+        /*if (this.nbPoints == 0){
+            tempDelta = 0; 
+        } else {
+            tempDelta = this.l/this.nbPoints;
+        }*/
         let rd = random(0.5,1);
         
+       /* let iLimit;
+        if (this.l == 0 && this.nbPoints == 1){
+            iLimit = 1;
+        } else {
+            iLimit = this.nbPoints+1;
+        }*/
         for (let i = 0; i < this.nbPoints+1; i++){
             if (this.zMode == "CUSTOM"){
                 if (customZMode != null){
