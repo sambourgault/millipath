@@ -318,17 +318,17 @@ class Movement{
    * @param {any} customZMode=null
    * @returns {any}
    */
-  makeRectanglePath(rx,ry,nbPoints,theta,zMode,customZMode = null){
+  makeRectanglePath(sx,sy,nbPoints,theta,zMode,customZMode = null){
     this.paths = [];
     this.linePaths = [];
     
-    this.linePaths.push(new LinePath(-rx,-ry,2*rx,nbPoints, theta, theta, zMode, customZMode));
+    this.linePaths.push(new LinePath(-sx/2,-sy/2,sx,nbPoints, theta, theta, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
-    this.linePaths.push(new LinePath(rx,-ry,2*ry,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
+    this.linePaths.push(new LinePath(sx/2,-sy/2,sy,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
-    this.linePaths.push(new LinePath(rx,ry,2*rx,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+    this.linePaths.push(new LinePath(sx/2,sy/2,sx,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
-    this.linePaths.push(new LinePath(-rx,ry,2*ry,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
+    this.linePaths.push(new LinePath(-sx/2,sy/2,sy,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
 
@@ -343,29 +343,29 @@ class Movement{
    * @param {any} customZMode=null
    * @returns {any}
    */
-  makeDogBonePath(rx,ry,nbPoints,theta,boneMode,zMode,customZMode = null){
+  makeDogBonePath(sx,sy,nbPoints,theta,boneMode,zMode,customZMode = null){
     this.paths = [];
     this.linePaths = [];  
     if (boneMode == "ONE_SIDE"){
-      this.linePaths.push(new LinePath(-rx,-ry,2*rx+toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(-sx/2,-sy/2,sx+toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     } else if (boneMode == "TWO_SIDE") {
-      this.linePaths.push(new LinePath(-rx-toolSizeMm/2,-ry,2*rx+2*toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(-sx/2-toolSizeMm/2,-sy/2,sx+2*toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
 
-    this.linePaths.push(new LinePath(rx,-ry,2*ry,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
+    this.linePaths.push(new LinePath(sx/2,-sy/2,sy,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
 
     if (boneMode == "ONE_SIDE"){
-      this.linePaths.push(new LinePath(rx+toolSizeMm/2,ry,2*rx+toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,sx+toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     } else if (boneMode == "TWO_SIDE") {
-      this.linePaths.push(new LinePath(rx+toolSizeMm/2,ry,2*rx+2*toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,sx+2*toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
 
-    this.linePaths.push(new LinePath(-rx,ry,2*ry,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
+    this.linePaths.push(new LinePath(-sx/2,sy/2,sy,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   

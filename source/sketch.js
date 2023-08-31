@@ -34,7 +34,7 @@ let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 5; // mm/s
 let plungeRate = 16; //mm/s
-let maxDepthCut = 2; // mm
+let maxDepthCut = 3.05; // mm
 let toolSize = 0.25; // in
 let toolSizeMm = toolSize * 25.4; //mm
 let infoBox;
