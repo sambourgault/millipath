@@ -12,7 +12,6 @@ class Boundary{
     this.reverse = false;
     this.reverseMultiplier = 1;
     
-    
     //shader program
     this.shaderProgram;    
     this.vertSrc = this.makeVertexShader();

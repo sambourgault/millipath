@@ -21,7 +21,7 @@ class Movement{
     //this.customZmode = customZmode;
     
     // by default the movement path is a point at z = -1 (max depth);
-    this.makePointPath(0,0);
+    //this.makePointPath(0,0);
   }
   
   // Create your custon linePaths composition and add it to the movement
@@ -178,7 +178,7 @@ class Movement{
     this.linePaths.push(new LinePath(x,y,0,1, 0, 0, "CUSTOM", function (i){
       //console.log(z);
       return z;}));
-    //console.log(this.linePaths[this.linePaths.length-1].path);
+    console.log(this.linePaths[this.linePaths.length-1].path);
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   

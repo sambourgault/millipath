@@ -42,6 +42,7 @@ class LinePath{
             iLimit = this.nbPoints+1;
         }*/
         for (let i = 0; i < this.nbPoints+1; i++){
+            
             if (this.zMode == "CUSTOM"){
                 if (customZMode != null){
                     z = customZMode(i);
@@ -77,6 +78,7 @@ class LinePath{
             let yf = x1*sin(2*this.phi) - y1*cos(2*this.phi) + this.y;
             this.path.push(new createVector(-xf,yf,z));
         }
+        console.log(this.path);
         return this.path;
     }
     

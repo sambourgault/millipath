@@ -1,53 +1,29 @@
-boundaries[0] = new Boundary(3,125,120.3775,125,120.3775);
+// Simple Pattern Generated with the Gui Function
+let sizeX = 337;
+let sizeY = 235;
+let offsetX = 19;
+let offsetY = 18;
+mvts[0] = new Movement(0,0, 5);
+//mvts[0].makeGuiPath(2,0,"PARABOLA");
+mvts[0].makePointPath(0,0,-1);
 
-mvts[0] = new Movement(0,0);
-mvts[0].makePathWithGUI(2,0);
-
-boundaries[0] = new Boundary(0,0,0,250,130);
+boundaries[0] = new Boundary("RECTANGLE",sizeX/2,sizeY/2,sizeX/2-offsetX,sizeY/2-offsetY);
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-grids[0] = new Grid(0,10,10,0,20,20,250,130);
+grids[0] = new Grid(0,2*offsetX,2*offsetY,"LINEAR",20,20,sizeX-2*offsetX,sizeY-2*offsetY);
 
 
-// ADD ROTATIONS
-mvts[0] = new Movement(0,0);
-mvts[0].makePathWithGUI(2,0);
-boundaries[0] = new Boundary(0,0,0,250,130);
-//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-grids[0] = new Grid(0,10,10,0,20,20,250,130);
-
+// Add rotation of random increment of PI/4
 rotations = [];
 for (let i = 0; i < grids[0].row; i ++){
   rotations[i] = [];
   for (let j = 0; j < grids[0].column; j++){
-    if ((i+j) % 2 == 0){
-    	rotations[i][j] = 0;
-    } else {
-    	rotations[i][j] = PI/2;
-    }
+    rotations[i][j] = floor(random(0,8))*PI/4;
   }
 }
 
 grids[0].addRotations(rotations);
 
-// ADD ROTATIONS && SCALING
-mvts[0] = new Movement(0,0);
-mvts[0].makePathWithGUI(2,0);
-boundaries[0] = new Boundary(0,0,0,250,130);
-//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-grids[0] = new Grid(0,10,10,0,20,20,250,130);
-
-rotations = [];
-for (let i = 0; i < grids[0].row; i ++){
-  rotations[i] = [];
-  for (let j = 0; j < grids[0].column; j++){
-    if ((i+j) % 2 == 0){
-    	rotations[i][j] = 0;
-    } else {
-    	rotations[i][j] = PI/2;
-    }
-  }
-}
-
+// Add scaling based on position along the x axis
 scales = [];
 for (let i = 0; i < grids[0].row; i ++){
   scales[i] = [];
@@ -56,36 +32,9 @@ for (let i = 0; i < grids[0].row; i ++){
   }
 }
 
-grids[0].addRotations(rotations);
 grids[0].addScales(scales);
 
-// ADD ROTATIONS && SCALING && MVT VISIBILITY
-mvts[0] = new Movement(0,0);
-mvts[0].makePathWithGUI(2,0);
-boundaries[0] = new Boundary(0,0,0,250,130);
-//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-grids[0] = new Grid(0,10,10,0,20,20,250,130);
-
-rotations = [];
-for (let i = 0; i < grids[0].row; i ++){
-  rotations[i] = [];
-  for (let j = 0; j < grids[0].column; j++){
-    if ((i+j) % 2 == 0){
-    	rotations[i][j] = 0;
-    } else {
-    	rotations[i][j] = PI/2;
-    }
-  }
-}
-
-scales = [];
-for (let i = 0; i < grids[0].row; i ++){
-  scales[i] = [];
-  for (let j = 0; j < grids[0].column; j++){
-    	scales[i][j] = 1-abs(grids[0].row/2 - i)/(grids[0].row/2) +0.5;
-  }
-}
-
+// Add random visibility
 vis = [];
 for (let i = 0; i < grids[0].row; i ++){
   vis[i] = [];
@@ -100,16 +49,8 @@ for (let i = 0; i < grids[0].row; i ++){
 }
 
 grids[0].addMvtVisibility(vis);
-grids[0].addRotations(rotations);
-grids[0].addScales(scales);
 
-// ADD REFLECTIONS
-mvts[0] = new Movement(0,0);
-mvts[0].makePathWithGUI(2,0);
-boundaries[0] = new Boundary(0,0,0,250,130);
-//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-grids[0] = new Grid(0,10,10,0,20,20,250,130);
-
+// Add reflection around the middle row // not working yet
 reflections = [];
 for (let i = 0; i < grids[0].row; i ++){
   reflections[i] = [];
@@ -123,60 +64,3 @@ for (let i = 0; i < grids[0].row; i ++){
 }
 
 grids[0].addReflections(reflections);
-
-
-//**** grid rotation setup
-
-mvts[0] = new Movement(0,0);
-//nbPoints, theta, zMode = 0
-mvts[0].makeGuiPath(1,0,3);
-
-boundaries[0] = new Boundary(3, 120, 60, 120, 60);
-
-grids[0] = new Grid(0, 0, 0, 0, 20, 20, 240, 120);
-
-rotations = [];
-
-for (let i = 0; i < grids[0].row; i++){
-  rotations[i] = [];
-  for (let j = 0; j < grids[0].column; j++){
-    if ((i+j) % 2 == 0){
-    rotations[i][j] = 0;
-    } else {
-    rotations[i][j] = PI/2;
-    }
-  }
-}
-
-grids[0].addRotations(rotations);
-
-/// custom boundaries
-mvts[0] = new Movement(0,0);
-
-let bb = function circleBoundary(x,y){
-  cx = 100;
-  cy = 100;
-  rx = 50;
-  
-  let d = dist(cx, cy, -x, y);
-
-    if (d < rx){
-      return -1.;
-    } else if (d > rx){
-      return 1.;
-    } else if (d == rx){
-      return 0;
-    }
-}
-
-boundaries[0] = new Boundary(-1, 100,100,50,50, bb);
-grids[0] = new Grid(0, 0, 0, 0, 20, 20, 400, 400);
-
-
-// custom Z modemvts[0] = new Movement(0,0);
-
-let zz = function randomZ(){
-  return random(-1,0);
-}
-
-mvts[0].makeLinePath(0,0,30,5,0,0,-1,zz)

@@ -3,8 +3,8 @@ let offsetY = 10;
 let materialSize = 12.2;
 let sizeX = 100+toolSizeMm;
 let sizeY = 100+toolSizeMm;
-let posX = sizeX + offsetX;
-let posY = sizeY + offsetY;
+let posX = sizeX/2 + offsetX;
+let posY = sizeY/2 + offsetY;
 let sizeJointX = sizeX/2;
 let sizeJointY = materialSize - toolSizeMm/2;
 let posXJoint = posX;
@@ -41,3 +41,28 @@ for (let i = 4; i < 8; i++){
     //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
     grids[i] = new Grid(i,posX,posY,"LINEAR",1,1,1,1);
 }
+
+mvts[8] = new Movement(0,0,10);
+mvts[8].makeGuiPath(3, 0, "PARABOLA");
+
+boundaries[8] = new Boundary("NONE",0,0,250,130);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+let gridSize = sizeX - 20;
+let gridSpaceSize = (gridSize)/5;
+grids[8] = new Grid(8,posX - sizeX/2+10,posY - sizeY/2+10,"LINEAR",gridSpaceSize,gridSpaceSize,gridSpaceSize*6,gridSpaceSize*6);
+
+// Add rotation of random increment of PI/4
+rotations = [];
+for (let i = 0; i < grids[8].row; i ++){
+  rotations[i] = [];
+  for (let j = 0; j < grids[8].column; j++){
+    let d = atan((j-(grids[8].column-1)/2)/(i-(grids[8].row-1)/2));
+    //console.log(d)
+    if (i < 3){
+    	rotations[i][j] = -d;
+    } else {
+    	rotations[i][j] = PI - d;
+    }
+  }
+}
+grids[8].addRotations(rotations);

@@ -32,9 +32,9 @@ let codeGenButton;
 let safeHeight = 6 //mm
 let materialThickness = 50.8; //mm = 2 inches
 let spindleSpeed = 18000; // rpm
-let moveSpeed = 5; // mm/s
-let plungeRate = 16; //mm/s
-let maxDepthCut = 3.05; // mm
+let moveSpeed = 16; // mm/s
+let plungeRate = 5; //mm/s
+let maxDepthCut = 3.125; // mm
 let toolSize = 0.25; // in
 let toolSizeMm = toolSize * 25.4; //mm
 let infoBox;
@@ -392,7 +392,8 @@ function draw() {
   }
   directions.display();
   for (let i = 0; i < boundaries.length; i++){
-    if (boundaries[i].x != 0 || boundaries[i].y !=0){
+    //if (boundaries[i].x != 0 || boundaries[i].y != 0){
+    if (boundaries[i].mode != "NONE"){
       boundaries[i].display();
     }
   }
