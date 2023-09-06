@@ -56,7 +56,7 @@ class Grid {
     this.rotations = [];
     this.reflections = [];
     this.scales = [];
-    this.scaleZ = [];
+    this.scalesZ = [];
     this.visibleMvts = [];
 
 
@@ -77,7 +77,7 @@ class Grid {
         this.depthMatrix[i][j] = 0;
         this.rotations.push(0);
         this.scales.push(1.);
-        this.scaleZ.push(1.);
+        this.scalesZ.push(1.);
         this.visibleMvts.push(1.);
       }
     }
@@ -154,6 +154,7 @@ class Grid {
         }
         
         let x;
+        let y = j2 * this.spacingY + this.y;
         if (this.mode == "LINEAR"){
           x = -i * this.spacingX + this.x;
         } else if (this.mode == "SIN"){
@@ -163,9 +164,13 @@ class Grid {
           //perlin mode
           x = (this.sinAmp * noise(i/8, j2/5) - i) * this.spacingX + this.x;
           //console.log(noise(i/50, j2/70));
+        } else if (this.mode == "RANDOM"){
+          //perlin mode
+          x = (this.sinAmp * random(-1,1) - i) * this.spacingX + this.x;
+          y = (this.sinAmp * random(-1,1) + j2) * this.spacingY + this.y
         }
 
-        let y = j2 * this.spacingY + this.y;
+        //let y = j2 * this.spacingY + this.y;
         c = 0.;
         //c = this.boundaryFunction2(-x,y,50,50,200);
         /*c = textu.get(

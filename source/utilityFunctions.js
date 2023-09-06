@@ -60,3 +60,22 @@ function rotatePath(paths, angle, x = 0, y = 0){
     
     return scaledPaths;
   }
+
+  function scaleZPath(paths,scaleZ){
+    let scaledZPaths = [];
+    
+    for (let i = 0; i < paths.length; i++){
+      scaledZPaths[i] = [];
+      for (let j = 0; j < paths[i].length; j++){
+        let x0 = paths[i][j].x;
+        let y0 = paths[i][j].y;
+        let z0 = paths[i][j].z;
+        // scale matrix operation around (0,0)
+        let zf = scaleZ*z0;
+        
+        scaledZPaths[i][j] = new createVector(x0, y0, zf);
+      }
+    }
+    
+    return scaledZPaths;
+  }

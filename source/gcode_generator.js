@@ -175,8 +175,9 @@ class GCodeGen {
       
       //this.rotateMvt(mvt,index,grid[0], 0);
       //tempPaths[1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.path[0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.path[0].y, safeHeight));
-      tempPaths[tempPaths.length-1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.paths[0][0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.paths[0][0].y, safeHeight));
-      
+      //-->tempPaths[tempPaths.length-1].push(new createVector(grid[0].x+this.scaleMvt(grid[0], index)*mvt.paths[0][0].x, grid[0].y+this.scaleMvt(grid[0], index)*mvt.paths[0][0].y, safeHeight));
+      tempPaths[tempPaths.length-1].push(new createVector(grid[0].x+mvt.paths[0][0].x, grid[0].y+mvt.paths[0][0].y, safeHeight));
+
       //go over each grid point
       for (let i = 2; i < grid.length+2 ; i++){
         
@@ -190,8 +191,8 @@ class GCodeGen {
           
           let kIn = [];
           for (let k = 0; k < mvt.paths[l].length; k++){
-            let x = grid[i-2].x+this.scaleMvt(grid[i-2], index)*mvt.paths[l][k].x;
-            let y = grid[i-2].y+this.scaleMvt(grid[i-2], index)*mvt.paths[l][k].y;
+            let x = grid[i-2].x+mvt.paths[l][k].x;
+            let y = grid[i-2].y+mvt.paths[l][k].y;
             let z = maxDepthCut*(grid[i-2].z+mvt.paths[l][k].z);
             //tempPaths[tempPaths.length-1].push(new createVector(x, y, z));
             
@@ -212,8 +213,8 @@ class GCodeGen {
           
           let lastPath = tempPaths[tempPaths.length-1];
           
-          //remove unconnected points
-          
+          //if its not a 1-point path, remove unconnected points
+          if (mvt.paths[l].length != 1){
           for (let m = 0; m < lastPath.length; m++){
             let connected = false;
             if (m == 0){
@@ -234,12 +235,14 @@ class GCodeGen {
               tempPaths[tempPaths.length-1].splice(m,1);
             }
           }
+        
           
           // if after adding the mvt the path if empty bc none of the mvt is within the boundary or points connected to one another, remove path
           if (lastPath.length <= 1){
             tempPaths.pop();
             tempTypePaths.pop();
           }
+        }
         }
       }
       
@@ -266,17 +269,20 @@ class GCodeGen {
       for (let i = 1; i < grid.length+1 ; i++){
         //this.rotateMvt(mvt,index,grid[i-1], i-1);
         //console.log(index);
+        
+        //check if you should recompute z  
+
         let rotatedMvtPaths
         let reflectedPaths;
+        let scaledZPaths;
         if (grids[index].reflections.length != 0){
+          //scaledZPaths = this.scaleZMvt(mvt.paths, grids[index].reflections[i-1]);
           reflectedPaths = this.reflectMvt(mvt.paths, grids[index].reflections[i-1]);
           rotatedMvtPaths = this.rotateMvt(reflectedPaths, grids[index].rotations[i-1]);
-
         } else {
+          //scaledZPaths = this.scaleZMvt(mvt.paths, grids[index].reflections[i-1]);
           rotatedMvtPaths = this.rotateMvt(mvt.paths, grids[index].rotations[i-1]);
         }
-        
-
         
         // go through each path of mvt
         for (let l = 0; l < rotatedMvtPaths.length; l++){
@@ -302,7 +308,7 @@ class GCodeGen {
             //y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].y;
             x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x;
             y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y;
-            z = maxDepthCut*(grid[i-1].z+rotatedMvtPaths[l][k].z);
+            z = maxDepthCut*(grid[i-1].z+grids[index].scalesZ[i-1]*rotatedMvtPaths[l][k].z);
             
             let boundaryValue = boundaries[index].checkBoundary(x,y);
             //console.log(boundaryValue);
@@ -327,6 +333,8 @@ class GCodeGen {
           if (rotatedMvtPaths.length == 1 && rotatedMvtPaths[0].length == 1 && lastPath.length != 0){
             // don't remove point movement
           }else {
+             //if its not a 1-point path, remove unconnected points
+          if (mvt.paths[l].length != 1){
             for (let m = 0; m < lastPath.length; m++){
               let connected = false;
               if (m == 0){
@@ -347,6 +355,7 @@ class GCodeGen {
                 tempPaths[tempPaths.length-1].splice(m,1);
               }
             }
+          }
           }
           
           // add retract to safe Z height
@@ -391,6 +400,12 @@ class GCodeGen {
     let scaledPaths = scalePath(mvt.paths, scale);
     return scaledPaths;
   }
+
+  scaleZMvt(mvt,scaleZ){
+    let scaledZPaths = scalePath(mvt.paths, scaleZ);
+    return scaledZPaths;
+  }
+
 
 
   

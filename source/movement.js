@@ -18,6 +18,7 @@ class Movement{
     
     this.paths = [];
     this.linePaths = [];
+  
     //this.customZmode = customZmode;
     
     // by default the movement path is a point at z = -1 (max depth);
@@ -170,15 +171,13 @@ class Movement{
   
   //** Predefined Movement Functions **//
   // Default Movement is a PointPath
-  makePointPath(x, y, z = -1){
+  makePointPath(x, y, zMode = "FLAT", customZMode = null){
     /*let tempPath = [];
 
     tempPath.push(new createVector(x,y,z));
     this.paths.push(tempPath);*/
-    this.linePaths.push(new LinePath(x,y,0,1, 0, 0, "CUSTOM", function (i){
-      //console.log(z);
-      return z;}));
-    console.log(this.linePaths[this.linePaths.length-1].path);
+    this.linePaths.push(new LinePath(x,y,0,1, 0, 0, zMode, customZMode));
+    //console.log(this.linePaths[this.linePaths.length-1].path);
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   
