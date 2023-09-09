@@ -233,6 +233,7 @@ class Movement{
     this.paths.push(tempPath);
   }
   */
+ 
   
   makeChevronPath(x,y,l,nbPoints, theta, zMode, customZMode = null){
     this.paths = [];

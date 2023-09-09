@@ -61,8 +61,8 @@ class LinePath{
             } else if (this.zMode  == "PARABOLA"){
                 // positive parabola with min in the middle of the line
                 z = this.parabola(i*abs(tempDelta),0,max);
-            } else if (this.zMode == 5){
-                
+            } else if (this.zMode == "NOISE"){
+                z = this.noise();
             }
 
             let x0 = i*tempDelta;
@@ -97,6 +97,10 @@ class LinePath{
         let a = 4/pow(zero1-zero0, 2);
         let y = a*(x - zero0)*(x - zero1);
         return y;
+    }
+
+    noise(){
+        return random(0,1);
     }
     
 }
