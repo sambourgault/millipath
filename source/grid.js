@@ -58,7 +58,9 @@ class Grid {
     this.scales = [];
     this.scalesZ = [];
     this.visibleMvts = [];
-
+    this.randomizeMvtX = [];
+    this.randomizeMvtY = [];
+    this.randomizeMvtZ = [];
 
     for (let i = 0; i < this.row; i++) {
       this.gridMatrix[i] = [];
@@ -79,6 +81,10 @@ class Grid {
         this.scales.push(1.);
         this.scalesZ.push(1.);
         this.visibleMvts.push(1.);
+        this.randomizeMvtX.push(0.);
+        this.randomizeMvtY.push(0.);
+        this.randomizeMvtZ.push(0.);
+        
       }
     }
 
@@ -165,7 +171,7 @@ class Grid {
           x = (this.sinAmp * noise(i/8, j2/5) - i) * this.spacingX + this.x;
           //console.log(noise(i/50, j2/70));
         } else if (this.mode == "RANDOM"){
-          //perlin mode
+          //random mode
           x = (this.sinAmp * random(-1,1) - i) * this.spacingX + this.x;
           y = (this.sinAmp * random(-1,1) + j2) * this.spacingY + this.y
         }
@@ -323,6 +329,81 @@ class Grid {
           j2 = this.column - 1 - j;
         }
         this.visibleMvts.push(visMatrix[i][j2]);
+      }
+    }
+    this.changedGrid = true;
+  }
+
+  addRandomX(randomXMatrix){
+    this.randomizeMvtX = [];
+    //check if dimensions works
+    if (randomXMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (randomXMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < randomXMatrix.length; i++){
+      for (let j = 0; j < randomXMatrix[i].length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.randomizeMvtX.push(randomXMatrix[i][j2]);
+      }
+    }
+    this.changedGrid = true;
+  }
+
+  addRandomY(randomYMatrix){
+    this.randomizeMvtY = [];
+    //check if dimensions works
+    if (randomYMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (randomYMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < randomYMatrix.length; i++){
+      for (let j = 0; j < randomYMatrix[i].length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.randomizeMvtY.push(randomYMatrix[i][j2]);
+      }
+    }
+    this.changedGrid = true;
+  }
+
+  addRandomZ(randomZMatrix){
+    this.randomizeMvtZ = [];
+    //check if dimensions works
+    if (randomZMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (randomZMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < randomZMatrix.length; i++){
+      for (let j = 0; j < randomZMatrix[i].length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.randomizeMvtZ.push(randomZMatrix[i][j2]);
       }
     }
     this.changedGrid = true;

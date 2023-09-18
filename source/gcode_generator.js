@@ -274,7 +274,7 @@ class GCodeGen {
 
         let rotatedMvtPaths
         let reflectedPaths;
-        let scaledZPaths;
+        //let scaledZPaths;
         if (grids[index].reflections.length != 0){
           //scaledZPaths = this.scaleZMvt(mvt.paths, grids[index].reflections[i-1]);
           reflectedPaths = this.reflectMvt(mvt.paths, grids[index].reflections[i-1]);
@@ -292,8 +292,8 @@ class GCodeGen {
           
           //let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].x;
           //let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].y;
-          let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x;
-          let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][0].y;
+          let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x;//+ grids[index].randomizeMvtX[i-1]*random(-1,1);
+          let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][0].y;//+ grids[index].randomizeMvtY[i-1]*random(-1,1);
 
           let z = safeHeight;
           tempPaths[tempPaths.length-1].push(new createVector(x, y, safeHeight));
@@ -306,9 +306,10 @@ class GCodeGen {
           for (let k = 0; k < mvt.paths[l].length; k++){
             //x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].x;
             //y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].y;
-            x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x;
-            y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y;
-            z = maxDepthCut*(grid[i-1].z+grids[index].scalesZ[i-1]*rotatedMvtPaths[l][k].z);
+            x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x + grids[index].randomizeMvtX[i-1]*random(-1,1);
+            y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y + grids[index].randomizeMvtY[i-1]*random(-1,1);
+            //console.log(grids[index].randomizeMvtY[i-1]*random(-1,1));
+            z = maxDepthCut*(grid[i-1].z+grids[index].scalesZ[i-1]*rotatedMvtPaths[l][k].z) + grids[index].randomizeMvtY[i-1]*random(0,1);
             
             let boundaryValue = boundaries[index].checkBoundary(x,y);
             //console.log(boundaryValue);
