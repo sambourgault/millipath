@@ -24,7 +24,7 @@ for (let i = 0; i < grids[0].row; i ++){
   randomY[i] = [];
   for (let j = 0; j < grids[0].column; j++){
     rotations[i][j] = -PI/2;
-    randomX[i][j] = 1;
+    randomX[i][j] = 2;
     randomY[i][j] = 1;
   }
 }

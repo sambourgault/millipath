@@ -3,9 +3,12 @@
 
 function rotatePath(paths, angle, x = 0, y = 0){
     let rotatedPaths = [];
-    
+    console.log(paths.length);
+
     for (let i = 0; i < paths.length; i++){
       rotatedPaths[i] = [];
+      console.log(paths[i].length);
+
       for (let j = 0; j < paths[i].length; j++){
         let x0 = paths[i][j].x;
         let y0 = paths[i][j].y;
@@ -23,9 +26,9 @@ function rotatePath(paths, angle, x = 0, y = 0){
   
   function reflectPath(paths,angle){
     let reflectedPaths = [];
-    
     for (let i = 0; i < paths.length; i++){
       reflectedPaths[i] = [];
+      
       for (let j = 0; j < paths[i].length; j++){
         let x0 = paths[i][j].x;
         let y0 = paths[i][j].y;

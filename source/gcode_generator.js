@@ -283,20 +283,36 @@ class GCodeGen {
           //scaledZPaths = this.scaleZMvt(mvt.paths, grids[index].reflections[i-1]);
           rotatedMvtPaths = this.rotateMvt(mvt.paths, grids[index].rotations[i-1]);
         }
+
+        /*// add jog move from previous position to over current point
+        tempPaths.push([]);
+        tempTypePaths.push("J"); 
         
+        //let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].x;
+        //let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].y;
+        let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[0][0].x;// + grids[index].randomizeMvtX[i-1]*random(-1,1);
+        let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[0][0].y;//+ grids[index].randomizeMvtY[i-1]*random(-1,1);
+
+        let z = safeHeight;
+        tempPaths[tempPaths.length-1].push(new createVector(x, y, safeHeight));*/
+
+        //let lastPath;
+
         // go through each path of mvt
         for (let l = 0; l < rotatedMvtPaths.length; l++){
-          // add jog move from previous position to over current point
-          tempPaths.push([]);
-          tempTypePaths.push("J"); 
-          
+           
           //let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].x;
           //let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].y;
-          let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x;//+ grids[index].randomizeMvtX[i-1]*random(-1,1);
+          let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x;// + grids[index].randomizeMvtX[i-1]*random(-1,1);
           let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][0].y;//+ grids[index].randomizeMvtY[i-1]*random(-1,1);
-
-          let z = safeHeight;
-          tempPaths[tempPaths.length-1].push(new createVector(x, y, safeHeight));
+          let z;
+          // add jog move from previous position to over current point if the x and y are not the same position then just continue with feed move
+         // if (x != tempPaths[tempPaths.length-1].x && y != tempPaths[tempPaths.length-1].y){
+            tempPaths.push([]);
+            tempTypePaths.push("J"); 
+            z = safeHeight;
+            tempPaths[tempPaths.length-1].push(new createVector(x, y, safeHeight));
+         // }
           
           //add feed move
           tempPaths.push([]);
@@ -309,8 +325,9 @@ class GCodeGen {
             x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x + grids[index].randomizeMvtX[i-1]*random(-1,1);
             y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y + grids[index].randomizeMvtY[i-1]*random(-1,1);
             //console.log(grids[index].randomizeMvtY[i-1]*random(-1,1));
-            z = maxDepthCut*(grid[i-1].z+grids[index].scalesZ[i-1]*rotatedMvtPaths[l][k].z) + grids[index].randomizeMvtY[i-1]*random(0,1);
-            
+            //console.log(rotatedMvtPaths[l][k]);
+
+            z = maxDepthCut*(grid[i-1].z+grids[index].scalesZ[i-1]*rotatedMvtPaths[l][k].z) + grids[index].randomizeMvtZ[i-1]*random(0,1);
             let boundaryValue = boundaries[index].checkBoundary(x,y);
             //console.log(boundaryValue);
             
@@ -333,7 +350,7 @@ class GCodeGen {
           //remove unconnected point
           if (rotatedMvtPaths.length == 1 && rotatedMvtPaths[0].length == 1 && lastPath.length != 0){
             // don't remove point movement
-          }else {
+          } else {
              //if its not a 1-point path, remove unconnected points
           if (mvt.paths[l].length != 1){
             for (let m = 0; m < lastPath.length; m++){
@@ -360,9 +377,13 @@ class GCodeGen {
           }
           
           // add retract to safe Z height
-          if (lastPath.length > 1 || (rotatedMvtPaths.length == 1 && rotatedMvtPaths[0].length == 1 && lastPath.length != 0)){     
-            let lastPoint = lastPath[lastPath.length-1];
-            tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+          // && l == rotatedMvtPaths.length-1
+          if ((lastPath.length > 1) || (rotatedMvtPaths.length == 1 && rotatedMvtPaths[0].length == 1 && lastPath.length != 0)){     
+            // add retract only if it's the last 
+            //if (lastPath.length-1 == mvt.paths[l].length - 1){
+              let lastPoint = lastPath[lastPath.length-1];
+              tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+            //}
           } else {
             // if the mvt points were found all outside the boundary, remove the last two tempPaths.
             tempPaths.pop();
@@ -371,6 +392,18 @@ class GCodeGen {
             tempTypePaths.pop();
           }
         }
+
+        // add retract to safe Z height
+        /*if (lastPath.length > 1 || (rotatedMvtPaths.length == 1 && rotatedMvtPaths[0].length == 1 && lastPath.length != 0)){     
+          let lastPoint = lastPath[lastPath.length-1];
+          tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+        } else {
+          // if the mvt points were found all outside the boundary, remove the last two tempPaths.
+          tempPaths.pop();
+          tempPaths.pop();
+          tempTypePaths.pop();
+          tempTypePaths.pop();
+        }*/
       }
       
       // REHOME at the end

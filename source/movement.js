@@ -399,6 +399,40 @@ class Movement{
     }
     return this.paths;
   }
+
+  /**
+  * Make a arc path as the movement.
+  * @param {float} r - The radius of the arc.
+  * @param {float} arcAngle - The angle of the arc.
+  * @param {float} nbSides - The number of sides of the polygon.
+  * @param {int} nbPoints - The number of point in each line composing each side of the arc.
+  * @param {float} theta - The angular position of the arc with respect with the positive x-axis.
+  * @param {int} zMode - depth mode of linePaths composing the arc. 
+  */
+  makeArcPath(r, arcAngle, nbSides, theta, zMode = "FLAT", customZMode = null){
+    let t1,t2,x1,x2,y1,y2,l,angle;
+    this.paths = [];
+    this.linePaths = [];
+    
+    for (let i = 0; i < nbSides; i++){
+      t1 = arcAngle/nbSides*i*PI/180  + theta + this.globalRotOffset;
+      t2 = arcAngle/nbSides*(i+1)*PI/180  + theta + this.globalRotOffset;
+      x1 = r*cos(t1);
+      y1 = r*sin(t1);
+      x2 = r*cos(t2);
+      y2 = r*sin(t2);
+      angle = atan((y2-y1)/(x2-x1));
+      if (x2 < x1){
+        angle += PI;
+      }
+      l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
+      this.linePaths.push(new LinePath(x1,y1,l,1, angle, angle, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+      //this.paths = this.paths.concat(this.linePaths[this.linePaths.length-1].path);
+    }
+    console.log(this.paths);
+    return this.paths;
+  }
   
   /**
   * Make a polygon-shaped concentric paths as the movement.
