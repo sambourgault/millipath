@@ -427,10 +427,15 @@ class Movement{
       }
       l = sqrt(pow(x2-x1,2) + pow(y2-y1,2));
       this.linePaths.push(new LinePath(x1,y1,l,1, angle, angle, zMode, customZMode));
-      this.paths.push(this.linePaths[this.linePaths.length-1].path);
-      //this.paths = this.paths.concat(this.linePaths[this.linePaths.length-1].path);
+      if (this.paths.length == 0){
+        this.paths.push(this.linePaths[this.linePaths.length-1].path);
+      } else {
+        // remove the first point in array since its duplicata of last entry
+        this.linePaths[this.linePaths.length-1].path.shift();
+        this.paths[0] = this.paths[0].concat(this.linePaths[this.linePaths.length-1].path);
+      }
     }
-    console.log(this.paths);
+    //console.log(this.paths);
     return this.paths;
   }
   
