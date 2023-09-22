@@ -1,0 +1,52 @@
+// Square ecthing pattern
+let linePaths = [];
+let x = 0;
+let y = 0;
+let l = 16;
+let theta = 0;
+let nbPoints = 5;
+
+let sizeX = 220;
+let sizeY = 120;
+let offsetX = 20;
+let offsetY = 20;
+
+
+for (let i = 0; i < 4; i++){
+    linePaths.push(new LinePath(x-l/2,y+i*4-6,l, nbPoints, theta));
+}
+
+mvts[0] = new Movement(0,0,0);
+mvts[0].makePath(linePaths);
+
+//let offsetTileX = sizeX + 2*offsetX;
+//let offsetTileY = sizeY + 2*offsetY;
+
+boundaries[0] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/12;
+console.log(gridSizeX);
+gridSizeY = sizeY/6;
+grids[0] = new Grid(0,offsetX,offsetY,"SIN",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0);
+
+rotations = [];
+randomZ = [];
+scales = [];
+for (let i = 0; i < grids[0].row; i ++){
+  rotations[i] = [];
+  randomZ[i] = [];
+  scales[i] = [];
+  for (let j = 0; j < grids[0].column; j++){
+    if ((i+j) % 2 == 0){
+      //print(())
+        rotations[i][j] = PI/2 + random(0,2*PI)/(1.7*i+1);
+    } else {
+    	rotations[i][j] = 0 + random(0,2*PI)/(1.7*i+1);
+    }
+    randomZ[i][j] = 1;
+    scales[i][j] = 0.8+0.04*(grids[0].row-i)
+  }
+}
+grids[0].addRotations(rotations);
+grids[0].addRandomZ(randomZ);
+grids[0].addScales(scales);

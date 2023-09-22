@@ -8,8 +8,8 @@ let nbPoints = 5;
 
 for (let i = 0; i < 3; i++){
     theta = i*PI/3;
-    linePaths.push(new LinePath(x,y,l/2, nbPoints, theta, theta, 2));
-    linePaths.push(new LinePath(x+l/2*cos(theta),y+l/2*sin(theta),l/2, nbPoints, theta, theta, 1));
+    linePaths.push(new LinePath(x,y,l, nbPoints, theta, theta, "PARABOLA"));
+    //linePaths.push(new LinePath(x+l/2*cos(theta),y+l/2*sin(theta),l/2, nbPoints, theta, theta, 1));
 }
 
 mvts[0] = new Movement(0,0,0);
@@ -24,7 +24,7 @@ boundaries[0] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2
 gridSizeX = sizeX/8;
 console.log(gridSizeX);
 gridSizeY = sizeY/8;
-grids[0] = new Grid(0,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY-1);
+grids[0] = new Grid(0,offsetX,offsetY,"SIN",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY-1, 0.25);
 
 rotations = [];
 //randomX = [];
