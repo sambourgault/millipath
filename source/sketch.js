@@ -57,7 +57,8 @@ let boundaryLabel;
 let templateLabel;
 
 let showOnlyCutButton;
-
+let graphics;
+let pg;
 
 function setup() {
   pixelDensity(1);
@@ -65,6 +66,12 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   noStroke();
   
+  img = createGraphics(200, 200, SVG);
+  img.strokeWeight(50);
+  img.stroke('#ED225D');
+  img.ellipse(img.width / 2, img.height / 2, img.width - 50, img.height - 50);
+  //img.save('saved-image', 'svg');
+
   directions = new Directions();
   //camera(-width / 2, -600, 800, -width / 2, 0, 300, 0, 0, -1);
   //ortho(0, width / 2, height / 2, -height / 2, 0, 500);
