@@ -59,6 +59,7 @@ let templateLabel;
 let showOnlyCutButton;
 let graphics;
 let pg;
+let svg ;
 
 function setup() {
   pixelDensity(1);
@@ -66,10 +67,11 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   noStroke();
   
-  img = createGraphics(200, 200, SVG);
-  img.strokeWeight(50);
-  img.stroke('#ED225D');
-  img.ellipse(img.width / 2, img.height / 2, img.width - 50, img.height - 50);
+  // create svg from toolpaths
+  svg = createGraphics(305, 305, SVG)
+  svg.strokeWeight(2);
+  //svg.stroke('#FF0000');
+  //img.ellipse(img.width / 2, img.height / 2, img.width - 50, img.height - 50);
   //img.save('saved-image', 'svg');
 
   directions = new Directions();
@@ -470,6 +472,83 @@ function mouseDragged() {
   //theta = map(mouseX / width, 0, 1, -1, 1);
   thetaX = map((mouseX / width), 0, 1, 0, PI/2);
   thetaY = map((mouseY / height), 0, 1, 0, PI/2);
+}
+
+function keyPressed(){
+  if (key == 's'){
+    for (let k = 0; k < code.allPaths.length; k++){
+      //if (grids[k].visible){
+        //console.log(grids[k].visible);
+        for (let j = 0; j < code.allPaths[k].length; j++){
+          if (code.allTypePaths[k][j] == "J"){
+            //do nothing
+            //stroke(0, 255, 0);
+          } else if (code.allTypePaths[k][j] == "M"){
+            stroke(255, 0, 0);
+          /*if (this.hideJog == true && this.allTypePaths[k][j] == "J"){
+            } else {*/
+              for (let i = 0; i < code.allPaths[k][j].length; i++){
+                let previous;
+                if (i == 0 && j != 0){
+                  previous = code.allPaths[k][j-1][code.allPaths[k][j-1].length - 1];
+                } else if (i == 0 && j == 0){
+                  previous = new createVector(0,0,safeHeight);
+                } else {
+                  previous = code.allPaths[k][j][i-1];
+                }
+
+                let current = code.allPaths[k][j][i];
+                svg.push();
+                //translate(0,0,70);
+                let scalePZ = 1.;
+                let scaleCZ = 1.;
+                //if (previous.z < 0.) scalePZ = 30;
+                //if (current.z < 0.) scaleCZ = 30;
+                
+               // svg.line(previous.x, previous.y, scalePZ*previous.z, current.x, current.y, scaleCZ*current.z);
+               //if (previous.x != current.x && previous.y != current.y){
+                svg.stroke(255,0,0);
+                svg.line(-previous.x, previous.y, -current.x, current.y);
+               //}
+                
+                svg.pop();
+              }
+            //}
+          }
+        }
+      
+    }  
+
+    for (let b = 0; b < boundaries.length; b++){
+      let previous = new createVector(0,0);
+      let x,y,z;
+      if (!boundaries[b].reverse){
+        svg.stroke(0,0,255);
+      }  else {
+        svg.stroke(255,0,0);
+      }
+      //svg.strokeWeight(2);
+      
+      for (let i = 0; i < boundaries[b].path.length; i++){
+        x = boundaries[b].path[i].x;
+        y = boundaries[b].path[i].y;
+        z = boundaries[b].path[i].z;
+        
+        if (i != 0){
+          svg.push();
+          svg.translate(-boundaries[b].x, boundaries[b].y, 0);
+          svg.line(-previous.x, previous.y,-x,y);
+          svg.pop();
+        }
+        
+        previous.x = x;
+        previous.y = y;
+        previous.z = z;
+      }
+    }
+
+    svg.save('millipath_toolpath', 'svg');
+  }
 }
 
 function rotateWorld(){
