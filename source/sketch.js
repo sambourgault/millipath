@@ -88,6 +88,12 @@ function setup() {
   
   setupInputs();
 
+  rotationSlider =  createSlider(0.,1000.,0);
+  rotationSlider.addClass("sliders");
+  rotationSlider.position(width/2 - 75, height - 150);
+  rotationSlider.style('width', '150px');
+  rotationSlider.style('background-color', '#7C7C7C');
+
   //template gui
   templateLabel = createElement('h3', 'movement gui');
   templateLabel.position(10,height-100-sy-20);
@@ -197,11 +203,11 @@ function setup() {
   boundaries[3] = new Boundary(-65-3*120,65);
   boundaries[4] = new Boundary(-65-4*120,65);*/
 
-   boundaryLabel = createElement('h3',"boundaries");
+  /* boundaryLabel = createElement('h3',"boundaries");
    boundaryLabel .style('font-size', '14px');
    boundaryLabel .style('font-family', 'Poppins');
    boundaryLabel.style('margin-top', '0');
-   boundaryLabel .position(width - sizeRectX-20, height - sizeRectX - 30);
+   boundaryLabel .position(width - sizeRectX-20, height - sizeRectX - 30);*/
   
   /*boundaries[5] = new Boundary(-65,65+1*120);
   boundaries[6] = new Boundary(-65-1*120,65+1*120);
@@ -376,6 +382,7 @@ function draw() {
   }
   
   // movement the world for viewport
+  thetaX = map((rotationSlider.value() / 1000), 0, 1, 0, PI/2);
   push();
   rotateZ(PI);
   translate(width/2+sizeX/2,-height/2-sizeY/2,0);
@@ -413,14 +420,14 @@ function draw() {
   //stroke(0);
   //rect(-sizeRectX-20,height- sizeRectX+20,sizeRectX,sizeRectX);
   //noStroke();
-  stroke(0);
+  /*stroke(0);
   strokeWeight(2);
   rect(- sizeRectX-20, height-sizeRectX-10, sizeRectX, sizeRectX);
   for (let i = 0; i < boundaries.length; i++){
     push();
     boundaries[i].displayStatic();
     pop();
-  }
+  }*/
   
   
   push();
@@ -428,8 +435,11 @@ function draw() {
   noStroke();
   stroke(0);
   strokeWeight(2);
+  // xy movement display
   rect(-sizeRectX-20,20,sizeRectX,sizeRectY);
+  // xz movement display
   rect(-sizeRectX-20,40+sizeRectY,sizeRectX,sizeRectY);
+  // yz movement display
   rect(-sizeRectX-20,60+2*sizeRectY,sizeRectX,sizeRectY);
   noFill();
   noStroke();
@@ -470,9 +480,11 @@ function mousePressed(){
 
 function mouseDragged() {
   //theta = map(mouseX / width, 0, 1, -1, 1);
-  thetaX = map((mouseX / width), 0, 1, 0, PI/2);
+  //thetaX = map((mouseX / width), 0, 1, 0, PI/2);
   thetaY = map((mouseY / height), 0, 1, 0, PI/2);
 }
+
+
 
 function keyPressed(){
   if (key == 's'){
@@ -547,7 +559,7 @@ function keyPressed(){
       }
     }
 
-    svg.save('millipath_toolpath', 'svg');
+    //svg.save('millipath_toolpath', 'svg');
   }
 }
 

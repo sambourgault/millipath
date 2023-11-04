@@ -36,17 +36,17 @@ class GCodeGen {
     this.safeZ.position(0,height - 80);*/
     
     this.button = createButton("save file");
-    this.button.position(width/2-35, height - 80);
+    this.button.position(width/2-85, height - 80);
     this.button.style("font-family", "Poppins");
     this.button.style("background-color", "white");
     this.button.style("border-radius", "0px");
     this.button.style("border-width", "2px");
     
     this.simSlider =  createSlider(0.,1000.,0);
-    this.simSlider.addClass("sliders");
+    /*this.simSlider.addClass("sliders");
     this.simSlider.position(width/2 - 75, height - 150);
     this.simSlider.style('width', '150px');
-    this.simSlider.style('background-color', '#7C7C7C');
+    this.simSlider.style('background-color', '#7C7C7C');*/
     
     this.playButton = createButton("play");
     this.playButton.position(width/2-85, height - 120);
@@ -67,7 +67,7 @@ class GCodeGen {
 
     this.hideJog = false;
     this.hideJogButton = createButton("hide jog");
-    this.hideJogButton.position(width/2+105, height - 120);
+    this.hideJogButton.position(width/2+10, height - 80);
     this.hideJogButton.style("font-family", "Poppins");
     this.hideJogButton.style("width", "75px");
     this.hideJogButton.style("background-color", "white");

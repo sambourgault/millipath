@@ -653,8 +653,9 @@ class Movement{
     stroke(this.staticColor[0],this.staticColor[1],this.staticColor[2]);
     strokeWeight(2);
     push();
+    //scale(2);
     translate(this.sizeX/2, -this.sizeY/2, 20);
-    this.displayPath();
+    this.displayPath(2.);
     pop();
   }
   

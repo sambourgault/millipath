@@ -20,8 +20,7 @@ let offsetX = 20;
 let offsetY = 20;
 boundaries[0] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2,sizeY/2);
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-gridSizeX = sizeX/15;
+gridSizeX = sizeX/10;
 console.log(gridSizeX);
-gridSizeY = 1.1*sizeY;
+gridSizeY = sizeY/10;
 grids[0] = new Grid(0,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
-
