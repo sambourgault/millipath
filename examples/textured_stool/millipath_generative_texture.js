@@ -1,0 +1,222 @@
+// texture generated with p5 js generative stool texture code
+// https://editor.p5js.org/samuelle.bourgault/sketches/h6Z0pCGTU
+let x = 0;
+let y = 0;
+let l = 5;
+let theta = 0;
+let nbPoints = 5;
+
+
+/*let linePaths = [];
+linePaths.push(new LinePath(0,0,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(0,9,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(5,3,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(5,3,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(10,3,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(10,6,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,15,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(20,21,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,27,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,15,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,15,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,15,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,3,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(30,15,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(35,27,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(40,24,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(45,24,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(45,30,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,18,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,18,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,24,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,30,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(55,39,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(55,30,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(55,42,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,36,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,33,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,39,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,48,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,48,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(65,60,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(70,69,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(70,69,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,69,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,60,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,54,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,63,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,63,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,63,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(80,51,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(80,39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(80,45,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(85,45,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,45,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,57,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(95,48,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(100,57,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(105,63,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(110,72,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(110,60,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(110,72,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(110,-72,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(110,-60,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(110,-72,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(105,-63,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(100,-57,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(95,-48,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,-57,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,-45,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(85,-45,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(80,-45,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(80,-39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(80,-51,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,-63,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,-63,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,-63,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,-54,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,-60,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,-69,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(70,-69,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(70,-69,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(65,-60,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,-48,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,-48,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,-39,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,-33,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,-36,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(55,-42,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(55,-30,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(55,-39,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,-30,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,-24,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,-18,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,-18,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(45,-30,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(45,-24,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(40,-24,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(35,-27,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(30,-15,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,-3,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,-15,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,-15,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,-15,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,-27,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(20,-21,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,-15,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(10,-6,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(10,-3,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(5,-3,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(5,-3,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(0,-9,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(0,0,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(0,0,5,5,0,0,'FLAT'));*/
+
+let linePaths = [];
+linePaths.push(new LinePath(10,24,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(10,36,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,36,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,48,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,42,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,45,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(20,45,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(20,45,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,39,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(30,39,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(30,45,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(35,45,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(40,42,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(45,54,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,54,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,54,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(55,48,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,36,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,48,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(65,42,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(65,33,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(70,36,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(70,39,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,39,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(80,36,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(85,24,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,36,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,48,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(95,54,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(95,45,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(95,54,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(95,-54,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(95,-45,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(95,-54,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,-48,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,-39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(90,-36,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(85,-24,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(80,-36,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(75,-39,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(70,-39,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(70,-36,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(65,-33,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(65,-42,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,-48,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(60,-36,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(55,-48,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,-54,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(50,-54,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(45,-54,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(40,-42,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(35,-45,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(30,-45,15,5,0,0,'FLAT'));
+linePaths.push(new LinePath(30,-39,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(25,-39,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(20,-45,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(20,-45,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,-45,10,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,-39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,-39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,-39,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,-42,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,-48,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(15,-36,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(10,-36,0,5,0,0,'FLAT'));
+linePaths.push(new LinePath(10,-24,5,5,0,0,'FLAT'));
+linePaths.push(new LinePath(5,12,5,5,0,0,'FLAT'));
+ 
+
+let maxI = 4;
+for (let i = 0; i < maxI; i++){
+    mvts[i] = new Movement(0,0,0);
+    mvts[i].makePath(linePaths);
+}
+
+let sizeX = 304.8-40;
+let sizeY = sizeX;
+let offsetX = 20;
+let offsetY = 20;
+
+for (let i = 0; i < maxI; i++){
+	boundaries[i] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2,sizeY/2);
+}
+
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/1;
+gridSizeY = sizeY/1;
+
+for (let i = 0; i < maxI; i++){
+	grids[i] = new Grid(i,offsetX+ sizeX/2,offsetY + sizeY/2,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+}
+
+rotations = [];
+for (let n = 0; n < maxI; n++){
+    rotations[n] = [];
+    for (let i = 0; i < grids[1].row; i ++){
+        rotations[n][i] = [];
+        for (let j = 0; j < grids[1].column; j++){
+            rotations[n][i][j] = n*2*PI/maxI;
+        }
+    }
+    grids[n].addRotations(rotations[n]);
+}
