@@ -559,7 +559,7 @@ function keyPressed(){
       }
     }
 
-    //svg.save('millipath_toolpath', 'svg');
+    svg.save('millipath_toolpath', 'svg');
   }
 }
 

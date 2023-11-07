@@ -322,8 +322,8 @@ class GCodeGen {
           for (let k = 0; k < mvt.paths[l].length; k++){
             //x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].x;
             //y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].y;
-            x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x + grids[index].randomizeMvtX[i-1]*random(-1,1);
-            y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y + grids[index].randomizeMvtY[i-1]*random(-1,1);
+            x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x + grids[index].randomizeMvtX[i-1];
+            y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y + grids[index].randomizeMvtY[i-1];
             //console.log(grids[index].randomizeMvtY[i-1]*random(-1,1));
             //console.log(rotatedMvtPaths[l][k]);
 
