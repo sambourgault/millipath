@@ -303,8 +303,8 @@ class GCodeGen {
            
           //let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].x;
           //let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].y;
-          let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x;// + grids[index].randomizeMvtX[i-1]*random(-1,1);
-          let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][0].y;//+ grids[index].randomizeMvtY[i-1]*random(-1,1);
+          let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x+grids[index].translateMvtX[i-1];// + grids[index].randomizeMvtX[i-1]*random(-1,1);
+          let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][0].y+grids[index].translateMvtY[i-1];//+ grids[index].randomizeMvtY[i-1]*random(-1,1);
           let z;
           // add jog move from previous position to over current point if the x and y are not the same position then just continue with feed move
          // if (x != tempPaths[tempPaths.length-1].x && y != tempPaths[tempPaths.length-1].y){
@@ -322,8 +322,8 @@ class GCodeGen {
           for (let k = 0; k < mvt.paths[l].length; k++){
             //x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].x;
             //y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].y;
-            x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x + grids[index].randomizeMvtX[i-1];
-            y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y + grids[index].randomizeMvtY[i-1];
+            x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x +grids[index].translateMvtX[i-1] + grids[index].randomizeMvtX[i-1]*random(-1,1);
+            y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y +grids[index].translateMvtY[i-1] + grids[index].randomizeMvtY[i-1]*random(-1,1);
             //console.log(grids[index].randomizeMvtY[i-1]*random(-1,1));
             //console.log(rotatedMvtPaths[l][k]);
 

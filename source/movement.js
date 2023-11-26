@@ -115,7 +115,7 @@ class Movement{
       break;
       
       case 16:
-      this.perlin(0,0,spacingY, -PI/2, 20, pointIndex, 30, 20, 10);
+      this.(0,0,spacingY, -PI/2, 20, pointIndex, 30, 20, 10);
       break;
       
       case 17:
@@ -233,6 +233,9 @@ class Movement{
     this.paths.push(tempPath);
   }
   */
+ /*makePerlinLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
+
+ }*/
  
   
   makeChevronPath(x,y,l,nbPoints, theta, zMode, customZMode = null){
@@ -277,12 +280,30 @@ class Movement{
   * @param {int} nbPoints
   * @param {float} theta
   */
-  makeDiamondForVBit(x,y,l,nbPoints, theta, customZMode = null){
+  makeDiamondForVBit(x,y,l,nbPoints, theta){
     this.paths = [];
     this.linePaths = [];
-    this.linePaths.push(new LinePath(x+l/2,y,l/2, nbPoints, theta, theta, 1, customZMode));
+    this.linePaths.push(new LinePath(x-l/2,y,l/2, nbPoints, theta, theta, "LINEAR_DOWN"));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
-    this.linePaths.push(new LinePath(x,y,l/2, nbPoints, theta, theta, 2, customZMode));
+    this.linePaths.push(new LinePath(x,y,l/2, nbPoints, theta, theta, "LINEAR_UP"));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+  }
+
+  makeChevronForVBit(x,y,l,nbPoints, theta, bitAngle){
+    let rTool = maxDepthCut*tan(bitAngle/2*PI/180);
+    let angle = atan(rTool/(l/2));
+    let lMove = (l/2)/cos(angle);
+
+    this.paths = [];
+    this.linePaths = [];
+    // base
+    this.linePaths.push(new LinePath(x,y,lMove,nbPoints, theta,theta,"LINEAR_DOWN"));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    // first branch
+    this.linePaths.push(new LinePath(x+lMove,y,lMove,nbPoints,2*angle+theta,2*angle+theta,"LINEAR_UP"));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    // second branch
+    this.linePaths.push(new LinePath(x+lMove,y,lMove,nbPoints,-2*angle+theta,-2*angle+theta,"LINEAR_UP"));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   
