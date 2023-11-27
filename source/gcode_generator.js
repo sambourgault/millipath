@@ -274,6 +274,7 @@ class GCodeGen {
 
         let rotatedMvtPaths
         let reflectedPaths;
+        let tempClusters = [];
         //let scaledZPaths;
         if (grids[index].reflections.length != 0){
           //scaledZPaths = this.scaleZMvt(mvt.paths, grids[index].reflections[i-1]);
@@ -317,8 +318,8 @@ class GCodeGen {
           //add feed move
           tempPaths.push([]);
           tempTypePaths.push("M");
-          let pX ;
-          let pY ;
+          //let pX ;
+          //let pY ;
           
           let kIn = [];
           for (let k = 0; k < mvt.paths[l].length; k++){
@@ -327,10 +328,10 @@ class GCodeGen {
             x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x +grids[index].translateMvtX[i-1] + grids[index].randomizeMvtX[i-1]*random(-1,1);
             y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y +grids[index].translateMvtY[i-1] + grids[index].randomizeMvtY[i-1]*random(-1,1);
             
-            if (k == 0){
+            /*if (k == 0){
               pX = x;
               pY = y;
-            }
+            }*/
             //console.log(grids[index].randomizeMvtY[i-1]*random(-1,1));
             //console.log(rotatedMvtPaths[l][k]);
 
@@ -360,8 +361,8 @@ class GCodeGen {
               }
             }*/
 
-            pX = x;
-            pY = y;
+            //pX = x;
+            //pY = y;
           }
           
           // lastpath will be empty if the whole mvt is outside boundary
@@ -384,7 +385,7 @@ class GCodeGen {
                   connected = true;
                 }
               } else {
-                console.log(kIn[m+1] == kIn[m]+1);
+                //console.log(kIn[m+1] == kIn[m]+1);
                 if (kIn[m+1] == kIn[m]+1 || kIn[m-1] == kIn[m]-1){
                   connected = true;
                 }
@@ -397,28 +398,37 @@ class GCodeGen {
             }
 
             // look for cluster of connected points
-            console.log(kIn);
-            console.log(tempPaths[tempPaths.length-1]);
-            let tempClusters = [];
+            //console.log(kIn);
+            //console.log("tempPaths");
+            //console.log(tempPaths[tempPaths.length-1]);
+            
             let cluster = [];
             //tempClusters.push([]);
+            let firstOfCluster = true;
             for (let i = 0; i < lastPath.length; i++){
-              if (i == 0 && kIn[i] == kIn[i+1]-1){
+              //if (i == 0 && kIn[i] == kIn[i+1]-1){
+              if (firstOfCluster){
                 cluster.push(tempPaths[tempPaths.length-1][i]);
-                console.log(tempPaths[tempPaths.length-1][i]);
-              } else if (i == kIn.length-1 && kIn[kIn.length-1] == kIn[kIn.length-2]+1){
+                firstOfCluster = false;
+                //console.log(tempPaths[tempPaths.length-1][i]);
+                /*} else if (i == kIn.length-1 && kIn[kIn.length-1] == kIn[kIn.length-2]+1){
+                cluster.push(tempPaths[tempPaths.length-1][i]);*/
+              } else if (kIn[i] == kIn[i-1]+1){
                 cluster.push(tempPaths[tempPaths.length-1][i]);
-              } else if (kIn[i] == kIn[i+1]-1 || kIn[i] == kIn[i-1]+1){
-                cluster.push(tempPaths[tempPaths.length-1][i]);
+                if (i == lastPath.length-1){
+                  tempClusters.push(cluster);
+                }
               } else {
                 if (cluster.length != 0){
                   tempClusters.push(cluster);
                   cluster = [];
+                  cluster.push(tempPaths[tempPaths.length-1][i]);
+                  //firstOfCluster = true;
                 }
               }
             }
-          
-            console.log(tempClusters);
+            //console.log("clusters");
+            //console.log(tempClusters);
             
           }
           }
@@ -428,8 +438,37 @@ class GCodeGen {
           if ((lastPath.length > 1) || (rotatedMvtPaths.length == 1 && rotatedMvtPaths[0].length == 1 && lastPath.length != 0)){     
             // add retract only if it's the last 
             //if (lastPath.length-1 == mvt.paths[l].length - 1){
-              let lastPoint = lastPath[lastPath.length-1];
-              tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+              if (tempClusters.length == 1){
+                let lastPoint = lastPath[lastPath.length-1];
+                tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+              } else {
+              for (let i = 0; i < tempClusters.length; i++){
+                //let lastPoint = lastPath[lastPath.length-1];
+
+                // if only one cluster 
+                if (i == 0) {
+                  let lastPoint = tempClusters[i][tempClusters[i].length-1];
+                  tempPaths[tempPaths.length-1] = tempClusters[i];
+                  tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+                } else {
+                  // if more clusters, create new move and jog paths
+                  let firstPoint = tempClusters[i][0];
+                  tempPaths.push([]);
+                  tempTypePaths.push("J");
+                  tempPaths[tempPaths.length-1].push(new createVector(firstPoint.x, firstPoint.y, safeHeight));
+
+                  tempPaths.push([]);
+                  tempTypePaths.push("M");
+                  tempPaths[tempPaths.length-1] = tempClusters[i];
+                  let lastPoint = tempClusters[i][tempClusters[i].length-1];
+                  tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
+                }
+
+
+              }
+            }
+              //let lastPoint = lastPath[lastPath.length-1];
+              //tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
             //}
           } else {
             // if the mvt points were found all outside the boundary, remove the last two tempPaths.

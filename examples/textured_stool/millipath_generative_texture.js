@@ -431,7 +431,7 @@ gridSizeX = sizeX/1;
 gridSizeY = sizeY/1;
 
 for (let i = 0; i < maxI; i++){
-	grids[i] = new Grid(i,offsetX+ sizeX/2,offsetY + sizeY/2,"LINEAR",gridSizeX,gridSizeY,sizeX-gridSizeX,sizeY-gridSizeY);
+	grids[i] = new Grid(i,offsetX+ sizeX/2,offsetY + sizeY/2,"LINEAR",gridSizeX,gridSizeY,sizeX,sizeY);
 }
 
 rotations = [];
