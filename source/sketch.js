@@ -628,13 +628,13 @@ function setupInputs(){
   labelSX= createDiv("stock size X (mm)").parent(matBox.box);
   labelSX.position(offX,2*offY);
   labelSX.style('width', '170px');
-  stockSizeXIn = createInput("304.8").parent(matBox.box);
+  stockSizeXIn = createInput("306.3875").parent(matBox.box);
   stockSizeXIn.position(offX, 2.5*offY);
   
   labelSY= createDiv("stock size Y (mm)").parent(matBox.box);
   labelSY.position(offX,3*offY);
   labelSY.style('width', '170px');
-  stockSizeYIn = createInput("304.8").parent(matBox.box);
+  stockSizeYIn = createInput("306.3875").parent(matBox.box);
   stockSizeYIn.position(offX, 3.5*offY);
   
   matBox.collapse();

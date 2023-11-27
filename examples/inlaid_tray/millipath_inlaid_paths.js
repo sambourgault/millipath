@@ -5,7 +5,7 @@ let theta = 0;
 let nbPoints = 5;
 
 let linePaths = [];
-linePaths.push(new LinePath(x-l/2,y,l,5,0,0,'FLAT'));
+linePaths.push(new LinePath(x,y,l,5,0,0,'FLAT'));
 
 /*let r = int(random(6));
 if (r == 0){
@@ -28,7 +28,7 @@ for (let i = 0; i < maxI; i++){
     mvts[i].makePath(linePaths);
 }
 
-let sizeX = 304.8-40;
+let sizeX = 306.3875-40;
 let sizeY = sizeX;
 let offsetX = 20;
 let offsetY = 20;
@@ -90,5 +90,5 @@ for (let n = 0; n < maxI; n++){
     grids[n].addRotations(rotations[n]);
     grids[n].addScales(scales[n]);
     grids[n].addRandomX(translatesX[n]);
-    grids[n].addRandomX(translatesY[n]);
+    grids[n].addRandomY(translatesY[n]);
 }
