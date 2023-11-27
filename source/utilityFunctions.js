@@ -1,5 +1,12 @@
 // utility functions: return nbPoint following a specific function
 
+function vBitWidth(depth, angle){
+  return 2*tan(angle*(PI/180)/2)*depth;
+}
+
+function vBitDepth(width, angle){
+  return width/(2*tan(angle*(PI/180)/2));
+}
 
 function rotatePath(paths, angle, x = 0, y = 0){
     let rotatedPaths = [];

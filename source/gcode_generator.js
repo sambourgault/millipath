@@ -303,8 +303,8 @@ class GCodeGen {
            
           //let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].x;
           //let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].y;
-          let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x;// + grids[index].randomizeMvtX[i-1]*random(-1,1);
-          let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][0].y;//+ grids[index].randomizeMvtY[i-1]*random(-1,1);
+          let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x+grids[index].translateMvtX[i-1];// + grids[index].randomizeMvtX[i-1]*random(-1,1);
+          let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][0].y+grids[index].translateMvtY[i-1];//+ grids[index].randomizeMvtY[i-1]*random(-1,1);
           let z;
           // add jog move from previous position to over current point if the x and y are not the same position then just continue with feed move
          // if (x != tempPaths[tempPaths.length-1].x && y != tempPaths[tempPaths.length-1].y){
@@ -317,13 +317,20 @@ class GCodeGen {
           //add feed move
           tempPaths.push([]);
           tempTypePaths.push("M");
+          let pX ;
+          let pY ;
           
           let kIn = [];
           for (let k = 0; k < mvt.paths[l].length; k++){
             //x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].x;
             //y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].y;
-            x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x + grids[index].randomizeMvtX[i-1];
-            y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y + grids[index].randomizeMvtY[i-1];
+            x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x +grids[index].translateMvtX[i-1] + grids[index].randomizeMvtX[i-1]*random(-1,1);
+            y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y +grids[index].translateMvtY[i-1] + grids[index].randomizeMvtY[i-1]*random(-1,1);
+            
+            if (k == 0){
+              pX = x;
+              pY = y;
+            }
             //console.log(grids[index].randomizeMvtY[i-1]*random(-1,1));
             //console.log(rotatedMvtPaths[l][k]);
 
@@ -338,11 +345,23 @@ class GCodeGen {
                 tempPaths[tempPaths.length-2][0].x = x;
                 tempPaths[tempPaths.length-2][0].y = y;
               }
+
               tempPaths[tempPaths.length-1].push(new createVector(x,y,abs(boundaryValue)*z));   
               kIn.push(k);     
-            } else {
+            } /*else if (boundaryValue > 0) {
               // outside the boundary
-            }
+              // if part of path
+              let thisPathCurrentLength = tempPaths[tempPaths.length-1].length;
+              if (thisPathCurrentLength != 0){
+                //let prePath = tempPaths[tempPaths.length-1][thisPathCurrentLength-1];
+                tempPaths[tempPaths.length-1].push(new createVector(pX,pY,abs(boundaryValue)*safeHeight)); 
+                kIn.push(k);
+              
+              }
+            }*/
+
+            pX = x;
+            pY = y;
           }
           
           // lastpath will be empty if the whole mvt is outside boundary
@@ -353,6 +372,7 @@ class GCodeGen {
           } else {
              //if its not a 1-point path, remove unconnected points
           if (mvt.paths[l].length != 1){
+            // keep connected / remove unconnected
             for (let m = 0; m < lastPath.length; m++){
               let connected = false;
               if (m == 0){
@@ -364,6 +384,7 @@ class GCodeGen {
                   connected = true;
                 }
               } else {
+                console.log(kIn[m+1] == kIn[m]+1);
                 if (kIn[m+1] == kIn[m]+1 || kIn[m-1] == kIn[m]-1){
                   connected = true;
                 }
@@ -371,8 +392,34 @@ class GCodeGen {
               
               if (!connected){
                 tempPaths[tempPaths.length-1].splice(m,1);
+                kIn.splice(m,1);
               }
             }
+
+            // look for cluster of connected points
+            console.log(kIn);
+            console.log(tempPaths[tempPaths.length-1]);
+            let tempClusters = [];
+            let cluster = [];
+            //tempClusters.push([]);
+            for (let i = 0; i < lastPath.length; i++){
+              if (i == 0 && kIn[i] == kIn[i+1]-1){
+                cluster.push(tempPaths[tempPaths.length-1][i]);
+                console.log(tempPaths[tempPaths.length-1][i]);
+              } else if (i == kIn.length-1 && kIn[kIn.length-1] == kIn[kIn.length-2]+1){
+                cluster.push(tempPaths[tempPaths.length-1][i]);
+              } else if (kIn[i] == kIn[i+1]-1 || kIn[i] == kIn[i-1]+1){
+                cluster.push(tempPaths[tempPaths.length-1][i]);
+              } else {
+                if (cluster.length != 0){
+                  tempClusters.push(cluster);
+                  cluster = [];
+                }
+              }
+            }
+          
+            console.log(tempClusters);
+            
           }
           }
           
@@ -511,6 +558,12 @@ class GCodeGen {
               
               line(previous.x, previous.y, scalePZ*previous.z, current.x, current.y, scaleCZ*current.z);
               
+              pop();
+
+              push()
+              translate(current.x, current.y, scaleCZ*current.z);
+              ellipse(0,0,2,2);
+
               pop();
           }
         }

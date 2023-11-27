@@ -58,6 +58,8 @@ class Grid {
     this.scales = [];
     this.scalesZ = [];
     this.visibleMvts = [];
+    this.translateMvtX = [];
+    this.translateMvtY = [];
     this.randomizeMvtX = [];
     this.randomizeMvtY = [];
     this.randomizeMvtZ = [];
@@ -81,6 +83,8 @@ class Grid {
         this.scales.push(1.);
         this.scalesZ.push(1.);
         this.visibleMvts.push(1.);
+        this.translateMvtX.push(0.);
+        this.translateMvtY.push(0.);
         this.randomizeMvtX.push(0.);
         this.randomizeMvtY.push(0.);
         this.randomizeMvtZ.push(0.);
@@ -165,7 +169,9 @@ class Grid {
           x = -i * this.spacingX + this.x;
         } else if (this.mode == "SIN"){
           //sinusoidal mode
-          x = (this.sinAmp * cos(2*PI/this.sinPeriod * j2) - i) * this.spacingX + this.x;
+          //x = (this.sinAmp * cos(2*PI/this.sinPeriod * j2) - i) * this.spacingX + this.x;
+          x = -i * this.spacingX + this.x;
+          y = (this.sinAmp * cos(2*PI/this.sinPeriod * -i) + j2) * this.spacingY + this.y;
         } else if (this.mode == "PERLIN"){
           //perlin mode
           x = (this.sinAmp * noise(i/8, j2/5) - i) * this.spacingX + this.x;

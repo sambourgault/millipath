@@ -90,5 +90,5 @@ for (let n = 0; n < maxI; n++){
     grids[n].addRotations(rotations[n]);
     grids[n].addScales(scales[n]);
     grids[n].addRandomX(translatesX[n]);
-    grids[n].addRandomY(translatesY[n]);
+    grids[n].addRandomX(translatesY[n]);
 }
