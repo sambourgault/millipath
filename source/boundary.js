@@ -84,7 +84,7 @@ class Boundary{
     switch(this.mode){
       case "CUSTOM":
       //customBoundary(this.x, this.y, this.rX, this.rY);
-      this.circle();
+      //this.circle();
       break;
 
       case "NONE":
@@ -115,11 +115,11 @@ class Boundary{
   
   checkInCircle(x, y){
     let d = dist(this.x, this.y, x, y);
-    if (d < this.rx){
+    if (d < this.rX){
       return -1.;
-    } else if (d > this.rx){
+    } else if (d > this.rX){
       return 1.;
-    } else if (d == this.rx){
+    } else if (d == this.rX){
       return 0;
     }
   }

@@ -416,7 +416,6 @@ grids[0] = new Grid(0,offsetX,offsetY+diamondWidth/2,"SIN",gridSizeX,gridSizeY,s
 mvts[1] = new Movement(0,0,0);
 mvts[1].makeChevronForVBit(0,0,16,2,0,60);
 
-
 boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetX+(sizeX+offsetX),sizeY/2+offsetY,sizeX/2,sizeY/2);
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
 gridSizeX = sizeX/5;
@@ -436,6 +435,120 @@ for (let i = 0; i < grids[1].row; i ++){
   }
 }
 grids[1].addRotations(rotations);
+
+// 3. chevron lines
+let linePaths2 = [];
+
+//chevron
+mvts[2] = new Movement(0,0,0);
+mvts[2].makeDiamondForVBit(0,0,20,2,0);
+
+// x's
+for (let i = 0; i < 4; i++){
+    linePaths2.push(new LinePath(0,0,8, 2, i*PI/2, i*PI/2, "LINEAR_UP"));
+}
+
+mvts[3] = new Movement(0,0,0);
+mvts[3].makePath(linePaths2);
+
+boundaries[2] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY+(sizeY+offsetY),sizeX/2,sizeY/2-2);
+boundaries[3] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY+(sizeY+offsetY),sizeX/2,sizeY/2-2);
+
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/4;
+gridSizeY = sizeY/4;
+grids[2] = new Grid(2,offsetX,sizeY+2*offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+grids[3] = new Grid(3,offsetX+gridSizeX/2,sizeY+2*offsetY+gridSizeY/2,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+
+// 4. kumiko-inspired-design
+let linePaths3 = [];
+let x = 0;
+let offset = 5;
+let y = 0;
+let l = 17.8;
+let theta = 0;
+let nbPoints = 2;
+for (let i = 0; i < 3; i++){
+    theta = PI/6+i*PI/3;
+    linePaths3.push(new LinePath(x+offset*cos(theta),y+offset*sin(theta),l, nbPoints, theta, theta, "PARABOLA"));
+    //linePaths3.push(new LinePath(x+l/2*cos(theta)+offset*cos(theta),y+l/2*sin(theta)+offset*sin(theta),l/2, nbPoints, theta, theta, 1));
+}
+mvts[4] = new Movement(0,0,0);
+mvts[4].makePath(linePaths3);
+boundaries[4] = new Boundary("RECTANGLE",sizeX/2+offsetX+(sizeX+offsetX),sizeY/2+offsetY+(sizeY+offsetY), sizeX/2-2, sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/5;
+gridSizeY = sizeY/5;
+grids[4] = new Grid(4,sizeX+2*offsetX,sizeY+2*offsetY+0.25*gridSizeY,"SIN",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.25);
+
+}
+
+//** BOOLEAN & SUPERPOSITION **//
+{
+//  1. circle in circle
+let sizeX = 120;
+let sizeY = 120;
+let offsetX = 20;
+let offsetY = 20;
+
+let diamondWidth = vBitWidth(5,90);
+
+// inside circle
+mvts[0] = new Movement(0,0);
+mvts[0].makeLinePath(0,0,sizeY,10,PI/2);
+
+// parameters: mode, x, y, rX, rY = rX, checkCustomBoundary = null
+boundaries[0] = new Boundary("CIRCLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/3);
+
+gridSizeX = diamondWidth;
+gridSizeY = sizeY/7;
+grids[0] = new Grid(0,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,gridSizeY);
+
+// outside border
+mvts[1] = new Movement(0,0);
+mvts[1].makeLinePath(0,0,sizeY,10,0);
+
+let bb = function outsideCircleBoundary(x,y){
+    let cx = sizeX/2+offsetX;
+    let cy = sizeY/2+offsetY;
+    let rIn = sizeX/3;
+    let rOut = sizeX/2;
+    
+    // inner circle
+    let state1 = 0;
+    let dIn = dist(cx, cy, -x, y);
+    if (dIn <= rIn){
+        state1 = 1.;
+    } else {
+        state1 = -1.;
+    }
+
+    // outter square
+    let state2 = 0;
+    let dOutX = abs(-x+cx) - rOut;
+    let dOutY = abs(y-cy) - rOut;
+    let dOut = sqrt((max(dOutX, 0))^2 + max(dOutY, 0)^2) + min(max(dOutX,dOutY),0);
+    
+    if (dOut <= 0){
+        state2 = 1.
+    } else {
+        state2=  -1.
+    }
+
+    if (state1+state2<0){
+        // inside the region
+        return -1.;
+    } else {
+        // outside the region
+        return 1;
+    }
+}
+
+boundaries[1] = new Boundary("CUSTOM",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2, sizeY/2,bb);
+
+gridSizeX = sizeX/7;
+gridSizeY = diamondWidth;
+grids[1] = new Grid(1,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,gridSizeX,sizeY+gridSizeY);
 
 
 }
