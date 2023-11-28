@@ -599,11 +599,11 @@ class GCodeGen {
               
               pop();
 
-              push()
+              /*push()
               translate(current.x, current.y, scaleCZ*current.z);
               ellipse(0,0,2,2);
 
-              pop();
+              pop();*/
           }
         }
       }

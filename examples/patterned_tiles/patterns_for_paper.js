@@ -3,6 +3,51 @@ let bitDepth = 4; //mm
 let bitWidth = vBitWidth(bitDepth,bitAngle);
 bitWidth;
 
+//** DOTS 1 **//
+{
+//1. ordered large dots
+let sizeX = 120;
+let sizeY = 120;
+let offsetX = 20;
+let offsetY = 20;
+mvts[0] = new Movement(0,0, 5);
+//mvts[0].makePointPath(0,0);
+//to remove the speed-zero notch use a circle instead
+mvts[0].makeArcPath(1,360,5,0);
+
+boundaries[0] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/12;
+gridSizeY = sizeY/12;
+grids[0] = new Grid(0,offsetX,offsetY,"SIN",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.25);
+
+// 2. disordered large dots
+let offsetTileX = sizeX + 2*offsetX;
+let offsetTileY = sizeY + 2*offsetY;
+
+mvts[1] = new Movement(0,0, 5);
+mvts[1].makeArcPath(2,360,5,0);
+
+boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/12;
+gridSizeY = sizeY/12;
+grids[1] = new Grid(1,offsetTileX,offsetY,"RANDOM",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.5);
+
+// Add random scaling Z 
+scalesZ = [];
+for (let i = 0; i < grids[1].row; i ++){
+  scalesZ[i] = [];
+  for (let j = 0; j < grids[1].column; j++){
+    	scalesZ[i][j] = random(0.3,1);
+  }
+}
+
+grids[1].addScalesZ(scalesZ);
+
+
+}
+
 //** LINES 1 **//
 {
 let sizeX = 120;
@@ -495,7 +540,7 @@ let diamondWidth = vBitWidth(5,90);
 
 // inside circle
 mvts[0] = new Movement(0,0);
-mvts[0].makeLinePath(0,0,sizeY,10,PI/2);
+mvts[0].makeLinePath(0,0,sizeY,30,PI/2);
 
 // parameters: mode, x, y, rX, rY = rX, checkCustomBoundary = null
 boundaries[0] = new Boundary("CIRCLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/3);
@@ -506,7 +551,7 @@ grids[0] = new Grid(0,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSiz
 
 // outside border
 mvts[1] = new Movement(0,0);
-mvts[1].makeLinePath(0,0,sizeY,10,0);
+mvts[1].makeLinePath(0,0,sizeY,25,0);
 
 let bb = function outsideCircleBoundary(x,y){
     let cx = sizeX/2+offsetX;
