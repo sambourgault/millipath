@@ -685,6 +685,9 @@ let sizeY = 120;
 let offsetX = 20;
 let offsetY = 20;
 
+let offsetTileX = sizeX + 2*offsetX;
+let offsetTileY = sizeY + 2*offsetY;
+
 let diamondWidth = vBitWidth(5,90);
 
 // inside circle
@@ -744,5 +747,179 @@ gridSizeX = sizeX/7;
 gridSizeY = diamondWidth;
 grids[1] = new Grid(1,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,gridSizeX,sizeY+gridSizeY);
 
+
+//2. crisscross lines
+mvts[2] = new Movement(0,0, 5);
+//mvts[0].makeGuiPath(2,0,"PARABOLA");
+//  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
+mvts[2].makeLinePath(0,0, 120, 5,0);
+
+boundaries[2] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/15;
+gridSizeY = 1.1*sizeY;
+grids[2] = new Grid(2,offsetTileX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+
+// Add rotation of -PI/2 and randomization on X and Y
+rotations = [];
+randomX = [];
+randomY = [];
+randomZ = [];
+for (let i = 0; i < grids[2].row; i ++){
+  rotations[i] = [];
+  randomX[i] = [];
+  randomY[i] = [];
+  randomZ[i] = [];
+  for (let j = 0; j < grids[2].column; j++){
+    rotations[i][j] = -PI/2;
+    //rotations[i][j] = -PI/2+random(-PI/6, PI/6);
+    randomX[i][j] = 2;
+    randomY[i][j] = 1;
+    randomZ[i][j] = 1;
+  }
+}
+grids[2].addRotations(rotations);
+grids[2].addRandomX(randomX);
+grids[2].addRandomY(randomY);
+//grids[3].addRandomZ(randomZ);
+
+mvts[3] = new Movement(0,0, 5);
+//mvts[0].makeGuiPath(2,0,"PARABOLA");
+//  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
+mvts[3].makeLinePath(0,0, 120, 5,0);
+
+boundaries[3] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = 1.1*sizeX;
+gridSizeY = sizeY/15;
+grids[3] = new Grid(3,offsetTileX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+
+// Add rotation of -PI/2 and randomization on X and Y
+rotations = [];
+randomX = [];
+randomY = [];
+randomZ = [];
+for (let i = 0; i < grids[3].row; i ++){
+  rotations[i] = [];
+  randomX[i] = [];
+  randomY[i] = [];
+  randomZ[i] = [];
+  for (let j = 0; j < grids[3].column; j++){
+    rotations[i][j] = 0;
+    randomX[i][j] = 1;
+    randomY[i][j] = 2;
+    randomZ[i][j] = 1;
+  }
+}
+grids[3].addRotations(rotations);
+grids[3].addRandomX(randomX);
+grids[3].addRandomY(randomY);
+
+//3. random circle + bigger circle
+mvts[4] = new Movement(0,0, 5);
+mvts[4].makeArcPath(1,360,5,0);
+
+boundaries[4] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/10;
+gridSizeY = sizeY/10;
+grids[4] = new Grid(4,offsetX,offsetTileY,"RANDOM",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.5);
+
+// add random scaling Z 
+scalesZ = [];
+for (let i = 0; i < grids[4].row; i ++){
+  scalesZ[i] = [];
+  for (let j = 0; j < grids[4].column; j++){
+    	scalesZ[i][j] = random(0.3,1);
+  }
+}
+
+grids[4].addScalesZ(scalesZ);
+
+mvts[5] = new Movement(0,0, 5);
+mvts[5].makeArcPath(2,360,5,0);
+
+boundaries[5] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/3;
+gridSizeY = sizeY/3;
+grids[5] = new Grid(5,offsetX,offsetTileY,"RANDOM",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.5);
+
+// add random scaling Z 
+scalesZ = [];
+for (let i = 0; i < grids[5].row; i ++){
+  scalesZ[i] = [];
+  for (let j = 0; j < grids[5].column; j++){
+    	scalesZ[i][j] = random(0.3,1);
+  }
+}
+
+grids[5].addScalesZ(scalesZ);
+
+// 4. crisscross in all direction
+mvts[6] = new Movement(0,0, 5);
+//mvts[0].makeGuiPath(2,0,"PARABOLA");
+//  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
+mvts[6].makeLinePath(0,0, 120, 10,0);
+
+boundaries[6] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/15;
+gridSizeY = 1.1*sizeY;
+grids[6] = new Grid(6,offsetTileX,offsetTileY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+
+// Add rotation of -PI/2 and randomization on X and Y
+rotations = [];
+randomX = [];
+randomY = [];
+randomZ = [];
+for (let i = 0; i < grids[6].row; i ++){
+  rotations[i] = [];
+  randomX[i] = [];
+  randomY[i] = [];
+  randomZ[i] = [];
+  for (let j = 0; j < grids[6].column; j++){
+    rotations[i][j] = -PI/2+random(-PI/8, PI/8);
+    randomX[i][j] = 2;
+    randomY[i][j] = 1;
+    randomZ[i][j] = 1;
+  }
+}
+grids[6].addRotations(rotations);
+grids[6].addRandomX(randomX);
+grids[6].addRandomY(randomY);
+//grids[3].addRandomZ(randomZ);
+
+mvts[7] = new Movement(0,0, 5);
+//mvts[0].makeGuiPath(2,0,"PARABOLA");
+//  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
+mvts[7].makeLinePath(0,0, 120, 10,0);
+
+boundaries[7] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = 1.1*sizeX;
+gridSizeY = sizeY/15;
+grids[7] = new Grid(7,offsetTileX,offsetTileY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+
+// Add rotation of -PI/2 and randomization on X and Y
+rotations = [];
+randomX = [];
+randomY = [];
+randomZ = [];
+for (let i = 0; i < grids[7].row; i ++){
+  rotations[i] = [];
+  randomX[i] = [];
+  randomY[i] = [];
+  randomZ[i] = [];
+  for (let j = 0; j < grids[7].column; j++){
+    rotations[i][j] = 0+random(-PI/8, PI/8);
+    randomX[i][j] = 1;
+    randomY[i][j] = 2;
+    randomZ[i][j] = 1;
+  }
+}
+grids[7].addRotations(rotations);
+grids[7].addRandomX(randomX);
+grids[7].addRandomY(randomY);
 
 }
