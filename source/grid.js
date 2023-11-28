@@ -1,6 +1,6 @@
 // cartesian grid
 class Grid {
-  constructor(id, x, y, mode = "LINEAR", spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0) {
+  constructor(id, x, y, mode = "LINEAR", spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0, perlinSize =[1,1]) {
     
     this.visible = false;
     this.openBox = false;
@@ -10,6 +10,7 @@ class Grid {
     this.mode = mode;
     //constructor(x, y, textu) {
     const self = this;
+  
 
     // grid layer component
     this.layerNameDiv = createDiv("grid"+this.id).parent(gridLayersBox.box);
@@ -49,6 +50,7 @@ class Grid {
     this.maxDepth = 0;
     this.sinAmp = sinAmp;//Number(this.ui.sliders[6].value());
     this.sinPeriod = 2;//Number(this.ui.sliders[7].value());
+    this.perlinSize = perlinSize;
     //this.bindUI(self);
     this.firstPoint = true;
     this.changedGrid = false;
@@ -174,7 +176,7 @@ class Grid {
           y = (this.sinAmp * cos(2*PI/this.sinPeriod * -i) + j2) * this.spacingY + this.y;
         } else if (this.mode == "PERLIN"){
           //perlin mode
-          x = (this.sinAmp * noise(i/8, j2/5) - i) * this.spacingX + this.x;
+          x = (this.sinAmp * map(noise(i/this.perlinSize[0], j2/this.perlinSize[1]),0,1,-1,1) - i) * this.spacingX + this.x;
           //console.log(noise(i/50, j2/70));
         } else if (this.mode == "RANDOM"){
           //random mode
