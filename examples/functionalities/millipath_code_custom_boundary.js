@@ -75,6 +75,6 @@ boundaries[0] = new Boundary("CUSTOM",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2, s
 
 gridSizeX = sizeX/7;
 gridSizeY = diamondWidth;
-grids[0] = new Grid(0,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,gridSizeX,sizeY+gridSizeY);
+grids[0] = new Grid(0,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,gridSizeX,sizeY/2+gridSizeY);
 
 }

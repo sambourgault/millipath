@@ -3,6 +3,200 @@ let bitDepth = 4; //mm
 let bitWidth = vBitWidth(bitDepth,bitAngle);
 bitWidth;
 
+//** DOTS 1 **//
+{
+let sizeX = 120;
+let sizeY = 120;
+let offsetX = 20;
+let offsetY = 20;
+
+// 1. ordered dots on linear grid
+mvts[0] = new Movement(0,0,10);
+// parameters: r, arcAngle, nbSides, theta, zMode = "FLAT", customZMode = null
+mvts[0].makeArcPath(1,360,5,0);
+
+boundaries[0] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2-1,sizeY/2-1);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/12;
+gridSizeY = sizeY/12;
+grids[0] = new Grid(0,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+
+// 2. ordered dots on sin grid
+let offsetTileX = sizeX + 2*offsetX;
+let offsetTileY = sizeY + 2*offsetY;
+mvts[1] = new Movement(0,0, 5);
+mvts[1].makeArcPath(1,360,5,0);
+
+boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetY,sizeX/2-1,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/12;
+gridSizeY = sizeY/12;
+grids[1] = new Grid(1,offsetTileX,offsetY,"SIN",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.25);
+
+// 3. disordered dots on random grid
+mvts[2] = new Movement(0,0, 5);
+mvts[2].makeArcPath(1,360,5,0);
+
+boundaries[2] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/12;
+gridSizeY = sizeY/12;
+grids[2] = new Grid(2,offsetX,offsetTileY,"RANDOM",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.5);
+
+// add random scaling Z 
+scalesZ = [];
+for (let i = 0; i < grids[2].row; i ++){
+  scalesZ[i] = [];
+  for (let j = 0; j < grids[2].column; j++){
+    	scalesZ[i][j] = random(0.3,1);
+  }
+}
+
+grids[2].addScalesZ(scalesZ);
+
+// 4. perlin displacement  of grid
+mvts[3] = new Movement(0,0);
+mvts[3].makeArcPath(1,360,5,0);
+// parameters: mode, x, y, rX, rY = rX, checkCustomBoundary = null
+boundaries[3] = new Boundary("RECTANGLE",sizeX/2+offsetX+(sizeX+offsetX),sizeY/2+offsetY+(sizeY+offsetY),sizeX/2+2, sizeY/2);
+gridSizeX = sizeX/12;
+gridSizeY = sizeY/12;
+// parameters: id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0
+grids[3] = new Grid(3,sizeX+2*offsetX,sizeY+2*offsetY+gridSizeY/2,"PERLIN",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,2,[4,10]);
+
+/*let n,  mapp;
+let translateX = [];
+let translateY = [];
+for (let i = 0; i < grids[3].row; i ++){
+    
+    translateX[i] = [];
+    translateY[i] = [];
+    for (let j = 0; j < grids[3].column; j++){
+        n = noise(i / 10, j / 10);
+        mapp = map(n, 0, 1, -2, 2);
+        translateX[i][j] = 2;
+        translateY[i][j] = 2;
+    }
+}
+grids[3].addTranslateX(translateX);
+grids[3].addTranslateY(translateY);*/
+
+}
+
+//** DOTS 2 **//
+{
+    let sizeX = 120;
+    let sizeY = 120;
+    let offsetX = 20;
+    let offsetY = 20;
+    
+    // 1. ordered dots on linear grid with random depth
+    mvts[0] = new Movement(0,0,10);
+    // parameters: r, arcAngle, nbSides, theta, zMode = "FLAT", customZMode = null
+    mvts[0].makeArcPath(1,360,5,0);
+    
+    boundaries[0] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2-1,sizeY/2-1);
+    //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+    gridSizeX = sizeX/10;
+    gridSizeY = sizeY/10;
+    grids[0] = new Grid(0,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+    
+    let scaleZ= [];
+    for (let i = 0; i < grids[0].row; i ++){
+        scaleZ[i] = [];
+        for (let j = 0; j < grids[0].column; j++){
+            scaleZ[i][j] = random(0,1);
+        }
+    }
+    grids[0].addScalesZ(scaleZ);
+    
+    // 2. ordered dots on linear grid with perlin depth
+    let offsetTileX = sizeX + 2*offsetX;
+    let offsetTileY = sizeY + 2*offsetY;
+    
+    mvts[1] = new Movement(0,0, 5);
+    mvts[1].makeArcPath(1,360,5,0);
+    
+    boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetY,sizeX/2-1,sizeY/2);
+    //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+    gridSizeX = sizeX/10;
+    gridSizeY = sizeY/10;
+    grids[1] = new Grid(1,offsetTileX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+    
+    let n;
+    scaleZ= [];
+    for (let i = 0; i < grids[1].row; i ++){
+        scaleZ[i] = [];
+        for (let j = 0; j < grids[1].column; j++){
+            n = noise(i / 10, j / 10);
+            scaleZ[i][j] = n;
+        }
+    }
+    grids[1].addScalesZ(scaleZ);
+    
+    // 3. ordered dots on linear grid with circle depth
+    mvts[2] = new Movement(0,0, 5);
+    mvts[2].makeArcPath(1,360,5,0);
+    
+    boundaries[2] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
+    //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+    gridSizeX = sizeX/10;
+    gridSizeY = sizeY/10;
+    grids[2] = new Grid(2,offsetX,offsetTileY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+    
+    // add circular depth
+    let d;
+    scalesZ = [];
+    let visibility = [];
+    for (let i = 0; i < grids[2].row; i ++){
+      scalesZ[i] = [];
+      visibility[i] = [];
+      for (let j = 0; j < grids[2].column; j++){
+            d = dist(5,5,i,j);
+    
+            if (d<=4){
+                visibility[i][j] = 1;
+            } else {
+                visibility[i][j] = 0;
+            }
+            console.log(d)
+            scalesZ[i][j] = 1-map(d,0,2.5,0,1);
+      }
+    }
+    grids[2].addMvtVisibility(visibility);
+    grids[2].addScalesZ(scalesZ);
+
+
+    // 4. perlin displacement  of grid
+    mvts[3] = new Movement(0,0);
+    mvts[3].makeArcPath(1,360,5,0);
+    // parameters: mode, x, y, rX, rY = rX, checkCustomBoundary = null
+    boundaries[3] = new Boundary("RECTANGLE",sizeX/2+offsetX+(sizeX+offsetX),sizeY/2+offsetY+(sizeY+offsetY),sizeX/2, sizeY/2);
+    gridSizeX = sizeX/20;
+    gridSizeY = sizeY/20;
+    // parameters: id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0
+    grids[3] = new Grid(3,sizeX+2*offsetX,sizeY+2*offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+
+    scaleZ= [];
+    visibility = [];
+    for (let i = 0; i < grids[3].row; i ++){
+        scaleZ[i] = [];
+        visibility[i] = [];
+        for (let j = 0; j < grids[3].column; j++){
+            n = noise(i / 5, j / 2);
+            if (n < 0.5){
+                scaleZ[i][j] = 1;
+                visibility[i][j] = 1;
+            } else{
+                scaleZ[i][j] = 0;
+                visibility[i][j] = 0;
+            }
+        }
+    }
+    grids[3].addScalesZ(scaleZ);
+    grids[3].addMvtVisibility(visibility);
+}
+
 //** LINES 1 **//
 {
 let sizeX = 120;
