@@ -82,7 +82,7 @@ class GCodeGen {
     this.indexPlay = 0;
     this.linkState = true;
     this.movement;
-    this.mvtScale = 0.4;
+    this.mvtScale = 0.4
     this.gridP0;
     
     
@@ -403,6 +403,7 @@ class GCodeGen {
             //console.log(tempPaths[tempPaths.length-1]);
             
             let cluster = [];
+            tempClusters= [];
             //tempClusters.push([]);
             let firstOfCluster = true;
             for (let i = 0; i < lastPath.length; i++){
@@ -427,7 +428,7 @@ class GCodeGen {
                 }
               }
             }
-            //console.log("clusters");
+           // console.log("clusters");
             //console.log(tempClusters);
             
           }
@@ -445,7 +446,7 @@ class GCodeGen {
               for (let i = 0; i < tempClusters.length; i++){
                 //let lastPoint = lastPath[lastPath.length-1];
 
-                // if only one cluster 
+                // for first point in cluster
                 if (i == 0) {
                   let lastPoint = tempClusters[i][tempClusters[i].length-1];
                   tempPaths[tempPaths.length-1] = tempClusters[i];
@@ -466,6 +467,8 @@ class GCodeGen {
 
 
               }
+
+
             }
               //let lastPoint = lastPath[lastPath.length-1];
               //tempPaths[tempPaths.length-1].push(new createVector(lastPoint.x, lastPoint.y, safeHeight));
@@ -477,6 +480,8 @@ class GCodeGen {
             tempTypePaths.pop();
             tempTypePaths.pop();
           }
+
+          
         }
 
         // add retract to safe Z height
