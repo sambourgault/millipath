@@ -9,7 +9,7 @@ let offsetY = 20;
 // 1. ordered dots on linear grid
 mvts[0] = new Movement(0,0,10);
 // parameters: r, arcAngle, nbSides, theta, zMode = "FLAT", customZMode = null
-mvts[0].makeArcPath(1,360,5,0);
+mvts[0].makeArcPath(0.1,360,5,0);
 
 boundaries[0] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2-1,sizeY/2-1);
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
@@ -31,7 +31,7 @@ grids[0].addScalesZ(scalesZ);
 let offsetTileX = sizeX + 2*offsetX;
 let offsetTileY = sizeY + 2*offsetY;
 mvts[1] = new Movement(0,0, 5);
-mvts[1].makeArcPath(1,360,5,0);
+mvts[1].makeArcPath(0.1,360,5,0);
 
 boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetY,sizeX/2-1,sizeY/2-2);
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
@@ -51,7 +51,7 @@ grids[1].addScalesZ(scalesZ);
 
 // 3. disordered dots on random grid
 mvts[2] = new Movement(0,0, 5);
-mvts[2].makeArcPath(1,360,5,0);
+mvts[2].makeArcPath(0.1,360,5,0);
 
 boundaries[2] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
@@ -72,13 +72,13 @@ grids[2].addScalesZ(scalesZ);
 
 // 4. perlin displacement  of grid
 mvts[3] = new Movement(0,0);
-mvts[3].makeArcPath(1,360,5,0);
+mvts[3].makeArcPath(0.1,360,5,0);
 // parameters: mode, x, y, rX, rY = rX, checkCustomBoundary = null
 boundaries[3] = new Boundary("RECTANGLE",sizeX/2+offsetX+(sizeX+offsetX),sizeY/2+offsetY+(sizeY+offsetY),sizeX/2+2, sizeY/2);
 gridSizeX = sizeX/12;
 gridSizeY = sizeY/12;
 // parameters: id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0
-grids[3] = new Grid(3,sizeX+2*offsetX,sizeY+2*offsetY+gridSizeY/2,"PERLIN",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,2,[4,10]);
+grids[3] = new Grid(3,sizeX+2*offsetX,sizeY+2*offsetY+gridSizeY/2,"PERLIN",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,3,[4,10]);
 
 // add random scaling Z 
 scalesZ = [];
@@ -627,12 +627,12 @@ grids[0] = new Grid(0,offsetX,offsetY+diamondWidth/2,"SIN",gridSizeX,gridSizeY,s
 
 // 2. chevron
 mvts[1] = new Movement(0,0,0);
-mvts[1].makeChevronForVBit(0,0,16,2,0,60);
+mvts[1].makeChevronForVBit(0,0,16,2,0,90);
 
-boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetX+(sizeX+offsetX),sizeY/2+offsetY,sizeX/2,sizeY/2);
+boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetX+(sizeX+offsetX),sizeY/2+offsetY,sizeX/2+3,sizeY/2);
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-gridSizeX = sizeX/5;
-gridSizeX -= 0.4*gridSizeX/5;
+gridSizeX = sizeX/7;
+gridSizeX -= 0.4*gridSizeX/7;
 gridSizeY = sizeY/5;
 grids[1] = new Grid(1,sizeX+2*offsetX+0.2*gridSizeX,offsetY,"SIN",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.25);
 
@@ -664,7 +664,7 @@ for (let i = 0; i < 4; i++){
 mvts[3] = new Movement(0,0,0);
 mvts[3].makePath(linePaths2);
 
-boundaries[2] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY+(sizeY+offsetY),sizeX/2,sizeY/2-2);
+boundaries[2] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY+(sizeY+offsetY),sizeX/2,sizeY/2);
 boundaries[3] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY+(sizeY+offsetY),sizeX/2,sizeY/2-2);
 
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
@@ -698,6 +698,7 @@ grids[4] = new Grid(4,sizeX+2*offsetX,sizeY+2*offsetY+0.25*gridSizeY,"SIN",gridS
 
 //** BOOLEAN & SUPERPOSITION **//
 {
+//*** CHANGE MAX DEPTH TO 2mm
 //  1. circle in circle
 let sizeX = 120;
 let sizeY = 120;
@@ -707,11 +708,11 @@ let offsetY = 20;
 let offsetTileX = sizeX + 2*offsetX;
 let offsetTileY = sizeY + 2*offsetY;
 
-let diamondWidth = vBitWidth(5,90);
+let diamondWidth = vBitWidth(2,90);
 
 // inside circle
 mvts[0] = new Movement(0,0);
-mvts[0].makeLinePath(0,0,sizeY,30,PI/2);
+mvts[0].makeLinePath(0,0,sizeY,40,PI/2);
 
 // parameters: mode, x, y, rX, rY = rX, checkCustomBoundary = null
 boundaries[0] = new Boundary("CIRCLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/3);
@@ -722,7 +723,7 @@ grids[0] = new Grid(0,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSiz
 
 // outside border
 mvts[1] = new Movement(0,0);
-mvts[1].makeLinePath(0,0,sizeY,25,0);
+mvts[1].makeLinePath(0,0,sizeY,40,0);
 
 let bb = function outsideCircleBoundary(x,y){
     let cx = sizeX/2+offsetX;
@@ -765,7 +766,6 @@ boundaries[1] = new Boundary("CUSTOM",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2, s
 gridSizeX = sizeX/7;
 gridSizeY = diamondWidth;
 grids[1] = new Grid(1,offsetX,offsetY,"LINEAR",gridSizeX,gridSizeY,gridSizeX,sizeY+gridSizeY);
-
 
 //2. crisscross lines
 mvts[2] = new Movement(0,0, 5);
@@ -834,111 +834,112 @@ grids[3].addRotations(rotations);
 grids[3].addRandomX(randomX);
 grids[3].addRandomY(randomY);
 
-//3. random circle + bigger circle
+// 3. crisscross in all directions
 mvts[4] = new Movement(0,0, 5);
-mvts[4].makeArcPath(1,360,5,0);
+//mvts[0].makeGuiPath(2,0,"PARABOLA");
+//  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
+mvts[4].makeLinePath(0,0, 120, 10,0);
 
 boundaries[4] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-gridSizeX = sizeX/10;
-gridSizeY = sizeY/10;
-grids[4] = new Grid(4,offsetX,offsetTileY,"RANDOM",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.5);
-
-// add random scaling Z 
-scalesZ = [];
-for (let i = 0; i < grids[4].row; i ++){
-  scalesZ[i] = [];
-  for (let j = 0; j < grids[4].column; j++){
-    	scalesZ[i][j] = random(0.3,1);
-  }
-}
-
-grids[4].addScalesZ(scalesZ);
-
-mvts[5] = new Movement(0,0, 5);
-mvts[5].makeArcPath(2,360,5,0);
-
-boundaries[5] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
-//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-gridSizeX = sizeX/3;
-gridSizeY = sizeY/3;
-grids[5] = new Grid(5,offsetX,offsetTileY,"RANDOM",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.5);
-
-// add random scaling Z 
-scalesZ = [];
-for (let i = 0; i < grids[5].row; i ++){
-  scalesZ[i] = [];
-  for (let j = 0; j < grids[5].column; j++){
-    	scalesZ[i][j] = random(0.3,1);
-  }
-}
-
-grids[5].addScalesZ(scalesZ);
-
-// 4. crisscross in all direction
-mvts[6] = new Movement(0,0, 5);
-//mvts[0].makeGuiPath(2,0,"PARABOLA");
-//  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
-mvts[6].makeLinePath(0,0, 120, 10,0);
-
-boundaries[6] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
-//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
 gridSizeX = sizeX/15;
 gridSizeY = 1.1*sizeY;
-grids[6] = new Grid(6,offsetTileX,offsetTileY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+grids[4] = new Grid(4,offsetX,offsetTileY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
 
 // Add rotation of -PI/2 and randomization on X and Y
 rotations = [];
 randomX = [];
 randomY = [];
 randomZ = [];
-for (let i = 0; i < grids[6].row; i ++){
+for (let i = 0; i < grids[4].row; i ++){
   rotations[i] = [];
   randomX[i] = [];
   randomY[i] = [];
   randomZ[i] = [];
-  for (let j = 0; j < grids[6].column; j++){
+  for (let j = 0; j < grids[4].column; j++){
     rotations[i][j] = -PI/2+random(-PI/8, PI/8);
     randomX[i][j] = 2;
     randomY[i][j] = 1;
     randomZ[i][j] = 1;
   }
 }
-grids[6].addRotations(rotations);
-grids[6].addRandomX(randomX);
-grids[6].addRandomY(randomY);
+grids[4].addRotations(rotations);
+grids[4].addRandomX(randomX);
+grids[4].addRandomY(randomY);
 //grids[3].addRandomZ(randomZ);
 
-mvts[7] = new Movement(0,0, 5);
+mvts[5] = new Movement(0,0, 5);
 //mvts[0].makeGuiPath(2,0,"PARABOLA");
 //  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
-mvts[7].makeLinePath(0,0, 120, 10,0);
+mvts[5].makeLinePath(0,0, 120, 10,0);
 
-boundaries[7] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
+boundaries[5] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
 gridSizeX = 1.1*sizeX;
 gridSizeY = sizeY/15;
-grids[7] = new Grid(7,offsetTileX,offsetTileY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
+grids[5] = new Grid(5,offsetX,offsetTileY,"LINEAR",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY);
 
 // Add rotation of -PI/2 and randomization on X and Y
 rotations = [];
 randomX = [];
 randomY = [];
 randomZ = [];
-for (let i = 0; i < grids[7].row; i ++){
+for (let i = 0; i < grids[5].row; i ++){
   rotations[i] = [];
   randomX[i] = [];
   randomY[i] = [];
   randomZ[i] = [];
-  for (let j = 0; j < grids[7].column; j++){
+  for (let j = 0; j < grids[5].column; j++){
     rotations[i][j] = 0+random(-PI/8, PI/8);
     randomX[i][j] = 1;
     randomY[i][j] = 2;
     randomZ[i][j] = 1;
   }
 }
-grids[7].addRotations(rotations);
-grids[7].addRandomX(randomX);
-grids[7].addRandomY(randomY);
+grids[5].addRotations(rotations);
+grids[5].addRandomX(randomX);
+grids[5].addRandomY(randomY);
+
+//4. random circle + bigger circle
+mvts[6] = new Movement(0,0, 5);
+mvts[6].makeArcPath(0.2,360,5,0);
+
+boundaries[6] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/10;
+gridSizeY = sizeY/10;
+grids[6] = new Grid(6,offsetTileX,offsetTileY,"RANDOM",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.5);
+
+// add random scaling Z 
+scalesZ = [];
+for (let i = 0; i < grids[6].row; i ++){
+  scalesZ[i] = [];
+  for (let j = 0; j < grids[6].column; j++){
+    	scalesZ[i][j] = random(0.3,0.5);
+  }
+}
+
+grids[6].addScalesZ(scalesZ);
+
+mvts[7] = new Movement(0,0, 5);
+mvts[7].makeArcPath(0.2,360,5,0);
+
+boundaries[7] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+gridSizeX = sizeX/3;
+gridSizeY = sizeY/3;
+grids[7] = new Grid(7,offsetTileX,offsetTileY,"RANDOM",gridSizeX,gridSizeY,sizeX+gridSizeX,sizeY+gridSizeY,0.5);
+
+// add random scaling Z 
+scalesZ = [];
+for (let i = 0; i < grids[7].row; i ++){
+  scalesZ[i] = [];
+  for (let j = 0; j < grids[7].column; j++){
+    	scalesZ[i][j] = random(1.5,2);
+  }
+}
+
+grids[7].addScalesZ(scalesZ);
+
 
 }

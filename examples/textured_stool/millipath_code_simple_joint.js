@@ -119,7 +119,7 @@ for (let i = 0; i < 1; i++){
   }
 }
 
-for (let i = 0; i < 5; i++){
+for (let i = 0; i < 4; i++){
     mvts[i] = new Movement(0,0,1);
     //makeDogBonePath(rx,ry,nbPoints,theta,boneMode,zMode,customZMode = null){
     mvts[i].makeDogBonePath(sizeJointX,sizeJointY,1,0,"ONE_SIDE", "CUSTOM", function (j){return -(i+1);});
@@ -130,9 +130,21 @@ for (let i = 0; i < 5; i++){
     grids[i].addRotations(rotations);
 }
 
+//tab level
+mvts[4] = new Movement(0,0,1);
+//makeDogBonePath(rx,ry,nbPoints,theta,boneMode,zMode,customZMode = null){
+mvts[4].makeDogBonePathWithTab(sizeJointX,sizeJointY,1,0,"ONE_SIDE", "CUSTOM", function (j){return -(4+1);});
+
+boundaries[4] = new Boundary("NONE",0,0,250,130);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+grids[4] = new Grid(4,posXJoint,posYJoint,"LINEAR",1,1,1,1);
+grids[4].addRotations(rotations);
+
+
+
 
 // Main Part
-for (let i = 5; i < 10; i++){
+for (let i = 5; i < 9; i++){
     mvts[i] = new Movement(0,0,1);
     //makeRectanglePath(sx,sy,nbPoints,theta,zMode,customZMode = null){
     mvts[i].makeRectanglePath(sizeX, sizeY, 1, 0, "CUSTOM", function (j){return -(i-4);});
@@ -141,3 +153,27 @@ for (let i = 5; i < 10; i++){
     //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
     grids[i] = new Grid(i,posX,posY,"LINEAR",1,1,1,1);
 }
+
+// tab level
+mvts[9] = new Movement(0,0,1);
+//makeRectanglePath(sx,sy,nbPoints,theta,zMode,customZMode = null){
+let linePaths = [];
+linePaths.push(new LinePath(0,0, sizeX/2-toolSizeMm, 1, 0, 0, "CUSTOM", function (j){return -(9-4);}));
+linePaths.push(new LinePath(sizeX/2+toolSizeMm, 0, sizeX/2-toolSizeMm, 1,0,0, "CUSTOM", function (j){return -(9-4);}));
+
+linePaths.push(new LinePath(sizeX,0, sizeY/2-toolSizeMm, 1, PI/2, PI/2, "CUSTOM", function (j){return -(9-4);}));
+linePaths.push(new LinePath(sizeX, sizeY/2+toolSizeMm, sizeY/2-toolSizeMm, 1,PI/2, PI/2, "CUSTOM", function (j){return -(9-4);}));
+
+linePaths.push(new LinePath(sizeX,sizeY, sizeX/2-toolSizeMm, 1, PI, PI, "CUSTOM", function (j){return -(9-4);}));
+linePaths.push(new LinePath(sizeX-(sizeX/2+toolSizeMm), sizeY, sizeX/2-toolSizeMm, 1, PI, PI, "CUSTOM", function (j){return -(9-4);}));
+
+linePaths.push(new LinePath(0,sizeY, sizeY/2-toolSizeMm, 1, 3*PI/2, 3*PI/2, "CUSTOM", function (j){return -(9-4);}));
+linePaths.push(new LinePath(0, sizeY-(sizeY/2+toolSizeMm), sizeY/2-toolSizeMm, 1,3*PI/2, 3*PI/2, "CUSTOM", function (j){return -(9-4);}));
+
+// constructor(x,y,l,nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null, amp = 0, p = 1){
+mvts[9].makePath(linePaths);
+boundaries[9] = new Boundary("NONE",0,0,250,130);
+    //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+grids[9] = new Grid(9,offsetX, offsetY,"LINEAR",1,1,1,1);
+//makeRectanglePath(sizeX, sizeY, 1, 0, "CUSTOM", function (j){return -(9-4);});
+

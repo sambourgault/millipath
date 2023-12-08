@@ -389,6 +389,51 @@ class Movement{
     this.linePaths.push(new LinePath(-sx/2,sy/2,sy,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
+
+  /**
+   * Make dogbone openings for joinery but make tabs on two sides
+   * @param {any} sx
+   * @param {any} sy
+   * @param {any} nbPoints
+   * @param {any} theta
+   * @param {any} boneMode
+   * @param {any} zMode
+   * @param {any} customZMode=null
+   * @returns {any}
+   */
+  makeDogBonePathWithTab(sx,sy,nbPoints,theta,boneMode,zMode,customZMode = null){
+    this.paths = [];
+    this.linePaths = [];  
+    let sideLength = sx+toolSizeMm/2;
+    if (boneMode == "ONE_SIDE"){
+      this.linePaths.push(new LinePath(-sx/2,-sy/2,sx/2-toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+      // tab
+      this.linePaths.push(new LinePath(-sx/2+sx/2+2*toolSizeMm/2,-sy/2,sx-toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    } else if (boneMode == "TWO_SIDE") {
+      this.linePaths.push(new LinePath(-sx/2-toolSizeMm/2,-sy/2,sx+2*toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    }
+
+    this.linePaths.push(new LinePath(sx/2,-sy/2,sy,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+
+    if (boneMode == "ONE_SIDE"){
+      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,sx+toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+      //tab
+      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,sx+toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+
+    } else if (boneMode == "TWO_SIDE") {
+      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,sx+2*toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    }
+
+    this.linePaths.push(new LinePath(-sx/2,sy/2,sy,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+  }
   
   /**
   * Make a polygon path as the movement.
