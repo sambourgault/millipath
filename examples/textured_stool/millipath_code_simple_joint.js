@@ -128,7 +128,7 @@ grids[0].addRotations(rotations);
 {
 let offsetX = 10;
 let offsetY = 10;
-let materialSize = 14.75;
+let materialSize = 14.5;
 let sizeX = 100+toolSizeMm;
 let sizeY = 100+toolSizeMm;
 let posX = sizeX/2 + offsetX;
