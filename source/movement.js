@@ -353,6 +353,36 @@ class Movement{
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
 
+  makeRectanglePathWithTab(sx,sy,nbPoints,theta,zMode,customZMode = null){
+    this.paths = [];
+    this.linePaths = [];
+
+    // side 1
+    this.linePaths.push(new LinePath(-sx/2,-sy/2,sx/2-toolSizeMm,nbPoints, theta, theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    this.linePaths.push(new LinePath(-sx/2+sx/2+toolSizeMm,-sy/2,sx/2-toolSizeMm,nbPoints, theta, theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+
+    // side 2
+    this.linePaths.push(new LinePath(sx/2,-sy/2,sy/2-toolSizeMm,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    this.linePaths.push(new LinePath(sx/2,-sy/2+sy/2+toolSizeMm,sy/2-toolSizeMm,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+
+    // side 3
+    this.linePaths.push(new LinePath(sx/2,sy/2,sx/2-toolSizeMm,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    this.linePaths.push(new LinePath(sx/2-sx/2-toolSizeMm,sy/2,sx/2-toolSizeMm,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+
+    // side 4
+    this.linePaths.push(new LinePath(-sx/2,sy/2,sy/2-toolSizeMm,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    this.linePaths.push(new LinePath(-sx/2,sy/2-sy/2-toolSizeMm,sy/2-toolSizeMm,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+
+  }
+
   /**
    * Make dogbone openings for joinery
    * @param {any} rx
@@ -406,10 +436,11 @@ class Movement{
     this.linePaths = [];  
     let sideLength = sx+toolSizeMm/2;
     if (boneMode == "ONE_SIDE"){
-      this.linePaths.push(new LinePath(-sx/2,-sy/2,sx/2-toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      // no tab:  this.linePaths.push(new LinePath(-sx/2,-sy/2,sx+toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(-sx/2,-sy/2,(sx+toolSizeMm/2)/2-toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
       // tab
-      this.linePaths.push(new LinePath(-sx/2+sx/2+2*toolSizeMm/2,-sy/2,sx-toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(-sx/2+((sx+toolSizeMm/2)/2)+toolSizeMm/2,-sy/2,(sx+toolSizeMm/2)/2-toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     } else if (boneMode == "TWO_SIDE") {
       this.linePaths.push(new LinePath(-sx/2-toolSizeMm/2,-sy/2,sx+2*toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
@@ -420,10 +451,10 @@ class Movement{
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
 
     if (boneMode == "ONE_SIDE"){
-      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,sx+toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,(sx+toolSizeMm/2)/2-toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
       //tab
-      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,sx+toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2-((sx+toolSizeMm/2)/2)-toolSizeMm/2,sy/2,(sx+toolSizeMm/2)/2-toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
 
     } else if (boneMode == "TWO_SIDE") {
@@ -431,8 +462,9 @@ class Movement{
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     }
 
-    this.linePaths.push(new LinePath(-sx/2,sy/2,sy,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
-    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    // remove the back side of joint has a tab
+    //this.linePaths.push(new LinePath(-sx/2,sy/2,sy,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
+    //this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
   
   /**

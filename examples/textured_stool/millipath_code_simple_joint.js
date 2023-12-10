@@ -70,7 +70,8 @@ for (let i = 4; i < 8; i++){
 
 
 //// V2
-
+{
+// 1. Pattern
 let offsetX = 10;
 let offsetY = 10;
 let materialSize = 14.75;
@@ -83,15 +84,28 @@ let sizeJointY = materialSize - toolSizeMm;
 let posXJoint = posX;
 let posYJoint = posY + sizeJointX/2 + toolSizeMm/2;
 
-/*// 1. Pattern
 mvts[0] = new Movement(0,0,10);
-mvts[0].makeGuiPath(3, 0, "PARABOLA");
+//mvts[0].makeGuiPath(3, 0, "PARABOLA");
+mvts[0].makeLinePath(0,0,10,5,0,0,"PARABOLA");
 
-boundaries[0] = new Boundary("NONE",0,0,250,130);
+let excludeJointBoundary = function(x,y){
+  let pX = posX;
+  let pY = posY+sizeY/4;
+  let rX = sizeJointY/2;
+  let rY = sizeX/4;
+  let state = boundaryRectangle(x,y,pX,pY,rX,rY,false);
+  return state;
+}
+
+//boundaries[0] = new Boundary("NONE",0,0,250,130);
+boundaries[0] = new Boundary("CUSTOM",0,0,0,0, excludeJointBoundary);
+boundaries[1] = new Boundary("RECTANGLE",posX,posY+sizeY/4,sizeJointY/2,sizeX/4);
+
+
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
 let gridSize = sizeX - 20;
-let gridSpaceSize = (gridSize)/5;
-grids[0] = new Grid(0,posX - sizeX/2+10,posY - sizeY/2+10,"LINEAR",gridSpaceSize,gridSpaceSize,gridSpaceSize*6,gridSpaceSize*6);
+let gridSpaceSize = (gridSize)/6;
+grids[0] = new Grid(0,posX - sizeX/2+10,posY - sizeY/2+10,"LINEAR",gridSpaceSize,gridSpaceSize,gridSpaceSize*7,gridSpaceSize*7);
 
 // Add rotation of random increment of PI/4
 let rotations = [];
@@ -108,9 +122,22 @@ for (let i = 0; i < grids[0].row; i ++){
   }
 }
 grids[0].addRotations(rotations);
-*/
+}
 
 // 2. Joint Part
+{
+let offsetX = 10;
+let offsetY = 10;
+let materialSize = 14.75;
+let sizeX = 100+toolSizeMm;
+let sizeY = 100+toolSizeMm;
+let posX = sizeX/2 + offsetX;
+let posY = sizeY/2 + offsetY;
+let sizeJointX = sizeX/2 - toolSizeMm;
+let sizeJointY = materialSize - toolSizeMm;
+let posXJoint = posX;
+let posYJoint = posY + sizeJointX/2 + toolSizeMm/2;
+
 rotations = [];
 for (let i = 0; i < 1; i++){
   rotations[i] = [];
@@ -141,8 +168,6 @@ grids[4] = new Grid(4,posXJoint,posYJoint,"LINEAR",1,1,1,1);
 grids[4].addRotations(rotations);
 
 
-
-
 // Main Part
 for (let i = 5; i < 9; i++){
     mvts[i] = new Movement(0,0,1);
@@ -156,24 +181,7 @@ for (let i = 5; i < 9; i++){
 
 // tab level
 mvts[9] = new Movement(0,0,1);
-//makeRectanglePath(sx,sy,nbPoints,theta,zMode,customZMode = null){
-let linePaths = [];
-linePaths.push(new LinePath(0,0, sizeX/2-toolSizeMm, 1, 0, 0, "CUSTOM", function (j){return -(9-4);}));
-linePaths.push(new LinePath(sizeX/2+toolSizeMm, 0, sizeX/2-toolSizeMm, 1,0,0, "CUSTOM", function (j){return -(9-4);}));
-
-linePaths.push(new LinePath(sizeX,0, sizeY/2-toolSizeMm, 1, PI/2, PI/2, "CUSTOM", function (j){return -(9-4);}));
-linePaths.push(new LinePath(sizeX, sizeY/2+toolSizeMm, sizeY/2-toolSizeMm, 1,PI/2, PI/2, "CUSTOM", function (j){return -(9-4);}));
-
-linePaths.push(new LinePath(sizeX,sizeY, sizeX/2-toolSizeMm, 1, PI, PI, "CUSTOM", function (j){return -(9-4);}));
-linePaths.push(new LinePath(sizeX-(sizeX/2+toolSizeMm), sizeY, sizeX/2-toolSizeMm, 1, PI, PI, "CUSTOM", function (j){return -(9-4);}));
-
-linePaths.push(new LinePath(0,sizeY, sizeY/2-toolSizeMm, 1, 3*PI/2, 3*PI/2, "CUSTOM", function (j){return -(9-4);}));
-linePaths.push(new LinePath(0, sizeY-(sizeY/2+toolSizeMm), sizeY/2-toolSizeMm, 1,3*PI/2, 3*PI/2, "CUSTOM", function (j){return -(9-4);}));
-
-// constructor(x,y,l,nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null, amp = 0, p = 1){
-mvts[9].makePath(linePaths);
+mvts[9].makeRectanglePathWithTab(sizeX, sizeY, 1, 0, "CUSTOM", function (j){return -(9-4);})
 boundaries[9] = new Boundary("NONE",0,0,250,130);
-    //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-grids[9] = new Grid(9,offsetX, offsetY,"LINEAR",1,1,1,1);
-//makeRectanglePath(sizeX, sizeY, 1, 0, "CUSTOM", function (j){return -(9-4);});
-
+grids[9] = new Grid(9,posX,posY,"LINEAR",1,1,1,1);
+}

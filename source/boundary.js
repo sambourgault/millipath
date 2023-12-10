@@ -53,6 +53,7 @@ class Boundary{
       case "CUSTOM":
       // if mode == -1, use custom boundary function
       status = this.checkCustomBoundary(x,y);
+      //console.log(status);
       break;
       case "NONE":
       status = this.checkNoBoundary();
