@@ -14,7 +14,7 @@ class Tool{
         translate(0,this.height/2,0);
 
         let scaleZ = 1.;
-        if (point.z < 0.) scaleZ = 30;
+        if (point.z < 0.) scaleZ = 1;
         translate(point.x, scaleZ*point.z, -point.y);
        
         cylinder(tsIn.value()*25.4, this.height);

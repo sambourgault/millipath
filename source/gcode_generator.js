@@ -336,6 +336,7 @@ class GCodeGen {
             //console.log(rotatedMvtPaths[l][k]);
 
             z = maxDepthCut*(grid[i-1].z+grids[index].scalesZ[i-1]*rotatedMvtPaths[l][k].z) + grids[index].randomizeMvtZ[i-1]*random(0,1);
+            console.log(z);
             let boundaryValue = boundaries[index].checkBoundary(x,y);
             //console.log(boundaryValue);
             
