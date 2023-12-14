@@ -305,7 +305,13 @@ class GCodeGen {
           //let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].x;
           //let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].y;
           let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x+grids[index].translateMvtX[i-1];// + grids[index].randomizeMvtX[i-1]*random(-1,1);
+          if (abs(x) < 0.00635){
+            x = 0;
+          }
           let y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][0].y+grids[index].translateMvtY[i-1];//+ grids[index].randomizeMvtY[i-1]*random(-1,1);
+          if (abs(y) < 0.00635){
+            y = 0;
+          }
           let z;
           // add jog move from previous position to over current point if the x and y are not the same position then just continue with feed move
          // if (x != tempPaths[tempPaths.length-1].x && y != tempPaths[tempPaths.length-1].y){
@@ -326,7 +332,14 @@ class GCodeGen {
             //x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].x;
             //y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].y;
             x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x +grids[index].translateMvtX[i-1] + grids[index].randomizeMvtX[i-1]*random(-1,1);
+            if (abs(x) < 0.00635){
+              x = 0;
+            }
+
             y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y +grids[index].translateMvtY[i-1] + grids[index].randomizeMvtY[i-1]*random(-1,1);
+            if (abs(y) < 0.00635){
+              y = 0;
+            }
             
             /*if (k == 0){
               pX = x;
@@ -336,7 +349,9 @@ class GCodeGen {
             //console.log(rotatedMvtPaths[l][k]);
 
             z = maxDepthCut*(grid[i-1].z+grids[index].scalesZ[i-1]*rotatedMvtPaths[l][k].z) + grids[index].randomizeMvtZ[i-1]*random(0,1);
-            console.log(z);
+            if (abs(z) < 0.00635){
+              z = 0;
+            }
             let boundaryValue = boundaries[index].checkBoundary(x,y);
             //console.log(boundaryValue);
             

@@ -30,7 +30,7 @@ let boundary;
 let code;
 let codeGenButton;
 let safeHeight = 6 //mm
-let materialThickness = 18.15; //mm = 0.75 inches
+let materialThickness = 19.3; //mm = mdf
 let spindleSpeed = 18000; // rpm
 let moveSpeed = 16; // mm/s
 let plungeRate = 5; //mm/s

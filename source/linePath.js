@@ -75,7 +75,6 @@ class LinePath{
             //reflection matrix operation and final translation
             let xf = x1*cos(2*this.phi) + y1*sin(2*this.phi) + this.x;
             let yf = x1*sin(2*this.phi) - y1*cos(2*this.phi) + this.y;
-            console.log(z);
             this.path.push(new createVector(-xf,yf,z));
         }
 

@@ -353,6 +353,16 @@ class Movement{
       this.linePaths.push(new LinePath(-sx/2,sy/2,sy,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     } else {
+
+      /*
+      let nbSteps = ceil(materialThickness/maxDepthCut);
+      let stepDepth = materialThickness/nbSteps;
+      maxDepthCut = stepDepth;
+      
+      for (let i = 0; i < nbSteps-1; i++){
+        this.addDogBonePath(sx,sy,nbPoints,theta,boneMode,"CUSTOM", function (j){return -(i+1);});
+      }
+      */
       //"CUSTOM", function (j){return -(i-4);}
       let nbSteps = ceil(materialThickness/maxDepthCut);
       console.log("nb Steps:" + nbSteps);
@@ -361,20 +371,32 @@ class Movement{
       maxDepthCut = stepDepth;
       
       for (let i = 0; i < nbSteps-1; i++){
-        console.log(-(i+1));
-        this.linePaths.push(new LinePath(-sx/2,-sy/2,sx,nbPoints, theta, theta, "CUSTOM", function (j){return -(i+1);}));
+        this.addRectanglePath(sx,sy,nbPoints,theta,"CUSTOM", function (j){return -(i+1);});
+        /*this.linePaths.push(new LinePath(-sx/2,-sy/2,sx,nbPoints, theta, theta, "CUSTOM", function (j){return -(i+1);}));
         this.paths.push(this.linePaths[this.linePaths.length-1].path);
         this.linePaths.push(new LinePath(sx/2,-sy/2,sy,nbPoints, PI/2+theta, PI/2+theta, "CUSTOM", function (j){return -(i+1);}));
         this.paths.push(this.linePaths[this.linePaths.length-1].path);
         this.linePaths.push(new LinePath(sx/2,sy/2,sx,nbPoints, -PI+theta, -PI+theta, "CUSTOM", function (j){return -(i+1);}));
         this.paths.push(this.linePaths[this.linePaths.length-1].path);
         this.linePaths.push(new LinePath(-sx/2,sy/2,sy,nbPoints, -PI/2+theta, -PI/2+theta, "CUSTOM", function (j){return -(i+1);}));
-        this.paths.push(this.linePaths[this.linePaths.length-1].path);
+        this.paths.push(this.linePaths[this.linePaths.length-1].path);*/
       }
 
       this.addRectanglePathWithTab(sx, sy, nbPoints, theta, "CUSTOM", function (j){return -nbSteps;})
       
     }
+  }
+
+
+  addRectanglePath(sx,sy,nbPoints,theta,zMode,customZMode = null){
+      this.linePaths.push(new LinePath(-sx/2,-sy/2,sx,nbPoints, theta, theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+      this.linePaths.push(new LinePath(sx/2,-sy/2,sy,nbPoints, PI/2+theta, PI/2+theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+      this.linePaths.push(new LinePath(sx/2,sy/2,sx,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
+      this.linePaths.push(new LinePath(-sx/2,sy/2,sy,nbPoints, -PI/2+theta, -PI/2+theta, zMode, customZMode));
+      this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
 
   makeRectanglePathWithTab(sx,sy,nbPoints,theta,zMode,customZMode = null){
@@ -574,10 +596,10 @@ class Movement{
   addDogBonePathWithTab(sx,sy,nbPoints,theta,boneMode,zMode,customZMode = null){
     if (boneMode == "ONE_SIDE"){
       // no tab:  this.linePaths.push(new LinePath(-sx/2,-sy/2,sx+toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
-      this.linePaths.push(new LinePath(-sx/2,-sy/2,(sx+toolSizeMm/2)/2-toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(-sx/2,-sy/2,(sx+toolSizeMm/2)/2-toolSizeMm,nbPoints, theta, theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
       // tab
-      this.linePaths.push(new LinePath(-sx/2+((sx+toolSizeMm/2)/2)+toolSizeMm/2,-sy/2,(sx+toolSizeMm/2)/2-toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(-sx/2+((sx+toolSizeMm/2)/2)+toolSizeMm,-sy/2,(sx+toolSizeMm/2)/2-toolSizeMm,nbPoints, theta, theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
     } else if (boneMode == "TWO_SIDE") {
       this.linePaths.push(new LinePath(-sx/2-toolSizeMm/2,-sy/2,sx+2*toolSizeMm/2,nbPoints, theta, theta, zMode, customZMode));
@@ -588,10 +610,10 @@ class Movement{
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
 
     if (boneMode == "ONE_SIDE"){
-      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,(sx+toolSizeMm/2)/2-toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2,sy/2,(sx+toolSizeMm/2)/2-toolSizeMm,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
       //tab
-      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2-((sx+toolSizeMm/2)/2)-toolSizeMm/2,sy/2,(sx+toolSizeMm/2)/2-toolSizeMm/2,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
+      this.linePaths.push(new LinePath(sx/2+toolSizeMm/2-((sx+toolSizeMm/2)/2)-toolSizeMm,sy/2,(sx+toolSizeMm/2)/2-toolSizeMm,nbPoints, -PI+theta, -PI+theta, zMode, customZMode));
       this.paths.push(this.linePaths[this.linePaths.length-1].path);
 
     } else if (boneMode == "TWO_SIDE") {
