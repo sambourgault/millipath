@@ -4,7 +4,7 @@
 {
     let offsetX = 0;
     let offsetY = 0;
-    let materialSize = 18.15;
+    let materialSize = 19.3;
 	let pieceSizeX = 457.2;
 	let pieceSizeY = 457.2;
     let sizeX = pieceSizeX+toolSizeMm;
@@ -22,15 +22,23 @@
 
         let state = -1;
         for (let i = 0; i < 10; i++){
-            if (boundaryRectangle(x,y,offsetX+(materialSize+toolSizeMm/2)+materialSize/2+i*(materialSize+spacingX), posYJoint,sizeJointY/2,sizeJointX/2,false) == 1){
+            /*if (boundaryRectangle(x,y,offsetX+(materialSize+toolSizeMm/2)+materialSize/2+i*(materialSize+spacingX), posYJoint,sizeJointY/2+materialSize/2,sizeJointX/2,false) == 1){
+                state = 1;
+                break;
+            }  */  
+            let outSideJointState = boundaryRectangle(x,y,offsetX+(materialSize+toolSizeMm/2)+materialSize/2+i*(materialSize+spacingX), posYJoint,sizeJointY/2+materialSize/2,sizeJointX/2,false);
+            let insidePieceState = boundaryRectangle(x,y,posX,posY,sizeX/2,sizeY/2);
+            if (outSideJointState == 1 || insidePieceState == 1){
                 state = 1;
                 break;
             }    
         }
+
         return state;
       }
 
       boundaries[0] = new Boundary("CUSTOM",0,0,0,0, excludeJointBoundary);
+      boundaries[1] = new Boundary("CUSTOM",0,0,0,0, excludeJointBoundary);
 
       let sizeJointX = 2*materialSize + toolSizeMm;
         let sizeJointY = materialSize - toolSizeMm ;
@@ -38,7 +46,7 @@
         let posYJoint = posY + sizeY/2 - sizeJointX/2;
         let spacingX = (pieceSizeX - 12*materialSize)/9
       for (let i = 0; i < 10; i++){
-        boundaries[i+1] = new Boundary("RECTANGLE",offsetX+(materialSize+toolSizeMm/2)+materialSize/2+i*(materialSize+spacingX), posYJoint,sizeJointY/2,sizeJointX/2);
+        boundaries[i+2] = new Boundary("RECTANGLE",offsetX+(materialSize+toolSizeMm/2)+materialSize/2+i*(materialSize+spacingX), posYJoint,sizeJointY/2+materialSize/2,sizeJointX/2);
       }
       //
     
@@ -46,14 +54,43 @@
 
     // stool side
     mvts[0] = new Movement(0,0,1);
-    mvts[0].makeArcPath(0.4, 360, 5, 0);
-    boundaries[11] = new Boundary("RECTANGLE",posX,posY,sizeX/2,sizeY/2);
+    mvts[0].makeArcPath(0.1, 360, 5, 0);
+    boundaries[12] = new Boundary("RECTANGLE",posX,posY,sizeX/2,sizeY/2);
     
     /*let gridSizeX = pieceSizeX/10;
     let gridSizeY = pieceSizeY/10;*/
-    let gridSizeX = 12;
-    let gridSizeY =12;
-    grids[0] = new Grid(0,offsetX+toolSizeMm/2,offsetY+toolSizeMm/2,"LINEAR",gridSizeX,gridSizeY,pieceSizeX+gridSizeX,pieceSizeY+gridSizeY);
+    let gridSizeX = 10;
+    let gridSizeY =10;
+    grids[0] = new Grid(0,offsetX+toolSizeMm/2,offsetY+toolSizeMm/2,"RANDOM",gridSizeX,gridSizeY,pieceSizeX+gridSizeX,pieceSizeY+gridSizeY,0.5);
+    // add random scaling Z 
+    scalesZ = [];
+    for (let i = 0; i < grids[0].row; i ++){
+        scalesZ[i] = [];
+        for (let j = 0; j < grids[0].column; j++){
+                scalesZ[i][j] = random(0.3,0.5);
+        }
+    }
+    grids[0].addScalesZ(scalesZ);
+
+    // bigger dots
+    mvts[1] = new Movement(0,0, 5);
+    mvts[1].makeArcPath(0.1,360,5,0);
+
+    //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+    gridSizeX = 18; // first one is 15...
+    gridSizeY = 60;
+    grids[1] = new Grid(1,offsetX+toolSizeMm/2,offsetY+sizeJointX/2,"RANDOM",gridSizeX,gridSizeY,pieceSizeX+gridSizeX,pieceSizeY+gridSizeY,0.5);
+
+    // add random scaling Z 
+    scalesZ = [];
+    for (let i = 0; i < grids[1].row; i ++){
+        scalesZ[i] = [];
+        for (let j = 0; j < grids[1].column; j++){
+                scalesZ[i][j] = random(1.5,2);
+        }
+    }
+    grids[1].addScalesZ(scalesZ);
+
 }
 
 // sides cut x 2
