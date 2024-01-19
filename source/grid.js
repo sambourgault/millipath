@@ -317,7 +317,7 @@ class Grid {
     this.changedGrid = true;
   }
 
-  addMvtVisibility(visMatrix){
+  addVisibility(visMatrix){
     this.visibleMvts = [];
     //check if dimensions works
     if (visMatrix.length != this.row){
@@ -337,6 +337,56 @@ class Grid {
           j2 = this.column - 1 - j;
         }
         this.visibleMvts.push(visMatrix[i][j2]);
+      }
+    }
+    this.changedGrid = true;
+  }
+
+  addTranslateX(translateXMatrix){
+    this.translateMvtX = [];
+    //check if dimensions works
+    if (translateXMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (translateXMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < translateXMatrix.length; i++){
+      for (let j = 0; j < translateXMatrix.length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.translateMvtX.push(translateXMatrix[i][j2]);
+      }
+    }
+    this.changedGrid = true;
+  }
+
+  addTranslateY(translateYMatrix){
+    this.translateMvtY = [];
+    //check if dimensions works
+    if (translateYMatrix.length != this.row){
+      console.log("This rotation matrix doesn't have the same amount of rows as the grid.");
+      return;
+    }
+
+    if (translateYMatrix[0].length != this.column){
+      console.log("This rotation matrix doesn't have the same amount of columns as the grid.");
+      return;
+    }
+
+    for (let i = 0; i < translateYMatrix.length; i++){
+      for (let j = 0; j < translateYMatrix[i].length; j++){
+        let j2 = j;
+        if ((i + 1) % 2 == 0) {
+          j2 = this.column - 1 - j;
+        }
+        this.translateMvtY.push(translateYMatrix[i][j2]);
       }
     }
     this.changedGrid = true;
