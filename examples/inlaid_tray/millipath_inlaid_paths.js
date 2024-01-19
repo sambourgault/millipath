@@ -1,4 +1,4 @@
-let x = 0;
+let x = -9;
 let y = 0;
 let l = 18;
 let theta = 0;
