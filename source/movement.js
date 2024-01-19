@@ -238,7 +238,7 @@ class Movement{
  }*/
  
   
-  makeChevronPath(x,y,l,nbPoints, theta, zMode, customZMode = null){
+  makeChevronPath(x,y,l,nbPoints, theta, zMode = "FLAT", customZMode = null){
     this.paths = [];
     this.linePaths = [];
     // first branch

@@ -151,6 +151,52 @@ class Boundary{
     }
   }
 
+  checkInTriangle(x,y){
+    //function sdfTriangle(p, p0, p1, p2) {
+      // adapted from inigo quilez
+      let p = [x,y];
+      let p0 = [0,0];
+      let p1 = [this.rX, 0];
+      let p2 = [0, this.rY];
+    
+      let e0 = math.subtract(p1, p0);
+      let e1 = math.subtract(p2, p1);
+      let e2 = math.subtract(p0, p2);
+    
+      let v0 = math.subtract(p, p0);
+      let v1 = math.subtract(p, p1);
+      let v2 = math.subtract(p, p2);
+      
+      let d0 = constrain(math.dot(v0, e0)/math.dot(e0,e0),0.0,1.0);
+      let pq0 = math.subtract(v0, math.multiply(e0,d0));
+      let d1 = constrain(math.dot(v1, e1)/math.dot(e1,e1),0.0,1.0);
+      let pq1 = math.subtract(v1, math.multiply(e1,d1));
+      let d2 = constrain(math.dot(v2, e2)/math.dot(e2,e2),0.0,1.0);
+      let pq2 = math.subtract(v2, math.multiply(e2,d2));
+      let s;
+      
+      if(e0[0]*e2[1]-e0[1]*e2[0]>=0){
+        s = 1;
+      } else {
+        s = -1;
+      }
+    
+      let pp0 = [math.dot(pq0,pq0), s*(v0[0]*e0[1]-v0[1]*e0[0])];
+      let pp1 = [math.dot(pq1,pq1), s*(v1[0]*e1[1]-v1[1]*e1[0])];
+      let pp2 = [math.dot(pq2,pq2), s*(v2[0]*e2[1]-v2[1]*e2[0])];
+      
+      //console.log(min(pp0, pp1));
+      let d_0 = min(pp0[0], pp1[0]);
+      let d_1 = min(pp0[1], pp1[1]);
+      let pp_0 = [d_0, d_1];
+      let d_2 = min(pp_0[0], pp2[0]);
+      let d_3 = min(pp_0[1], pp2[1]);
+      let d = [d_2, d_3];
+      
+      return -sqrt(d[0])*(d[1]>=0 ? 1:-1);
+
+  }
+
   checkInPolygon(x,y){
 
   }
