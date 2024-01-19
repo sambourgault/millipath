@@ -185,6 +185,15 @@ class Movement{
     this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, phi, zMode, customZMode));
     this.paths.push(this.linePaths[this.linePaths.length-1].path);
   }
+
+  makeLineAndBackPath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
+    this.linePaths.push(new LinePath(x,y,l,nbPoints, theta, phi, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    //vertical pass
+    this.linePaths.push(new LinePath(x+l/2,y+l/2,l,nbPoints, theta-PI/2, phi-PI/2, zMode, customZMode));
+    this.paths.push(this.linePaths[this.linePaths.length-1].path);
+    
+  }
   
   /*
   sinus(x, y, l, rotateOffset, nbPoint, period = l){
@@ -670,10 +679,11 @@ class Movement{
     let t1,t2,x1,x2,y1,y2,l,angle;
     this.paths = [];
     this.linePaths = [];
+    let angleOffset = theta + this.globalRotOffset;
     
     for (let i = 0; i < nbSides; i++){
-      t1 = arcAngle/nbSides*i*PI/180  + theta + this.globalRotOffset;
-      t2 = arcAngle/nbSides*(i+1)*PI/180  + theta + this.globalRotOffset;
+      t1 = arcAngle/nbSides*i*PI/180  + angleOffset;
+      t2 = arcAngle/nbSides*(i+1)*PI/180  + angleOffset;
       x1 = r*cos(t1);
       y1 = r*sin(t1);
       x2 = r*cos(t2);
@@ -692,6 +702,19 @@ class Movement{
         this.paths[0] = this.paths[0].concat(this.linePaths[this.linePaths.length-1].path);
       }
     }
+
+    // return to center to remove notch?
+    console.log("linepath"+this.linePaths);
+    console.log("path"+this.paths);
+    this.linePaths.push(new LinePath(r*cos(angleOffset),r*sin(angleOffset),2*r,1, PI, PI, zMode, customZMode));
+    this.linePaths[this.linePaths.length-1].path.shift();
+    this.paths[0] = this.paths[0].concat(this.linePaths[this.linePaths.length-1].path);
+
+    console.log("linepath"+this.linePaths);
+    console.log("path"+this.paths);
+
+    //this.paths.push(this.linePaths[this.linePaths.length-1].path);
+
     //console.log(this.paths);
     return this.paths;
   }
