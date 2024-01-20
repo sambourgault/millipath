@@ -3,7 +3,7 @@
 {
     let sizeX = 450;
     let sizeY = 2*sizeX/3;
-    let stepoverX = 1/2*12.7;//
+    let stepoverX = 1/2*12.7;//.5 tool?
     mvts[0] = new Movement(0,0, 5);
     //  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
     mvts[0].makePointPath(0,0,-0.1);
