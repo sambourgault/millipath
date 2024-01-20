@@ -1,4 +1,18 @@
 
+// flat pass
+{
+    let sizeX = 450;
+    let sizeY = 2*sizeX/3;
+    let stepoverX = 1/2*12.7;//
+    mvts[0] = new Movement(0,0, 5);
+    //  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
+    mvts[0].makePointPath(0,0,-0.1);
+    boundaries[0] = new Boundary("NONE",0,0,0,0);
+    //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+    grids[0] = new Grid(0,0,0,"LINEAR",stepoverX,sizeY,sizeX,2*sizeY);
+    grids[0].linkState = true;
+
+}
 
 // initial version
 {
