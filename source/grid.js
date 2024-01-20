@@ -355,8 +355,10 @@ class Grid {
       return;
     }
 
+    //console.log("row: "+this.row+" column:" + this.column);
+
     for (let i = 0; i < translateXMatrix.length; i++){
-      for (let j = 0; j < translateXMatrix.length; j++){
+      for (let j = 0; j < translateXMatrix[i].length; j++){
         let j2 = j;
         if ((i + 1) % 2 == 0) {
           j2 = this.column - 1 - j;

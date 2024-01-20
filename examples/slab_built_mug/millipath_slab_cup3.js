@@ -1,9 +1,9 @@
+//diagonal crisscross lines
 let sizeX = 250;
 let sizeY = 100;
 let offsetX = 10;
 let offsetY = 0;
 
-// grid 3
 mvts[0] = new Movement(0,0, 5);
 //makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
 mvts[0].makeLinePath(0,0, 200, 15,0);

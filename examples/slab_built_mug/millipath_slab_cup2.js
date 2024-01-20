@@ -1,3 +1,4 @@
+//diagonal crisscross lines
 let sizeX = 250;
 let sizeY = 100;
 let offsetX = 10;

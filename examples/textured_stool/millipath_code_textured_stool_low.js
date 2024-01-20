@@ -4,9 +4,9 @@
 {
     let offsetX = 0;
     let offsetY = 0;
-    let materialSize = 18.16;
+    let materialSize = 18.5;
 	let pieceSizeX = 457.2;
-	let pieceSizeY = 254;
+	let pieceSizeY = 304.8;
     let sizeX = pieceSizeX+toolSizeMm;
     let sizeY = pieceSizeY+toolSizeMm;
     let posX = sizeX/2 + offsetX;
@@ -64,7 +64,9 @@
 
     // stool side
     mvts[0] = new Movement(0,0,1);
-    mvts[0].makeArcPath(0.1, 360, 5, 0);
+    //mvts[0].makeArcPath(0.1, 360, 5, 0);
+    mvts[0].makeLinePath(-0.75, 0, 1.5, 3, 0);
+
     boundaries[12] = new Boundary("RECTANGLE",posX,posY,sizeX/2,sizeY/2);
     
     let gridSizeX = 10;
@@ -85,7 +87,7 @@
     mvts[1].makeArcPath(0.1,360,5,0);
 
     //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
-    gridSizeX = 18; // first one is 15...
+    gridSizeX = 30; // first one is 15...
     gridSizeY = 60;
     grids[1] = new Grid(1,offsetX+toolSizeMm/2,offsetY+sizeJointX/2,"RANDOM",gridSizeX,gridSizeY,pieceSizeX+gridSizeX,pieceSizeY+gridSizeY,0.5);
 
@@ -94,7 +96,7 @@
     for (let i = 0; i < grids[1].row; i ++){
         scalesZ[i] = [];
         for (let j = 0; j < grids[1].column; j++){
-                scalesZ[i][j] = random(1.5,2);
+                scalesZ[i][j] = random(1.1,1.6); //before 1.5 to 2
         }
     }
     grids[1].addScalesZ(scalesZ);
@@ -106,7 +108,7 @@
     let offsetY = 0;
     let materialSize = 18.5;
 	let pieceSizeX = 457.2;
-	let pieceSizeY = 254;
+	let pieceSizeY = 304.8;
     let sizeX = pieceSizeX+toolSizeMm;
     let sizeY = pieceSizeY+toolSizeMm;
     let posX = sizeX/2 + offsetX;
@@ -175,7 +177,7 @@
 {
     let offsetX = 0;
     let offsetY = 0;
-    let materialSize = 18.16;
+    let materialSize = 18.5;
 	let pieceSizeX = 457.2;
 	let pieceSizeY = 2*materialSize;
     let sizeX = pieceSizeX+toolSizeMm;

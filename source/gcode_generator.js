@@ -305,7 +305,9 @@ class GCodeGen {
            
           //let x = grid[i-1].x+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].x;
           //let y = grid[i-1].y+this.scaleMvt(grid[i-1], index)*rotatedMvtPaths[l][0].y;
+
           let x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][0].x+grids[index].translateMvtX[i-1];// + grids[index].randomizeMvtX[i-1]*random(-1,1);
+          //console.log("index0: "+(i-1)+ " "+grids[index].translateMvtX[i-1]);
           if (abs(x) < 0.00635){
             x = 0;
           }
@@ -333,11 +335,14 @@ class GCodeGen {
             //x = grid[i-1].x+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].x;
             //y = grid[i-1].y+this.scaleMvt(grid[i-1],index)*rotatedMvtPaths[l][k].y;
             x = grid[i-1].x+grids[index].scales[i-1]*rotatedMvtPaths[l][k].x +grids[index].translateMvtX[i-1] + grids[index].randomizeMvtX[i-1]*random(-1,1);
+            //console.log("index "+(i-1)+" "+grids[index].translateMvtX[i-1])
             if (abs(x) < 0.00635){
               x = 0;
             }
 
             y = grid[i-1].y+grids[index].scales[i-1]*rotatedMvtPaths[l][k].y +grids[index].translateMvtY[i-1] + grids[index].randomizeMvtY[i-1]*random(-1,1);
+            //console.log("indexy "+(i-1)+" "+grids[index].translateMvtY[i-1])
+
             if (abs(y) < 0.00635){
               y = 0;
             }
