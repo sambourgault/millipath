@@ -1,8 +1,8 @@
 // crisscross pattern
 
-let sizeX = 250;
+let sizeX = 300;
 let sizeY = 100;
-let offsetX = 10;
+let offsetX = 0;
 let offsetY = 0;
 
 // grid 3
@@ -46,7 +46,7 @@ grids[0].addRandomY(randomY);
 
 //
 mvts[1] = new Movement(0,0, 5);
-mvts[1].makeLinePath(-sizeX/2,0, 275, 30,0);
+mvts[1].makeLinePath(-sizeX/2,0, 315, 30,0);
 
 //boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
 boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2,sizeY/2);

@@ -1,7 +1,23 @@
+{
+  // 1. Facing operation
+let sizeX = 360; // 14.2 in
+let sizeY = 250; // 9.5 in
+let stepoverX = 1/2*6.35; // 1/4''
+mvts[0] = new Movement(0,0, 5);
+//  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
+mvts[0].makePointPath(0,0,-0.1);
+boundaries[0] = new Boundary("NONE",0,0,0,0);
+//constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
+grids[0] = new Grid(0,0,0,"LINEAR",stepoverX,sizeY,sizeX,2*sizeY);
+grids[0].linkState = true;
+
+}
+
+
 // square crisscross
-let sizeX = 250;
+let sizeX = 300;
 let sizeY = 100;
-let offsetX = 10;
+let offsetX = 0;
 let offsetY = 0;
 
 mvts[0] = new Movement(0,0, 5);
@@ -46,7 +62,7 @@ grids[0].addRandomY(randomY);
 mvts[1] = new Movement(0,0, 5);
 //mvts[0].makeGuiPath(2,0,"PARABOLA");
 //  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
-mvts[1].makeLinePath(0,0, 275, 10,0);
+mvts[1].makeLinePath(0,0, 350, 20,0);
 
 //boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
 boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2,sizeY/2);

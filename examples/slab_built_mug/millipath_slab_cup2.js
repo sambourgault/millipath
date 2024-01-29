@@ -1,7 +1,7 @@
 //diagonal crisscross lines
-let sizeX = 250;
+let sizeX = 300;
 let sizeY = 100;
-let offsetX = 10;
+let offsetX = 0;
 let offsetY = 0;
 
 // grid 3
@@ -47,7 +47,7 @@ grids[0].addRotations(rotations);
 mvts[1] = new Movement(0,0, 5);
 //mvts[0].makeGuiPath(2,0,"PARABOLA");
 //  makeLinePath(x, y, l, nbPoints, theta, phi = theta, zMode = "FLAT", customZMode = null){
-mvts[1].makeLinePath(0,0, 275, 10,0);
+mvts[1].makeLinePath(0,0, 350, 20,0);
 
 //boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetTileX,sizeY/2+offsetTileY,sizeX/2,sizeY/2);
 boundaries[1] = new Boundary("RECTANGLE",sizeX/2+offsetX,sizeY/2+offsetY,sizeX/2,sizeY/2);
