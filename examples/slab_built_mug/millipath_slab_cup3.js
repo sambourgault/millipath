@@ -1,4 +1,4 @@
-//diagonal crisscross lines
+//spikes
 let sizeX = 300;
 let sizeY = 100;
 let offsetX = 10;

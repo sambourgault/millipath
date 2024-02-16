@@ -289,7 +289,6 @@ let offsetY = 22+offset;
 
 boundaries[0] = new Boundary("RECTANGLE",realSizeX/2+offset,realSizeY/2+offset,realSizeX/2,realSizeY/2);
 
-
 //constructor(id, x, y, mode = 0, spx = 50, spy = 50, sx = 150, sy = 150, sinAmp = 0)
 gridSizeX = ll//sizeX/15/2;
 gridSizeY = ll//sizeX/15/2;
